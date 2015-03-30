@@ -1,0 +1,13 @@
+
+testButton.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+blue_button1.9
+  rotate: false
+  xy: 1, 1
+  size: 256, 256
+  split: 0, 0, 0, 14
+  orig: 256, 256
+  offset: 0, 0
+  index: -1

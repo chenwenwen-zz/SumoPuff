@@ -1,0 +1,10 @@
+{
+    "com.badlogic.gdx.graphics.g2d.BitmapFont": {
+        "font": { "file": "fonts/testButtonFonts.fnt" },
+    },
+
+   
+    "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+        "default": { "font": font, "background": blue_button1.9.9 },
+    },
+ }
