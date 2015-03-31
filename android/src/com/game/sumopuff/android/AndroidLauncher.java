@@ -77,7 +77,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     String mRoomId = null;
 
     // Are we playing in multiplayer mode?
-    boolean mMultiplayer = false;
+   // boolean mMultiplayer = false;
 
     // The participants in the currently active game
     ArrayList<Participant> mParticipants = null;
@@ -123,12 +123,12 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             Intent intent;
 
             switch (v.getId()) {
-                case R.id.button_single_player:
+               /* case R.id.button_single_player:
                 case R.id.button_single_player_2:
                     // play a single-player game
                     resetGameVars();
                     startGame(false);
-                    break;
+                    break;*/
                 case R.id.button_sign_in:
                     // user wants to sign in
                     // Check to see the developer who's running this sample code read the instructions :-)
@@ -188,7 +188,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
-        resetGameVars();
+        //resetGameVars();
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
     }
 
@@ -274,7 +274,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
-        resetGameVars();
+        //resetGameVars();
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
         Log.d(TAG, "Room created, waiting for it to be ready...");
     }
@@ -305,7 +305,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 .setRoomStatusUpdateListener(this);
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
-        resetGameVars();
+        //resetGameVars();
         Games.RealTimeMultiplayer.join(mGoogleApiClient, roomConfigBuilder.build());
     }
 
@@ -359,7 +359,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Leave the room.
     void leaveRoom() {
         Log.d(TAG, "Leaving room.");
-        mSecondsLeft = 0;
+        //mSecondsLeft = 0;
         stopKeepingScreenOn();
         if (mRoomId != null) {
             Games.RealTimeMultiplayer.leave(mGoogleApiClient, this, mRoomId);
@@ -603,7 +603,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
      */
 
     // Current state of the game:
-    int mSecondsLeft = -1; // how long until the game ends (seconds)
+    /*int mSecondsLeft = -1; // how long until the game ends (seconds)
     final static int GAME_DURATION = 20; // game duration, seconds.
     int mScore = 0; // user's current score
 
@@ -613,11 +613,11 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         mScore = 0;
         mParticipantScore.clear();
         mFinishedParticipants.clear();
-    }
+    }*/
 
     // Start the gameplay phase of the game.
     void startGame(boolean multiplayer) {
-        mMultiplayer = multiplayer;
+        //mMultiplayer = multiplayer;
         switchToScreen(R.id.screen_game);
     }
 
@@ -690,8 +690,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     final static int[] CLICKABLES = {
             R.id.button_accept_popup_invitation, R.id.button_invite_players,
             R.id.button_quick_game, R.id.button_see_invitations, R.id.button_sign_in,
-            R.id.button_sign_out, R.id.button_single_player,
-            R.id.button_single_player_2
+            R.id.button_sign_out
     };
 
     // This array lists all the individual screens our game has.
@@ -714,12 +713,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         if (mIncomingInvitationId == null) {
             // no invitation, so no popup
             showInvPopup = false;
-        } else if (mMultiplayer) {
+        } else  {
             // if in multiplayer, only show invitation on main screen
             showInvPopup = (mCurScreen == R.id.screen_main);
-        } else {
-            // single-player: show on main screen and gameplay screen
-            showInvPopup = (mCurScreen == R.id.screen_main || mCurScreen == R.id.screen_game);
         }
         findViewById(R.id.invitation_popup).setVisibility(showInvPopup ? View.VISIBLE : View.GONE);
     }
