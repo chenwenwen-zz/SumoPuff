@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.android.gms.common.ConnectionResult;
@@ -86,12 +85,14 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // invitation listener
     String mIncomingInvitationId = null;
 
-    // Message buffer for sending messages
-    byte[] mMsgBuf = new byte[2];
+    // Create game view
     private View gameView;
+
+
 
     private static int count;
     private int oppoCount = 0;
+    private ArrayList<String> participants = new ArrayList<String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -634,9 +635,17 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             if (p.getStatus() != Participant.STATUS_JOINED)
                 continue;
             Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId, p.getParticipantId());
-            Gdx.app.log("type",p.getParticipantId().getClass().getName());
-            Gdx.app.log("name",p.getDisplayName().getClass().getName()+"");
+
         }
+
+    }
+
+    @Override
+    public ArrayList<String> getParticipants() {
+        for(Participant p:mParticipants){
+            participants.add(p.getParticipantId());
+        }
+        return participants;
 
     }
 
@@ -647,6 +656,11 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     public int requestOppoCount(){
         return oppoCount;
+    }
+
+    @Override
+    public String getMyId() {
+        return mMyId;
     }
 
 

@@ -11,6 +11,8 @@ import com.mygdx.gameobjects.UserPuff;
 import com.mygdx.helpers.ActionResolver;
 import com.mygdx.helpers.AssetLoader;
 
+import java.util.ArrayList;
+
 // class which renders everything
 public class GameRenderer {
 
@@ -162,10 +164,40 @@ public class GameRenderer {
 		}
 
         batcher.begin();
-        Gdx.app.log("getX",oppPuff.getX()+"");
-        Gdx.app.log("getX",oppPuff.getY()+"");
-        Gdx.app.log("oppcount",actionResolver.requestOppoCount()+"");
-        AssetLoader.font.draw(batcher,actionResolver.requestOppoCount()+"",oppPuff.getX(),oppPuff.getY());
+        AssetLoader.font.draw(batcher,actionResolver.requestOppoCount()+"",oppPuff.getX(),oppPuff.getY()-50);
+
+        //Try something here
+        ArrayList<String> participants = actionResolver.getParticipants();
+        String myId = actionResolver.getMyId();
+        int player1 = participants.get(0).hashCode();
+        int player2 = participants.get(1).hashCode();
+        int me = myId.hashCode();
+        if(player1 > player2){
+                if(player1 == me){
+                Gdx.app.log("me","is puff1");
+                AssetLoader.font.draw(batcher,"Me",userPuff.getX(),userPuff.getY());}
+                else{
+                    Gdx.app.log("me","is puff2");
+                    AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());}}
+
+        else{
+            if(player1 == me){
+                Gdx.app.log("me","is puff2");
+                AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());
+                }
+            else{
+                Gdx.app.log("me","is puff1");
+                AssetLoader.font.draw(batcher,"Me",userPuff.getX(),userPuff.getY());}
+
+
+        }
+
+
+
+
+
+
+
         batcher.end();
 
 		shapeRenderer.end();

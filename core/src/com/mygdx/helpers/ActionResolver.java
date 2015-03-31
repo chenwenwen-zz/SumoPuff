@@ -1,11 +1,14 @@
 package com.mygdx.helpers;
 
+import java.util.ArrayList;
+
 /**
  * Created by wenwen on 30/3/15.
  */
 public interface ActionResolver {
     public void BroadCastMessage(int count);
-    public String ReceivedMessage();
+    public ArrayList<String> getParticipants();
     public int requestOppoCount();
+    public String getMyId();
 
 }
