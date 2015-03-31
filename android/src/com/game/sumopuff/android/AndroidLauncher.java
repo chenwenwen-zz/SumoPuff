@@ -76,9 +76,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // not playing.
     String mRoomId = null;
 
-    // Are we playing in multiplayer mode?
-   // boolean mMultiplayer = false;
-
     // The participants in the currently active game
     ArrayList<Participant> mParticipants = null;
 
@@ -123,12 +120,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             Intent intent;
 
             switch (v.getId()) {
-               /* case R.id.button_single_player:
-                case R.id.button_single_player_2:
-                    // play a single-player game
-                    resetGameVars();
-                    startGame(false);
-                    break;*/
                 case R.id.button_sign_in:
                     // user wants to sign in
                     // Check to see the developer who's running this sample code read the instructions :-)
@@ -188,7 +179,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
-        //resetGameVars();
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
     }
 
@@ -212,7 +202,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 if (responseCode == Activity.RESULT_OK) {
                     // ready to start playing
                     Log.d(TAG, "Starting game (waiting room returned OK).");
-                    startGame(true);
+                    startGame();
                 } else if (responseCode == GamesActivityResultCodes.RESULT_LEFT_ROOM) {
                     // player indicated that they want to leave the room
                     leaveRoom();
@@ -274,7 +264,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
-        //resetGameVars();
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
         Log.d(TAG, "Room created, waiting for it to be ready...");
     }
@@ -305,7 +294,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 .setRoomStatusUpdateListener(this);
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
-        //resetGameVars();
         Games.RealTimeMultiplayer.join(mGoogleApiClient, roomConfigBuilder.build());
     }
 
@@ -359,7 +347,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Leave the room.
     void leaveRoom() {
         Log.d(TAG, "Leaving room.");
-        //mSecondsLeft = 0;
         stopKeepingScreenOn();
         if (mRoomId != null) {
             Games.RealTimeMultiplayer.leave(mGoogleApiClient, this, mRoomId);
@@ -598,26 +585,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
     }
 
-    /*
-     * GAME LOGIC SECTION. Methods that implement the game's rules.
-     */
-
-    // Current state of the game:
-    /*int mSecondsLeft = -1; // how long until the game ends (seconds)
-    final static int GAME_DURATION = 20; // game duration, seconds.
-    int mScore = 0; // user's current score
-
-    // Reset game variables in preparation for a new game.
-    void resetGameVars() {
-        mSecondsLeft = GAME_DURATION;
-        mScore = 0;
-        mParticipantScore.clear();
-        mFinishedParticipants.clear();
-    }*/
 
     // Start the gameplay phase of the game.
-    void startGame(boolean multiplayer) {
-        //mMultiplayer = multiplayer;
+    void startGame() {
         switchToScreen(R.id.screen_game);
     }
 
