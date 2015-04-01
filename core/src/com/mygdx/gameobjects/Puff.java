@@ -32,7 +32,7 @@ public class Puff {
     private ActionResolver actionResolver;
     // initial collide value. Puffs start from the far end.
     public static Boolean collide = false;
-
+    private String directions = "right";
     // test count variables for checking movement.
     private int thisCounterPress = 1; // = 2;
 
@@ -43,7 +43,6 @@ public class Puff {
         this.actionResolver=actionResolver;
         position = new Vector2(x, y);
         velocity = new Vector2(0, 0);
-
         boundingCircle = new Circle();
     }
 
@@ -84,16 +83,29 @@ public class Puff {
             Gdx.app.log("Something", opponentPuff.getX() + "");
 
             // Static class method call.
+
+            if(getDirections().equals("right")){
             Collision.updatedposition(thisCounterPress, opponentPuff.getCounterPress(), position.x, opponentPuff.getPuff().getX());
             velocity.x = Collision.getpositions()[0];
 
             // if (opponentVelocity == velocity.x){ velocity.x = 0; }
             Gdx.app.log("Velocity of the UserPuff", velocity.x + "");
+            }
+            else if (getDirections().equals("left")){
+                Collision.updatedposition(opponentPuff.getCounterPress(),thisCounterPress, position.x, opponentPuff.getPuff().getX());
+                velocity.x = Collision.getpositions()[0];
+
+                }
 
             // handles default case: userPuff is running
         } else {
             // incremented by value.
-            velocity.x += 5;
+            if(getDirections().equals("right")){
+                velocity.x += 5;
+            }
+            else{
+                velocity.x-=5;
+            }
         }
     }
 
@@ -113,7 +125,10 @@ public class Puff {
         boundingCircle = new Circle();
         thisCounterPress = 0;
     }
-
+    public void setDirections(String directions){this.directions = directions;}
+    public String getDirections(){
+        return this.directions;
+    }
     public float getX() {
         return position.x;
     }

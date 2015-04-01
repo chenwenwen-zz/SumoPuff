@@ -36,6 +36,8 @@ public class GameWorld {
 
 		// initial state of the game when GameWorld is initialized. 
 		currentState = GameState.READY;
+        myPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver);
+        oppPuff = new Puff(midPointX +5 , 120, 13, 24, actionResolver);
         //Try something here
         ArrayList<String> participants = actionResolver.getParticipants();
         String myId = actionResolver.getMyId();
@@ -45,25 +47,26 @@ public class GameWorld {
         if(player1 > player2){
             if(player1 == me){
                 Gdx.app.log("me","is puff1");
+                myPuff.setDirections("left");
 
               }
             else{
                 Gdx.app.log("me","is puff2");
+                oppPuff.setDirections("right");
                 }}
 
         else{
             if(player1 == me){
                 Gdx.app.log("me","is puff2");
-
+                oppPuff.setDirections("right");
             }
             else{
                 Gdx.app.log("me","is puff1");
+                myPuff.setDirections("left");
                 }
 
 
         }
-		myPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver);
-		oppPuff = new Puff(midPointX + 5, 120, 13, 24, actionResolver);
 	}
 
 	// world is updated delta time by the render method at game screen. 
