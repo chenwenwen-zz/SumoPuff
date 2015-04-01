@@ -2,8 +2,6 @@ package com.mygdx.helpers;
 
 import com.badlogic.gdx.Gdx;
 
-import java.util.ArrayList;
-
 
 // still debugging. Need to change quite a lot depending on concurrency issues.
 // currently everything is static, so not a good idea for concurrency. Don't know if it is required to do so.
@@ -30,7 +28,7 @@ public class Collision {
 
 		// calculate the difference between the Press values.
 		// if (thisPressCounter > opponentPressCounter){
-		tapCounterDiff = thisPressCounter - opponentPressCounter;
+		tapCounterDiff = Math.abs(thisPressCounter - opponentPressCounter);
 		// } else { tapCounterDiff = opponentPressCounter - thisPressCounter; }
 
 		Gdx.app.log("TapDiffVal", tapCounterDiff + "");
@@ -51,11 +49,16 @@ public class Collision {
 				// position.add(thisPuffXVal);
 				// position.add(opponentPufFXVal);
 
-			} else {
+			}
+            else if (tapCounterDiff<5) {
+                position[0] = 0f;
+            }
+            else if (thisPressCounter<opponentPressCounter) {
+
 				// thisPuffXVal = thisPuffXVal + tapCounterDiff;
 				opponentPufFXVal = (opponentPufFXVal + tapCounterDiff) / 1.2f;
 
-				position[0] = opponentPufFXVal;
+				position[0] = -opponentPufFXVal;
 				// position.add(thisPuffXVal);
 				// position.add(opponentPufFXVal);
 			}

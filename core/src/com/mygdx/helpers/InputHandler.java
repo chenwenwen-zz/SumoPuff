@@ -3,15 +3,14 @@ package com.mygdx.helpers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.gameobjects.UserPuff;
-import com.mygdx.gameobjects.OpponentPuff;
+import com.mygdx.gameobjects.Puff;
 import com.mygdx.gameworld.GameWorld;
 
 public class InputHandler implements InputProcessor {
 	
 	private GameWorld myWorld;
-	private UserPuff userPuff;
-	private OpponentPuff oppPuff;	
+	private Puff userPuff;
+	private Puff oppPuff;
     private ActionResolver actionResolver;
     private int count=0;
 
