@@ -32,7 +32,7 @@ public class Puff {
     private ActionResolver actionResolver;
     // initial collide value. Puffs start from the far end.
     public static Boolean collide = false;
-    private String directions = "right";
+    private String directions = "left";
     // test count variables for checking movement.
     private int thisCounterPress = 1; // = 2;
 
@@ -84,14 +84,14 @@ public class Puff {
 
             // Static class method call.
 
-            if(getDirections().equals("right")){
+            if(getDirections().equals("left")){
             Collision.updatedposition(thisCounterPress, opponentPuff.getCounterPress(), position.x, opponentPuff.getPuff().getX());
             velocity.x = Collision.getpositions()[0];
 
             // if (opponentVelocity == velocity.x){ velocity.x = 0; }
             Gdx.app.log("Velocity of the UserPuff", velocity.x + "");
             }
-            else if (getDirections().equals("left")){
+            else if (getDirections().equals("right")){
                 Collision.updatedposition(opponentPuff.getCounterPress(),thisCounterPress, position.x, opponentPuff.getPuff().getX());
                 velocity.x = Collision.getpositions()[0];
 
@@ -100,7 +100,7 @@ public class Puff {
             // handles default case: userPuff is running
         } else {
             // incremented by value.
-            if(getDirections().equals("right")){
+            if(getDirections().equals("left")){
                 velocity.x += 5;
             }
             else{
