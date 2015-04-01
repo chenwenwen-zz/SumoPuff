@@ -20,7 +20,8 @@ public class GameWorld {
 	
 	// midPoint of the Game Screen.
 	// Only the "X" co-ordinate is used.
-	private int midPointX;	
+	private int midPointX;
+	private float gameHeight;
 	
 	// Enum type for identifying game state.
 	public enum GameState {
@@ -28,11 +29,12 @@ public class GameWorld {
 	    READY, RUNNING, GAMEOVER, COLLISION
 
 	}
+
 	
-	
-	public GameWorld(int midPointX, ActionResolver actionResolver) {
+	public GameWorld(int midPointX, ActionResolver actionResolver, float gameHeight) {
 		
 		this.midPointX = midPointX;
+		this.gameHeight = gameHeight;
 
 		// initial state of the game when GameWorld is initialized. 
 		currentState = GameState.READY;
@@ -40,32 +42,39 @@ public class GameWorld {
         oppPuff = new Puff(midPointX +5 , 120, 13, 24, actionResolver);
         //Try something here
         ArrayList<String> participants = actionResolver.getParticipants();
+
         String myId = actionResolver.getMyId();
+
         int player1 = participants.get(0).hashCode();
         int player2 = participants.get(1).hashCode();
+
         int me = myId.hashCode();
+
+
         if(player1 > player2){
             if(player1 == me){
                 Gdx.app.log("me","is puff1");
                 myPuff.setDirections("left");
-
+                oppPuff.setDirections("right");
               }
             else{
                 Gdx.app.log("me","is puff2");
+                myPuff.setDirections("left");
                 oppPuff.setDirections("right");
-                }}
+            }
+        }
 
         else{
             if(player1 == me){
                 Gdx.app.log("me","is puff2");
+                myPuff.setDirections("left");
                 oppPuff.setDirections("right");
             }
             else{
                 Gdx.app.log("me","is puff1");
                 myPuff.setDirections("left");
-                }
-
-
+                oppPuff.setDirections("right"); 
+            }
         }
 	}
 
@@ -157,5 +166,13 @@ public class GameWorld {
 	 public boolean isGameOverReady(){
 		return gameOverReady;
 	 }
+
+	public int getMidPoint(){
+		return midPointX;
+	}
+
+	public float getGameHeight(){
+		return gameHeight;
+	}
 
 }

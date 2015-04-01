@@ -37,8 +37,10 @@ public class InputHandler implements InputProcessor {
 		// increment userPuff press whenever touchDown is pressed. 
 		/* Need to change here when integrating with GooglePlayService/ServerSocket */
 		userPuff.incrementCounterPress();
+
 		userPuff.onClick(oppPuff);
 		oppPuff.onClick(userPuff);
+
         actionResolver.BroadCastMessage(count);
         count+=1;
 			
@@ -56,14 +58,17 @@ public class InputHandler implements InputProcessor {
 			//play again clicked 
 			// if(16<=screenX && 213>=screenX && 148<=screenY && 215>=screenY){
 			if(212<=screenX && 920>=screenX && 736<=screenY && 925>=screenY){
+//			if (screenX < myWorld.getMidPoint() && screenY > 0){
 				// Reset all variables, go to GameState.READY
 				myWorld.restart();
 			}
 			
 			//quit screen is clicked
 			if(302<=screenX && 465>=screenX && 114<=screenY && 219>=screenY){
+//			if (screenX >= myWorld.getMidPoint() && screenY > 0){
 			// System.out.println("quit");
 				Gdx.app.log("QuitTesting", "Exitted");
+				Gdx.app.exit();
 			}
 		}
 			return true;

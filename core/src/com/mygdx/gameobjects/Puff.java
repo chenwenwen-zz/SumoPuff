@@ -9,8 +9,7 @@ import com.mygdx.helpers.Collision;
 
 // Main puff object. 
 // This object is the current users puff object. 
-// TO-DO: Possible Option is to create a puff superclass. 
-// Then extend to create this users puff object and opponents puff object. 
+
 public class Puff {
 
     // contains the current postion of the puff object.
@@ -48,9 +47,9 @@ public class Puff {
 
     public void update(float delta) {
         // code for stopping at the edge.
-        if (position.x > 100) {
-            velocity.x = 0;
-        }
+        // if (position.x > 120) {
+        //     velocity.x = 0;
+        // }
 
         // updates the position delta times by copying the velocity vector.
         position.add(velocity.cpy().scl(delta));
@@ -68,7 +67,7 @@ public class Puff {
     // method to increase the CounterPress value with each touchdown();
     // momentarily fixed the counterPressValues for debugging issues.
     public int incrementCounterPress(){
-        // thisCounterPress += 1;
+        thisCounterPress += 1;
         // Gdx.app.log("counter", thisCounterPress+" ");
         return thisCounterPress;
     }
@@ -76,6 +75,7 @@ public class Puff {
     // method called at every click/tap for updating the position.
     public void onClick(Puff opponentPuff) {
         Float opponentVelocity;
+        
 
         // checks for collision.
         if (collides(opponentPuff)){
@@ -85,17 +85,16 @@ public class Puff {
             // Static class method call.
 
             if(getDirections().equals("left")){
-            Collision.updatedposition(thisCounterPress, opponentPuff.getCounterPress(), position.x, opponentPuff.getPuff().getX());
-            velocity.x = Collision.getpositions()[0];
-
-            // if (opponentVelocity == velocity.x){ velocity.x = 0; }
-            Gdx.app.log("Velocity of the UserPuff", velocity.x + "");
-            }
-            else if (getDirections().equals("right")){
-                Collision.updatedposition(opponentPuff.getCounterPress(),thisCounterPress, position.x, opponentPuff.getPuff().getX());
+                Collision.updatedposition(thisCounterPress, opponentPuff.getCounterPress(), position.x, opponentPuff.getPuff().getX());
                 velocity.x = Collision.getpositions()[0];
 
-                }
+                // if (opponentVelocity == velocity.x){ velocity.x = 0; }
+                Gdx.app.log("Velocity of the UserPuff", velocity.x + "");
+            }
+            else if (getDirections().equals("right")){
+                // Collision.updatedposition(opponentPuff.getCounterPress(),thisCounterPress, position.x, opponentPuff.getPuff().getX());
+                velocity.x = Collision.getpositions()[0];
+            }
 
             // handles default case: userPuff is running
         } else {
@@ -125,10 +124,14 @@ public class Puff {
         boundingCircle = new Circle();
         thisCounterPress = 0;
     }
-    public void setDirections(String directions){this.directions = directions;}
+    public void setDirections(String directions){
+        this.directions = directions;
+    }
+   
     public String getDirections(){
         return this.directions;
     }
+
     public float getX() {
         return position.x;
     }

@@ -29,7 +29,7 @@ public class GameScreen implements Screen {
         // midPoint of game screen.
         int midPointX = (int) (gameWidth / 2);
 
-        world = new GameWorld(midPointX, actionResolver);
+        world = new GameWorld(midPointX, actionResolver, gameHeight);
         renderer = new GameRenderer(world, (int) gameWidth, midPointX,actionResolver) ;
        
         // allow input to be handled by this screen.

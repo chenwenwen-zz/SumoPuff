@@ -1,5 +1,6 @@
 package com.mygdx.gameworld;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,6 +9,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.mygdx.gameobjects.Puff;
 import com.mygdx.helpers.ActionResolver;
 import com.mygdx.helpers.AssetLoader;
+
+import java.util.ArrayList;
 
 // class which renders everything
 public class GameRenderer {
@@ -162,31 +165,53 @@ public class GameRenderer {
         batcher.begin();
         AssetLoader.font.draw(batcher,actionResolver.requestOppoCount()+"",oppPuff.getX(),oppPuff.getY()-50);
 
-//        //Try something here
-//        ArrayList<String> participants = actionResolver.getParticipants();
-//        String myId = actionResolver.getMyId();
-//        int player1 = participants.get(0).hashCode();
-//        int player2 = participants.get(1).hashCode();
-//        int me = myId.hashCode();
-//        if(player1 > player2){
-//            if(player1 == me){
-//                Gdx.app.log("me","is puff1");
-//                AssetLoader.font.draw(batcher,"Me",userPuff.getX(),userPuff.getY());}
-//            else{
-//                Gdx.app.log("me","is puff2");
-//                AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());}}
-//
-//        else{
-//            if(player1 == me){
-//                Gdx.app.log("me","is puff2");
-//                AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());
-//            }
-//            else{
-//                Gdx.app.log("me","is puff1");
-//                AssetLoader.font.draw(batcher,"Me",userPuff.getX(),userPuff.getY());}
-//
-//
-//        }
+       //Try something here
+       ArrayList<String> participants = actionResolver.getParticipants();
+       String myId = actionResolver.getMyId();
+       int player1 = participants.get(0).hashCode();
+       int player2 = participants.get(1).hashCode();
+       int me = myId.hashCode();
+
+       // if(player1 > player2){
+       //     if(player1 == me){
+       //         Gdx.app.log("me","is puff1");
+       //         AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());}
+       //     else{
+       //         Gdx.app.log("me","is puff2");
+       //         AssetLoader.font.draw(batcher,"NotMe",userPuff.getX(),userPuff.getY());}}
+
+       // else{
+       //     if(player1 == me){
+       //         Gdx.app.log("me","is puff2");
+       //         AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());
+       //     }
+       //     else{
+       //         Gdx.app.log("me","is puff1");
+       //         AssetLoader.font.draw(batcher,"Me",userPuff.getX(),userPuff.getY());
+       //    }
+       // }
+
+
+
+       if(player1 > player2){
+           if(player1 == me){
+               Gdx.app.log("me","is puff1");
+               AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());}
+           else{
+               Gdx.app.log("me","is puff2");
+               AssetLoader.font.draw(batcher,"NotMe",userPuff.getX(),userPuff.getY());}}
+
+       else{
+           if(player1 == me){
+               Gdx.app.log("me","is puff2");
+               AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());
+           }
+           else{
+               Gdx.app.log("me","is puff1");
+               AssetLoader.font.draw(batcher,"Me",userPuff.getX(),userPuff.getY());}
+
+
+       }
 
 
 
