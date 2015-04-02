@@ -80,13 +80,6 @@ public class GameRenderer {
 		// The userPuff needs transparency, so we enable that again.
 		batcher.enableBlending();
 
-		// Draw userPuff at its coordinates. Retrieve the Animation object from AssetLoader
-		// Pass in the runTime variable to get the current frame.
-		// batcher.draw(AssetLoader.oppPuff, userPuff.getX(), userPuff.getY(), userPuff.getWidth(), userPuff.getHeight());
-
-		// batcher.draw(AssetLoader.puffDefault, 25, 120, 13, 24);
-		// batcher.draw(AssetLoader.oppPuff, 40, 120, 13, 24);
-
 		// GAMESTATE = READY
 		if (myWorld.isReady()) {
 			falldistance = 0;
@@ -195,20 +188,20 @@ public class GameRenderer {
 
        if(player1 > player2){
            if(player1 == me){
-               Gdx.app.log("me","is puff1");
-               AssetLoader.font.draw(batcher,"Puff1",oppPuff.getX(),oppPuff.getY());}
+               Gdx.app.log("me","is p1");
+               AssetLoader.font.draw(batcher,"P1",oppPuff.getX(),oppPuff.getY());}
            else{
-               Gdx.app.log("me","is puff2");
-               AssetLoader.font.draw(batcher,"Puff2",userPuff.getX(),userPuff.getY());}}
+               Gdx.app.log("me","is p2");
+               AssetLoader.font.draw(batcher,"P2",userPuff.getX(),userPuff.getY());}}
 
        else{
            if(player1 == me){
-               Gdx.app.log("me","is puff2");
-               AssetLoader.font.draw(batcher,"Puff2",oppPuff.getX(),oppPuff.getY());
+               Gdx.app.log("me","is p2");
+               AssetLoader.font.draw(batcher,"P2",oppPuff.getX(),oppPuff.getY());
            }
            else{
-               Gdx.app.log("me","is puff1");
-               AssetLoader.font.draw(batcher,"Puff1",userPuff.getX(),userPuff.getY());}
+               Gdx.app.log("me","is p1");
+               AssetLoader.font.draw(batcher,"P1",userPuff.getX(),userPuff.getY());}
 
 
        }

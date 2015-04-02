@@ -35,8 +35,8 @@ public class GameWorld {
 
 		// initial state of the game when GameWorld is initialized. 
 		currentState = GameState.READY;
-        myPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver);
-        oppPuff = new Puff(midPointX +5 , 120, 13, 24, actionResolver);
+        myPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver,"runtoright");
+        oppPuff = new Puff(midPointX +5 , 120, 13, 24, actionResolver,"runtoleft");
 
 	}
 

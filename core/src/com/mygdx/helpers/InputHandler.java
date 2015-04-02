@@ -41,6 +41,7 @@ public class InputHandler implements InputProcessor {
 		userPuff.onClick(oppPuff);
 		oppPuff.onClick(userPuff);
 
+
         actionResolver.BroadCastMessage(count);
         count+=1;
 			

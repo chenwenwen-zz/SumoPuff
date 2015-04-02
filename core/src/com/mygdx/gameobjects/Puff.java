@@ -1,9 +1,8 @@
 package com.mygdx.gameobjects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.helpers.ActionResolver;
 import com.mygdx.helpers.Collision;
 
@@ -21,7 +20,7 @@ public class Puff {
     // It's not the velocity of the puff object.
     // this vector allows to update the position of the puff delta times. (argument of the update method)
     // technically, this is not required. But it does allow, separation of the two variables during click and no click.
-    private Vector2 velocity;
+    public Vector2 velocity;
 
     // width and height;
     // sets the width and height of the puff.
@@ -30,21 +29,22 @@ public class Puff {
     private int player1;
     private int player2;
     private int me;
+    private String run;
 
     // circle object used for detecting collision.
     private Circle boundingCircle;
     private ActionResolver actionResolver;
     // initial collide value. Puffs start from the far end.
     public static Boolean collide = false;
-    private String myIdentity = "null";
     // test count variables for checking movement.
     private int thisCounterPress = 1; // = 2;
 
     // UserPuff's constructor.
-    public Puff(float x, float y, int width, int height, ActionResolver actionResolver) {
+    public Puff(float x, float y, int width, int height, ActionResolver actionResolver,String run) {
         this.width = width;
         this.height = height;
         this.actionResolver=actionResolver;
+        this.run=run;
         position = new Vector2(x, y);
         velocity = new Vector2(0, 0);
         boundingCircle = new Circle();
@@ -80,16 +80,8 @@ public class Puff {
 
     // method called at every click/tap for updating the position.
     public void onClick(Puff opponentPuff) {
-        Float opponentVelocity;
-        
-
         // checks for collision.
         if (collides(opponentPuff)){
-
-            Gdx.app.log("Something", opponentPuff.getX() + "");
-
-            // Static class method call.
-
             if(player1 > player2){
                 if(player1 == me){
                 Collision.updatedposition(thisCounterPress, actionResolver.requestOppoCount(), position.x, opponentPuff.getPuff().getX());
@@ -112,21 +104,11 @@ public class Puff {
 
             // handles default case: userPuff is running
         } else {
-            if(player1 > player2){
-                if(player1 == me){
-                  velocity.x -= 5;
-                }
-                else{
-                 velocity.x += 5;}
+            if(run=="runtoright"){
+                velocity.x+=5;
             }
             else{
-                if(player1 == me){
-                    velocity.x += 5;
-                    }
-                else{
-                    velocity.x -= 5;
-                  }
-
+                velocity.x-=5;
             }
 
         }
@@ -149,6 +131,8 @@ public class Puff {
         thisCounterPress = 0;
     }
 
+
+
     public float getX() {
         return position.x;
     }
@@ -167,10 +151,6 @@ public class Puff {
 
     public Circle getBoundingCircle() {
         return boundingCircle;
-    }
-
-    public int getCounterPress(){
-        return actionResolver.requestOppoCount();
     }
 
     public Puff getPuff(){
