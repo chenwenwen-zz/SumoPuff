@@ -196,19 +196,19 @@ public class GameRenderer {
        if(player1 > player2){
            if(player1 == me){
                Gdx.app.log("me","is puff1");
-               AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());}
+               AssetLoader.font.draw(batcher,"Puff1",oppPuff.getX(),oppPuff.getY());}
            else{
                Gdx.app.log("me","is puff2");
-               AssetLoader.font.draw(batcher,"NotMe",userPuff.getX(),userPuff.getY());}}
+               AssetLoader.font.draw(batcher,"Puff2",userPuff.getX(),userPuff.getY());}}
 
        else{
            if(player1 == me){
                Gdx.app.log("me","is puff2");
-               AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());
+               AssetLoader.font.draw(batcher,"Puff2",oppPuff.getX(),oppPuff.getY());
            }
            else{
                Gdx.app.log("me","is puff1");
-               AssetLoader.font.draw(batcher,"Me",userPuff.getX(),userPuff.getY());}
+               AssetLoader.font.draw(batcher,"Puff1",userPuff.getX(),userPuff.getY());}
 
 
        }

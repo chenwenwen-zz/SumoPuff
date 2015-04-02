@@ -1,10 +1,7 @@
 package com.mygdx.gameworld;
 
-import com.badlogic.gdx.Gdx;
 import com.mygdx.gameobjects.Puff;
 import com.mygdx.helpers.ActionResolver;
-
-import java.util.ArrayList;
 
 // this class handles all the functionalities of the gameobjects. 
 public class GameWorld {
@@ -40,42 +37,7 @@ public class GameWorld {
 		currentState = GameState.READY;
         myPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver);
         oppPuff = new Puff(midPointX +5 , 120, 13, 24, actionResolver);
-        //Try something here
-        ArrayList<String> participants = actionResolver.getParticipants();
 
-        String myId = actionResolver.getMyId();
-
-        int player1 = participants.get(0).hashCode();
-        int player2 = participants.get(1).hashCode();
-
-        int me = myId.hashCode();
-
-
-        if(player1 > player2){
-            if(player1 == me){
-                Gdx.app.log("me","is puff1");
-                myPuff.setDirections("left");
-                oppPuff.setDirections("right");
-              }
-            else{
-                Gdx.app.log("me","is puff2");
-                myPuff.setDirections("left");
-                oppPuff.setDirections("right");
-            }
-        }
-
-        else{
-            if(player1 == me){
-                Gdx.app.log("me","is puff2");
-                myPuff.setDirections("left");
-                oppPuff.setDirections("right");
-            }
-            else{
-                Gdx.app.log("me","is puff1");
-                myPuff.setDirections("left");
-                oppPuff.setDirections("right"); 
-            }
-        }
 	}
 
 	// world is updated delta time by the render method at game screen. 

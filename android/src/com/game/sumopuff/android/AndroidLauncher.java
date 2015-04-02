@@ -87,10 +87,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     // Create game view
     private View gameView;
-
-
-
-    private static int count;
     private int oppoCount = 0;
     private ArrayList<String> participants = new ArrayList<String>();
 
@@ -180,6 +176,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
+        resetGame();
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
     }
 
@@ -265,6 +262,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
+        resetGame();
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
         Log.d(TAG, "Room created, waiting for it to be ready...");
     }
@@ -295,6 +293,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 .setRoomStatusUpdateListener(this);
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
+        resetGame();
         Games.RealTimeMultiplayer.join(mGoogleApiClient, roomConfigBuilder.build());
     }
 
@@ -322,6 +321,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // go through the sign-in flow (remember that, yes, every time the Activity comes back to the
     // foreground we go through the sign-in flow -- but if the user is already authenticated,
     // this flow simply succeeds and is imperceptible).
+
     @Override
     public void onStart() {
         switchToScreen(R.id.screen_wait);
@@ -649,11 +649,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     }
 
-
-    public String ReceivedMessage() {
-        return String.valueOf(count);
-    }
-
     public int requestOppoCount(){
         return oppoCount;
     }
@@ -731,6 +726,10 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Clears the flag that keeps the screen on.
     void stopKeepingScreenOn() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+    public void resetGame(){
+        this.oppoCount = 0;
+        this.participants = new ArrayList<String>();
     }
 
 
