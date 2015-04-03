@@ -1,10 +1,7 @@
 package com.mygdx.gameworld;
 
-import com.badlogic.gdx.Gdx;
 import com.mygdx.gameobjects.Puff;
 import com.mygdx.helpers.ActionResolver;
-
-import java.util.ArrayList;
 
 // this class handles all the functionalities of the gameobjects. 
 public class GameWorld {
@@ -20,7 +17,8 @@ public class GameWorld {
 	
 	// midPoint of the Game Screen.
 	// Only the "X" co-ordinate is used.
-	private int midPointX;	
+	private int midPointX;
+	private float gameHeight;
 	
 	// Enum type for identifying game state.
 	public enum GameState {
@@ -28,45 +26,18 @@ public class GameWorld {
 	    READY, RUNNING, GAMEOVER, COLLISION
 
 	}
+
 	
-	
-	public GameWorld(int midPointX, ActionResolver actionResolver) {
+	public GameWorld(int midPointX, ActionResolver actionResolver, float gameHeight) {
 		
 		this.midPointX = midPointX;
+		this.gameHeight = gameHeight;
 
 		// initial state of the game when GameWorld is initialized. 
 		currentState = GameState.READY;
-        myPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver);
-        oppPuff = new Puff(midPointX +5 , 120, 13, 24, actionResolver);
-        //Try something here
-        ArrayList<String> participants = actionResolver.getParticipants();
-        String myId = actionResolver.getMyId();
-        int player1 = participants.get(0).hashCode();
-        int player2 = participants.get(1).hashCode();
-        int me = myId.hashCode();
-        if(player1 > player2){
-            if(player1 == me){
-                Gdx.app.log("me","is puff1");
-                myPuff.setDirections("left");
+        myPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver,"runtoright");
+        oppPuff = new Puff(midPointX +5 , 120, 13, 24, actionResolver,"runtoleft");
 
-              }
-            else{
-                Gdx.app.log("me","is puff2");
-                oppPuff.setDirections("right");
-                }}
-
-        else{
-            if(player1 == me){
-                Gdx.app.log("me","is puff2");
-                oppPuff.setDirections("right");
-            }
-            else{
-                Gdx.app.log("me","is puff1");
-                myPuff.setDirections("left");
-                }
-
-
-        }
 	}
 
 	// world is updated delta time by the render method at game screen. 
@@ -157,5 +128,13 @@ public class GameWorld {
 	 public boolean isGameOverReady(){
 		return gameOverReady;
 	 }
+
+	public int getMidPoint(){
+		return midPointX;
+	}
+
+	public float getGameHeight(){
+		return gameHeight;
+	}
 
 }

@@ -1,20 +1,27 @@
 package com.mygdx.gameworld;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.mygdx.gameobjects.Puff;
 import com.mygdx.helpers.ActionResolver;
 import com.mygdx.helpers.AssetLoader;
+
+import java.util.ArrayList;
 
 // class which renders everything
 public class GameRenderer {
 
 	private GameWorld myWorld;
     private ActionResolver actionResolver;
-	private OrthographicCamera cam;
+	private static OrthographicCamera cam;
 
 	private ShapeRenderer shapeRenderer;
 	private ShapeRenderer shapeRenderer1;
@@ -33,8 +40,21 @@ public class GameRenderer {
 	private Puff userPuff;
 	private Puff oppPuff;
 
+    //Aspect Ratio and Scaling Components
+    private static final int VIRTUAL_WIDTH = 620;
+    private static final int VIRTUAL_HEIGHT = 350;
+    private static final float ASPECT_RATIO = (float)VIRTUAL_WIDTH/(float)VIRTUAL_HEIGHT;
+    private static Rectangle viewport;
+    public static Vector2 crop = new Vector2(0f, 0f);
+    public static float scale = 1f;
+    public static int Case=0;
+    public static float width;
+    public static float height;
+    public static float w;
+    public static float h;
+    //
 
-	public GameRenderer(GameWorld world, int gameWidth, int midPointX,ActionResolver actionResolver) {
+    public GameRenderer(GameWorld world, int gameWidth, int gameHeight, int midPointX,ActionResolver actionResolver) {
 		myWorld = world;
         this.actionResolver = actionResolver;
 		userPuff = myWorld.getUserPuff();
@@ -62,7 +82,42 @@ public class GameRenderer {
 
 	// renders everything. 
 	public void render(float runTime) {
+        //Begin Aspect Ratio Conversion
+        cam.update();
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        height=Gdx.graphics.getHeight();
+        width=Gdx.graphics.getWidth();
+
+        float aspectRatio = (float)width/(float)height;
+
+
+        if(aspectRatio > ASPECT_RATIO)
+        {
+            scale = (float)height/(float)VIRTUAL_HEIGHT;
+            crop.x = (width - VIRTUAL_WIDTH*scale)/2f;
+            Case=1;
+        }
+        else if(aspectRatio < ASPECT_RATIO)
+        {
+            scale = (float)width/(float)VIRTUAL_WIDTH;
+            crop.y = (float)(height - VIRTUAL_HEIGHT*scale)/2f;
+            Case=2;
+        }
+        else
+        {
+            scale = (float)width/(float)VIRTUAL_WIDTH;
+        }
+
+        w = (float)VIRTUAL_WIDTH*scale;
+        h = (float)VIRTUAL_HEIGHT*scale;
+
+
+        viewport = new Rectangle(crop.x, crop.y, w, h);
+
+        Gdx.gl.glViewport((int) viewport.x, (int) viewport.y, (int) viewport.width, (int) viewport.height);
+        //End aspect ratio conversion
 		/* @ Ching Yan, your part to comment if need be. Note: changed puff variables name. */
 
 		// Begin SpriteBatch
@@ -76,13 +131,6 @@ public class GameRenderer {
 
 		// The userPuff needs transparency, so we enable that again.
 		batcher.enableBlending();
-
-		// Draw userPuff at its coordinates. Retrieve the Animation object from AssetLoader
-		// Pass in the runTime variable to get the current frame.
-		// batcher.draw(AssetLoader.oppPuff, userPuff.getX(), userPuff.getY(), userPuff.getWidth(), userPuff.getHeight());
-
-		// batcher.draw(AssetLoader.puffDefault, 25, 120, 13, 24);
-		// batcher.draw(AssetLoader.oppPuff, 40, 120, 13, 24);
 
 		// GAMESTATE = READY
 		if (myWorld.isReady()) {
@@ -162,31 +210,31 @@ public class GameRenderer {
         batcher.begin();
         AssetLoader.font.draw(batcher,actionResolver.requestOppoCount()+"",oppPuff.getX(),oppPuff.getY()-50);
 
-//        //Try something here
-//        ArrayList<String> participants = actionResolver.getParticipants();
-//        String myId = actionResolver.getMyId();
-//        int player1 = participants.get(0).hashCode();
-//        int player2 = participants.get(1).hashCode();
-//        int me = myId.hashCode();
-//        if(player1 > player2){
-//            if(player1 == me){
-//                Gdx.app.log("me","is puff1");
-//                AssetLoader.font.draw(batcher,"Me",userPuff.getX(),userPuff.getY());}
-//            else{
-//                Gdx.app.log("me","is puff2");
-//                AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());}}
-//
-//        else{
-//            if(player1 == me){
-//                Gdx.app.log("me","is puff2");
-//                AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());
-//            }
-//            else{
-//                Gdx.app.log("me","is puff1");
-//                AssetLoader.font.draw(batcher,"Me",userPuff.getX(),userPuff.getY());}
-//
-//
-//        }
+       //Try something here
+       ArrayList<String> participants = actionResolver.getParticipants();
+       String myId = actionResolver.getMyId();
+       int player1 = participants.get(0).hashCode();
+       int player2 = participants.get(1).hashCode();
+       int me = myId.hashCode();
+       if(player1 > player2){
+           if(player1 == me){
+               Gdx.app.log("me","is p1");
+               AssetLoader.font.draw(batcher,"me",oppPuff.getX(),oppPuff.getY());}
+           else{
+               Gdx.app.log("me","is p2");
+               AssetLoader.font.draw(batcher,"me",userPuff.getX(),userPuff.getY());}}
+
+       else{
+           if(player1 == me){
+               Gdx.app.log("me","is p2");
+               AssetLoader.font.draw(batcher,"me",oppPuff.getX(),oppPuff.getY());
+           }
+           else{
+               Gdx.app.log("me","is p1");
+               AssetLoader.font.draw(batcher,"me",userPuff.getX(),userPuff.getY());}
+
+
+       }
 
 
 
@@ -199,5 +247,11 @@ public class GameRenderer {
 		shapeRenderer.end();
 		shapeRenderer1.end();
 	}
+
+    //method to convert real phone coordinates to scaled coordinates, used by input handler
+    public static Vector3 unprojectCoords(Vector3 coords){
+        cam.unproject(coords, viewport.x, viewport.y, viewport.width, viewport.height);
+        return coords;
+    }
 }
 

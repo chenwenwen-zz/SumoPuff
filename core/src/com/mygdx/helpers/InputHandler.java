@@ -3,7 +3,9 @@ package com.mygdx.helpers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.mygdx.gameobjects.Puff;
+import com.mygdx.gameworld.GameRenderer;
 import com.mygdx.gameworld.GameWorld;
 
 public class InputHandler implements InputProcessor {
@@ -24,7 +26,12 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-	
+
+        //Conversion to scaled of X and Y coords to scaled values
+        Vector3 coords=new Vector3(screenX,screenY,0);
+        Vector3 coords2= GameRenderer.unprojectCoords(coords);
+        screenX=(int) coords2.x;
+        screenY=(int) coords2.y;
 		//System.out.println(screenX + " " + screenY + " " + pointer + " " + button);
 
 		if (myWorld.isReady()) {
@@ -37,8 +44,11 @@ public class InputHandler implements InputProcessor {
 		// increment userPuff press whenever touchDown is pressed. 
 		/* Need to change here when integrating with GooglePlayService/ServerSocket */
 		userPuff.incrementCounterPress();
+
 		userPuff.onClick(oppPuff);
 		oppPuff.onClick(userPuff);
+
+
         actionResolver.BroadCastMessage(count);
         count+=1;
 			
@@ -55,16 +65,20 @@ public class InputHandler implements InputProcessor {
 			
 			//play again clicked 
 			// if(16<=screenX && 213>=screenX && 148<=screenY && 215>=screenY){
-			if(212<=screenX && 920>=screenX && 736<=screenY && 925>=screenY){
-				// Reset all variables, go to GameState.READY
-				myWorld.restart();
-			}
-			
-			//quit screen is clicked
-			if(302<=screenX && 465>=screenX && 114<=screenY && 219>=screenY){
-			// System.out.println("quit");
-				Gdx.app.log("QuitTesting", "Exitted");
-			}
+            if(6<=screenX && 60>=screenX && 80<=screenY && 100>=screenY){
+//			if (screenX < myWorld.getMidPoint() && screenY > 0){
+                // Reset all variables, go to GameState.READY
+                Gdx.app.log("QuitTesting","Restarted");
+                myWorld.restart();
+            }
+
+            //quit screen is clicked
+            if(66<screenX && 100>=screenX && 80<=screenY && 100>=screenY){
+//			if (screenX >= myWorld.getMidPoint() && screenY > 0){
+                // System.out.println("quit");
+                Gdx.app.log("QuitTesting", "Exitted");
+                Gdx.app.exit();
+            }
 		}
 			return true;
 	}
