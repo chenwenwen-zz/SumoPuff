@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.gameobjects.Puff;
 import com.mygdx.gameworld.GameRenderer;
 import com.mygdx.gameworld.GameWorld;
@@ -17,8 +18,8 @@ public class InputHandler implements InputProcessor,GestureDetector.GestureListe
 	private Puff RightPuff;
     private ActionResolver actionResolver;
     private int myCount=0;
-    private boolean activateSend = true;
-    private boolean addCount = false;
+    private ClickListener clickListener = new ClickListener();
+
 
 
 	public InputHandler(GameWorld myWorld,ActionResolver actionResolver) {
@@ -40,6 +41,18 @@ public class InputHandler implements InputProcessor,GestureDetector.GestureListe
 			myWorld.start();
             return true;
 		}
+        if(myWorld.isStart()){
+           myCount++;
+           LeftPuff.onClick(RightPuff,myCount);
+           RightPuff.onClick(LeftPuff,myCount);
+           actionResolver.BroadCastCount(myCount);
+
+
+        }
+        Gdx.app.log("x",screenX+"");
+        Gdx.app.log("y",screenY+"");
+        Gdx.app.log("pointer",pointer+"");
+        Gdx.app.log("button",button+"");
 
 		if (myWorld.isGameOverReady()) {
 
@@ -68,7 +81,18 @@ public class InputHandler implements InputProcessor,GestureDetector.GestureListe
 
 			return true;
 	}
+    public void update()
+    {
+
+        if(clickListener.isOver()){
+            actionResolver.updateScreen(1);
+            LeftPuff.onClick(RightPuff,myCount);
+            RightPuff.onClick(LeftPuff,myCount);
+            myCount++;
+        }
+    }
     public int getCount(){return myCount;}
+
 	@Override
 	public boolean keyDown(int keycode) {
 	    return true;

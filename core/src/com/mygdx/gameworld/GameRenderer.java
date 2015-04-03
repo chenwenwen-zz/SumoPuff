@@ -42,6 +42,7 @@ public class GameRenderer {
 	private Puff rightPuff;
     private ActionResolver actionResolver;
     private InputHandler handler;
+    private int oldCount=0;
 
     //Aspect Ratio and Scaling Components
     private static final int VIRTUAL_WIDTH = 620;
@@ -187,10 +188,13 @@ public class GameRenderer {
 				batcher.draw(AssetLoader.start, midPointX-25, 50, 50, 25);
 			}
 			++showStart;
-            if(actionResolver.requestUpdates()==1) {
+
+            if(actionResolver.requestOppoCount()>oldCount) {
                 leftPuff.onClick(rightPuff, handler.getCount());
                 rightPuff.onClick(leftPuff, handler.getCount());
+                oldCount = actionResolver.requestOppoCount();
             }
+           // handler.update();
             AssetLoader.font.draw(batcher,actionResolver.requestOppoCount()+"",rightPuff.getX(),rightPuff.getY()-50);
             ArrayList<String> participants = actionResolver.getParticipants();
             String myId = actionResolver.getMyId();
