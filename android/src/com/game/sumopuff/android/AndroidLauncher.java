@@ -176,7 +176,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
-        resetGame();
+//        resetGame();
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
     }
 
@@ -262,7 +262,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
-        resetGame();
+        //resetGame();
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
         Log.d(TAG, "Room created, waiting for it to be ready...");
     }
@@ -293,7 +293,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 .setRoomStatusUpdateListener(this);
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
-        resetGame();
+        //resetGame();
         Games.RealTimeMultiplayer.join(mGoogleApiClient, roomConfigBuilder.build());
     }
 
@@ -727,10 +727,12 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     void stopKeepingScreenOn() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
-    public void resetGame(){
+   /* public void resetGame(){
         this.oppoCount = 0;
-        this.participants = new ArrayList<String>();
-    }
+        for(int i=0;i<participants.size();i++){
+            participants.remove(i);
+        }
+    }*/
 
 
 }

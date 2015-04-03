@@ -67,7 +67,7 @@ public class Puff {
     public boolean collides(Puff pufftarget) {
         return (collide = (Intersector.overlaps(pufftarget.getBoundingCircle(), this.getBoundingCircle())));
     }
-	
+
 
 
     // method to increase the CounterPress value with each touchdown();
@@ -84,11 +84,11 @@ public class Puff {
         if (collides(opponentPuff)){
             if(player1 > player2){
                 if(player1 == me){
-                Collision.updatedposition(thisCounterPress, actionResolver.requestOppoCount(), position.x, opponentPuff.getPuff().getX());
-                velocity.x = Collision.getpositions()[0];}
+                    Collision.updatedposition(thisCounterPress, actionResolver.requestOppoCount(), position.x, opponentPuff.getPuff().getX());
+                    velocity.x = Collision.getpositions()[1];}
                 else{
-                 Collision.updatedposition(actionResolver.requestOppoCount(),thisCounterPress, position.x, opponentPuff.getPuff().getX());
-                 velocity.x = Collision.getpositions()[0];
+                    Collision.updatedposition(actionResolver.requestOppoCount(),thisCounterPress, position.x, opponentPuff.getPuff().getX());
+                    velocity.x = Collision.getpositions()[0];
                 }
 
             }
@@ -98,7 +98,7 @@ public class Puff {
                     velocity.x = Collision.getpositions()[0];}
                 else{
                     Collision.updatedposition(thisCounterPress, actionResolver.requestOppoCount(), position.x, opponentPuff.getPuff().getX());
-                    velocity.x = Collision.getpositions()[0];
+                    velocity.x = Collision.getpositions()[1];
                 }
             }
 

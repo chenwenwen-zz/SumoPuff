@@ -164,44 +164,22 @@ public class GameRenderer {
        int player1 = participants.get(0).hashCode();
        int player2 = participants.get(1).hashCode();
        int me = myId.hashCode();
-
-       // if(player1 > player2){
-       //     if(player1 == me){
-       //         Gdx.app.log("me","is puff1");
-       //         AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());}
-       //     else{
-       //         Gdx.app.log("me","is puff2");
-       //         AssetLoader.font.draw(batcher,"NotMe",userPuff.getX(),userPuff.getY());}}
-
-       // else{
-       //     if(player1 == me){
-       //         Gdx.app.log("me","is puff2");
-       //         AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());
-       //     }
-       //     else{
-       //         Gdx.app.log("me","is puff1");
-       //         AssetLoader.font.draw(batcher,"Me",userPuff.getX(),userPuff.getY());
-       //    }
-       // }
-
-
-
        if(player1 > player2){
            if(player1 == me){
                Gdx.app.log("me","is p1");
-               AssetLoader.font.draw(batcher,"P1",oppPuff.getX(),oppPuff.getY());}
+               AssetLoader.font.draw(batcher,"me",oppPuff.getX(),oppPuff.getY());}
            else{
                Gdx.app.log("me","is p2");
-               AssetLoader.font.draw(batcher,"P2",userPuff.getX(),userPuff.getY());}}
+               AssetLoader.font.draw(batcher,"me",userPuff.getX(),userPuff.getY());}}
 
        else{
            if(player1 == me){
                Gdx.app.log("me","is p2");
-               AssetLoader.font.draw(batcher,"P2",oppPuff.getX(),oppPuff.getY());
+               AssetLoader.font.draw(batcher,"me",oppPuff.getX(),oppPuff.getY());
            }
            else{
                Gdx.app.log("me","is p1");
-               AssetLoader.font.draw(batcher,"P1",userPuff.getX(),userPuff.getY());}
+               AssetLoader.font.draw(batcher,"me",userPuff.getX(),userPuff.getY());}
 
 
        }
