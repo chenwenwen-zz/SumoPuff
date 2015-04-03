@@ -87,12 +87,10 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     // Create game view
     private View gameView;
-
-
-
-    private static int count;
     private int oppoCount = 0;
     private ArrayList<String> participants = new ArrayList<String>();
+    private  byte[] bytes = new byte[5];
+    private int isPressed = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -180,6 +178,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
+        resetGame();
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
     }
 
@@ -265,6 +264,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
+        resetGame();
         Games.RealTimeMultiplayer.create(mGoogleApiClient, rtmConfigBuilder.build());
         Log.d(TAG, "Room created, waiting for it to be ready...");
     }
@@ -295,6 +295,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 .setRoomStatusUpdateListener(this);
         switchToScreen(R.id.screen_wait);
         keepScreenOn();
+        resetGame();
         Games.RealTimeMultiplayer.join(mGoogleApiClient, roomConfigBuilder.build());
     }
 
@@ -322,6 +323,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // go through the sign-in flow (remember that, yes, every time the Activity comes back to the
     // foreground we go through the sign-in flow -- but if the user is already authenticated,
     // this flow simply succeeds and is imperceptible).
+
     @Override
     public void onStart() {
         switchToScreen(R.id.screen_wait);
@@ -617,12 +619,14 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         if (buf[0] == 'o'){
             oppoCount = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
         }
+        if (buf[0] == 'u'){
+            isPressed = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
+        }
 
     }
 
     @Override
-    public void BroadCastMessage(int count) {
-        byte[] bytes = new byte[5];
+    public void BroadCastCount(int count) {
         bytes[0] = 'o';
         bytes[1] = (byte) ((count >> 24) & 0xFF);
         bytes[2] = (byte) ((count >> 16) & 0xFF);
@@ -641,6 +645,11 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     }
 
     @Override
+    public void updateGameStatus(int count) {
+
+    }
+
+    @Override
     public ArrayList<String> getParticipants() {
         for(Participant p:mParticipants){
             participants.add(p.getParticipantId());
@@ -649,18 +658,41 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     }
 
-
-    public String ReceivedMessage() {
-        return String.valueOf(count);
-    }
-
     public int requestOppoCount(){
         return oppoCount;
     }
 
     @Override
+    public int requestUpdates() {
+        return isPressed;
+    }
+
+    @Override
+    public int requestOppGameStatus() {
+        return 0;
+    }
+
+    @Override
     public String getMyId() {
         return mMyId;
+    }
+
+    @Override
+    public void updateScreen(int status) {
+        bytes[0] = 'u';
+        bytes[1] = (byte) ((status >> 24) & 0xFF);
+        bytes[2] = (byte) ((status >> 16) & 0xFF);
+        bytes[3] = (byte) ((status >> 8) & 0xFF);
+        bytes[4] = (byte) (status & 0xFF);
+
+        for (Participant p : mParticipants) {
+            if (p.getParticipantId().equals(mMyId))
+                continue;
+            if (p.getStatus() != Participant.STATUS_JOINED)
+                continue;
+            Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId, p.getParticipantId());
+
+        }
     }
 
 
@@ -731,6 +763,12 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Clears the flag that keeps the screen on.
     void stopKeepingScreenOn() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+    public void resetGame(){
+        this.oppoCount = 0;
+        participants = new ArrayList<>();
+        bytes = new byte[5];
+        isPressed = 0;
     }
 
 

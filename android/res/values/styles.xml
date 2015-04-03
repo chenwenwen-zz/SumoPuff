@@ -27,7 +27,7 @@
     <style name="LLScreen" parent="@style/GameScreen">
         <item name="android:orientation">vertical</item>
         <item name="android:gravity">center</item>
-        <item name="android:padding">30dp</item>
+
     </style>
 
     <style name="GameplayScreen" parent="@style/LLScreen">
@@ -37,7 +37,7 @@
 
     <style name="InvPopup" parent="@style/LLScreen">
         <item name="android:background">@color/PopupColor</item>
-        <item name="android:padding">10dp</item>
+        <!--<item name="android:padding">10dp</item>-->
         <item name="android:layout_gravity">top|right</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -76,8 +76,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@color/AccentColor</item>
         <item name="android:textColor">@color/ButtonTextColor</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
+        <!--<item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>-->
     </style>
 
     <style name="MainScreenButton" parent="@style/GameButton">
@@ -120,22 +120,6 @@
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="ScoreToast">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:layout_marginBottom">20dp</item>
-    </style>
-
-    <style name="ScoresBox">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">#f0f0f0</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:layout_marginTop">30dp</item>
-        <item name="android:padding">20dp</item>
-    </style>
-
     <style name="ButtonsBox">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -145,30 +129,9 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="ScoreText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:gravity">left</item>
-    </style>
 
     <style name="Instructions" parent="@style/Blurb">
         <item name="android:layout_marginBottom">20dp</item>
-    </style>
-
-    <style name="ScoreLabel">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="ScoreDisplay">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">30sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/AccentColor</item>
-        <item name="android:layout_marginBottom">10dp</item>
     </style>
 
     <style name="PlacementDisplay">

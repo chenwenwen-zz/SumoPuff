@@ -1,20 +1,27 @@
 package com.mygdx.gameworld;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.mygdx.gameobjects.Puff;
 import com.mygdx.helpers.ActionResolver;
 import com.mygdx.helpers.AssetLoader;
+import com.mygdx.helpers.InputHandler;
+
+import java.util.ArrayList;
 
 // class which renders everything
 public class GameRenderer {
 
 	private GameWorld myWorld;
-    private ActionResolver actionResolver;
-	private OrthographicCamera cam;
+	private static OrthographicCamera cam;
 
 	private ShapeRenderer shapeRenderer;
 	private ShapeRenderer shapeRenderer1;
@@ -27,21 +34,39 @@ public class GameRenderer {
 	private SpriteBatch batcher;
 
 	private int midPointX;
-	private int gameWidth;
+	private int gameHeight;
+    private int gameWidth;
 
 	// Game Objects
-	private Puff userPuff;
-	private Puff oppPuff;
+	private Puff leftPuff;
+	private Puff rightPuff;
+    private ActionResolver actionResolver;
+    private InputHandler handler;
 
+    //Aspect Ratio and Scaling Components
+    private static final int VIRTUAL_WIDTH = 620;
+    private static final int VIRTUAL_HEIGHT = 350;
+    private static final float ASPECT_RATIO = (float)VIRTUAL_WIDTH/(float)VIRTUAL_HEIGHT;
+    private static Rectangle viewport;
+    public static Vector2 crop = new Vector2(0f, 0f);
+    public static float scale = 1f;
+    public static int Case=0;
+    public static float width;
+    public static float height;
+    public static float w;
+    public static float h;
+    //
 
-	public GameRenderer(GameWorld world, int gameWidth, int midPointX,ActionResolver actionResolver) {
+    public GameRenderer(GameWorld world, int gameWidth, int gameHeight, int midPointX,ActionResolver actionResolver,InputHandler handler) {
 		myWorld = world;
-        this.actionResolver = actionResolver;
-		userPuff = myWorld.getUserPuff();
-		oppPuff = myWorld.getOppPuff();
+		leftPuff = myWorld.getLeftPuff();
+		rightPuff = myWorld.getRightPuff();
 
 		this.gameWidth = gameWidth;
+        this.gameHeight = gameHeight;
 		this.midPointX = midPointX;
+        this.actionResolver = actionResolver;
+        this.handler = handler;
 
 		cam = new OrthographicCamera();
 		cam.setToOrtho(true, gameWidth, 160);
@@ -63,7 +88,41 @@ public class GameRenderer {
 	// renders everything. 
 	public void render(float runTime) {
 
-		/* @ Ching Yan, your part to comment if need be. Note: changed puff variables name. */
+        //Begin Aspect Ratio Conversion
+        cam.update();
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        height=Gdx.graphics.getHeight();
+        width= Gdx.graphics.getWidth();
+
+        float aspectRatio = (float)width/(float)height;
+
+
+        if(aspectRatio > ASPECT_RATIO)
+        {
+            scale = (float)height/(float)VIRTUAL_HEIGHT;
+            crop.x = (width - VIRTUAL_WIDTH*scale)/2f;
+            Case=1;
+        }
+        else if(aspectRatio < ASPECT_RATIO)
+        {
+            scale = (float)width/(float)VIRTUAL_WIDTH;
+            crop.y = (float)(height - VIRTUAL_HEIGHT*scale)/2f;
+            Case=2;
+        }
+        else
+        {
+            scale = (float)width/(float)VIRTUAL_WIDTH;
+        }
+
+        w = (float)VIRTUAL_WIDTH*scale;
+        h = (float)VIRTUAL_HEIGHT*scale;
+
+
+        viewport = new Rectangle(crop.x, crop.y, w, h);
+        Gdx.gl.glViewport((int) viewport.x, (int) viewport.y, (int) viewport.width, (int) viewport.height);
+        //End aspect ratio conversion
 
 		// Begin SpriteBatch
 		batcher.begin();
@@ -77,30 +136,23 @@ public class GameRenderer {
 		// The userPuff needs transparency, so we enable that again.
 		batcher.enableBlending();
 
-		// Draw userPuff at its coordinates. Retrieve the Animation object from AssetLoader
-		// Pass in the runTime variable to get the current frame.
-		// batcher.draw(AssetLoader.oppPuff, userPuff.getX(), userPuff.getY(), userPuff.getWidth(), userPuff.getHeight());
-
-		// batcher.draw(AssetLoader.puffDefault, 25, 120, 13, 24);
-		// batcher.draw(AssetLoader.oppPuff, 40, 120, 13, 24);
-
 		// GAMESTATE = READY
 		if (myWorld.isReady()) {
 			falldistance = 0;
 			batcher.draw(AssetLoader.ready, midPointX-25, 50, 50, 25);
-			batcher.draw(AssetLoader.puffDefault,  userPuff.getX(), userPuff.getY(), userPuff.getWidth(), userPuff.getHeight());
-			batcher.draw(AssetLoader.puffDefaulta,  oppPuff.getX(), oppPuff.getY(), oppPuff.getWidth(), oppPuff.getHeight());
+			batcher.draw(AssetLoader.puffDefault,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
+			batcher.draw(AssetLoader.puffDefaulta, rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
 		}
+
 
 		//GAMESTATE = OVER
 		else if(myWorld.isGameOver()){
 			showStart =0;
 
 			//if userPuff loses
-			if (myWorld.getUserPuff().getX()<15){
-				//batcher.draw(AssetLoader.puffDefaulta,  oppPuff.getX(), oppPuff.getY(), oppPuff.getWidth(), oppPuff.getHeight());
-				batcher.draw(AssetLoader.puffFall,  (userPuff.getX()+falldistance+3), userPuff.getY()-(fallcurve(falldistance))/10, userPuff.getWidth(), userPuff.getHeight());
-				batcher.draw(AssetLoader.puffDefaulta,  oppPuff.getX(), oppPuff.getY(), oppPuff.getWidth(), oppPuff.getHeight());
+			if (myWorld.getLeftPuff().getX()<15){
+				batcher.draw(AssetLoader.puffFall,  (leftPuff.getX()+falldistance+3), leftPuff.getY()-(fallcurve(falldistance))/10, leftPuff.getWidth(), leftPuff.getHeight());
+				batcher.draw(AssetLoader.puffDefaulta,  rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
 				if (falldistance<-40){
 					batcher.draw(AssetLoader.winner, 0, 0, 138, 160);
 				}
@@ -112,10 +164,10 @@ public class GameRenderer {
 				falldistance--;}
 
 			//if oppPuff loses
-			if (myWorld.getOppPuff().getX()>110){
-				
-				batcher.draw(AssetLoader.puffFalla,  (oppPuff.getX()-falldistance-3), oppPuff.getY()-(fallcurve(falldistance))/10, oppPuff.getWidth(), userPuff.getHeight());
-				batcher.draw(AssetLoader.puffDefault,  userPuff.getX(), userPuff.getY(), userPuff.getWidth(), userPuff.getHeight());
+			if (myWorld.getRightPuff().getX()>110){
+
+				batcher.draw(AssetLoader.puffFalla,  (rightPuff.getX()-falldistance-3), rightPuff.getY()-(fallcurve(falldistance))/10, rightPuff.getWidth(), rightPuff.getHeight());
+				batcher.draw(AssetLoader.puffDefault,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
 				if (falldistance<-40){
 					batcher.draw(AssetLoader.winner, 0, 0, 138, 160);
 				}
@@ -135,69 +187,60 @@ public class GameRenderer {
 				batcher.draw(AssetLoader.start, midPointX-25, 50, 50, 25);
 			}
 			++showStart;
-			batcher.draw(AssetLoader.runningAnimation.getKeyFrame(runTime), userPuff.getX(), userPuff.getY(), userPuff.getWidth(), userPuff.getHeight());
+            if(actionResolver.requestUpdates()==1) {
+                leftPuff.onClick(rightPuff, handler.getCount());
+                rightPuff.onClick(leftPuff, handler.getCount());
+            }
+            AssetLoader.font.draw(batcher,actionResolver.requestOppoCount()+"",rightPuff.getX(),rightPuff.getY()-50);
+            ArrayList<String> participants = actionResolver.getParticipants();
+            String myId = actionResolver.getMyId();
+            int player1 = participants.get(0).hashCode();
+            int player2 = participants.get(1).hashCode();
+            int me = myId.hashCode();
+            if(player1 > player2){
+                if(player1 == me){
+                    AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY());}
+                else{
+                    AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY());}}
 
-			batcher.draw(AssetLoader.runningAnimation1.getKeyFrame(runTime), oppPuff.getX(), oppPuff.getY(), oppPuff.getWidth(), oppPuff.getHeight());
+            else{
+                if(player1 == me){
+                    AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY());
+                }
+                else{
+                    AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY());}
+
+            }
+			batcher.draw(AssetLoader.runningAnimation.getKeyFrame(runTime), leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
+			batcher.draw(AssetLoader.runningAnimation1.getKeyFrame(runTime), rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
 		}
 		// End SpriteBatch
 
 		batcher.end();
-
 		shapeRenderer.begin(ShapeType.Filled);
 
 
 		// the code takes care of DISPLAYING BOUNDING circle for debugging.
-		// TO-DO: make the bounding circle transparent. 
+		// TO-DO: make the bounding circle transparent.
 		if (myWorld.isGameOver()){
 			// Don't display the bounding circle.
 		}
 		else{
 			shapeRenderer.setColor(Color.RED);
-			shapeRenderer.circle(userPuff.getBoundingCircle().x, userPuff.getBoundingCircle().y, userPuff.getBoundingCircle().radius);
+			shapeRenderer.circle(leftPuff.getBoundingCircle().x, leftPuff.getBoundingCircle().y, leftPuff.getBoundingCircle().radius);
 			shapeRenderer1.begin(ShapeType.Line);
 			shapeRenderer1.setColor(Color.BLUE);
-			shapeRenderer1.circle(oppPuff.getBoundingCircle().x, oppPuff.getBoundingCircle().y, oppPuff.getBoundingCircle().radius);
+			shapeRenderer1.circle(rightPuff.getBoundingCircle().x, rightPuff.getBoundingCircle().y, rightPuff.getBoundingCircle().radius);
 		}
 
-        batcher.begin();
-        AssetLoader.font.draw(batcher,actionResolver.requestOppoCount()+"",oppPuff.getX(),oppPuff.getY()-50);
 
-//        //Try something here
-//        ArrayList<String> participants = actionResolver.getParticipants();
-//        String myId = actionResolver.getMyId();
-//        int player1 = participants.get(0).hashCode();
-//        int player2 = participants.get(1).hashCode();
-//        int me = myId.hashCode();
-//        if(player1 > player2){
-//            if(player1 == me){
-//                Gdx.app.log("me","is puff1");
-//                AssetLoader.font.draw(batcher,"Me",userPuff.getX(),userPuff.getY());}
-//            else{
-//                Gdx.app.log("me","is puff2");
-//                AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());}}
-//
-//        else{
-//            if(player1 == me){
-//                Gdx.app.log("me","is puff2");
-//                AssetLoader.font.draw(batcher,"Me",oppPuff.getX(),oppPuff.getY());
-//            }
-//            else{
-//                Gdx.app.log("me","is puff1");
-//                AssetLoader.font.draw(batcher,"Me",userPuff.getX(),userPuff.getY());}
-//
-//
-//        }
-
-
-
-
-
-
-
-        batcher.end();
-
-		shapeRenderer.end();
-		shapeRenderer1.end();
+        shapeRenderer.end();
+        shapeRenderer1.end();
 	}
+    //method to convert real phone coordinates to scaled coordinates, used by input handler
+    public static Vector3 unprojectCoords(Vector3 coords){
+        cam.unproject(coords, viewport.x, viewport.y, viewport.width, viewport.height);
+        return coords;
+    }
 }
 

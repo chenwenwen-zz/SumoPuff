@@ -90,7 +90,7 @@ public class AssetLoader {
 
     public static void dispose() {
         // We must dispose of the texture when we are finished.
-        texture.dispose();
+      //  texture.dispose();
     }
 
 }

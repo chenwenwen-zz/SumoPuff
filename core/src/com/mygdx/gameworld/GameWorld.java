@@ -1,6 +1,5 @@
 package com.mygdx.gameworld;
 
-import com.badlogic.gdx.Gdx;
 import com.mygdx.gameobjects.Puff;
 import com.mygdx.helpers.ActionResolver;
 
@@ -9,64 +8,64 @@ import java.util.ArrayList;
 // this class handles all the functionalities of the gameobjects. 
 public class GameWorld {
 
-	private Puff myPuff;
-	private Puff oppPuff;
+	private Puff leftPuff;
+	private Puff rightPuff;
 
 	// current game state.
 	private GameState currentState;
-
 	// gameOverReady is the "state" after winner picture is shown.s
 	public static boolean gameOverReady = false;
 	
 	// midPoint of the Game Screen.
 	// Only the "X" co-ordinate is used.
-	private int midPointX;	
+	private int midPointX;
+	private float gameHeight;
 	
 	// Enum type for identifying game state.
 	public enum GameState {
 
-	    READY, RUNNING, GAMEOVER, COLLISION
+	    READY, RUNNING, GAMEOVER
 
 	}
+
 	
-	
-	public GameWorld(int midPointX, ActionResolver actionResolver) {
+	public GameWorld(int midPointX, ActionResolver actionResolver, float gameHeight) {
 		
 		this.midPointX = midPointX;
+		this.gameHeight = gameHeight;
 
 		// initial state of the game when GameWorld is initialized. 
 		currentState = GameState.READY;
-        myPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver);
-        oppPuff = new Puff(midPointX +5 , 120, 13, 24, actionResolver);
-        //Try something here
+        try{
         ArrayList<String> participants = actionResolver.getParticipants();
         String myId = actionResolver.getMyId();
         int player1 = participants.get(0).hashCode();
         int player2 = participants.get(1).hashCode();
         int me = myId.hashCode();
         if(player1 > player2){
-            if(player1 == me){
-                Gdx.app.log("me","is puff1");
-                myPuff.setDirections("left");
+           if(player1 == me){
+             leftPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver,"runtoright","me");
+             rightPuff = new Puff(midPointX +30 , 120, 13, 24, actionResolver,"runtoleft","notme");}
+           else{
+             leftPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver,"runtoright","notme");
+             rightPuff = new Puff(midPointX +30 , 120, 13, 24, actionResolver,"runtoleft","me");
+           }
 
-              }
-            else{
-                Gdx.app.log("me","is puff2");
-                oppPuff.setDirections("right");
-                }}
-
+           }
         else{
             if(player1 == me){
-                Gdx.app.log("me","is puff2");
-                oppPuff.setDirections("right");
-            }
+                leftPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver,"runtoright","notme");
+                rightPuff = new Puff(midPointX +30 , 120, 13, 24, actionResolver,"runtoleft","me");}
             else{
-                Gdx.app.log("me","is puff1");
-                myPuff.setDirections("left");
-                }
-
+                leftPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver,"runtoright","me");
+                rightPuff = new Puff(midPointX +30 , 120, 13, 24, actionResolver,"runtoleft","notme");
+            }
+        }
+       }
+        finally {
 
         }
+
 	}
 
 	// world is updated delta time by the render method at game screen. 
@@ -90,29 +89,26 @@ public class GameWorld {
 
 	private void updateRunning(float delta) {
 		// updating the myPuff at delta times.
-		myPuff.update(delta);
-		oppPuff.update(delta);
+		leftPuff.update(delta);
+		rightPuff.update(delta);
 		
 		// if the puff collides, momentarily change their velocity to zero.	
-		if(myPuff.collides(oppPuff)){
-			myPuff.stop();
-			oppPuff.stop();
-			// if the condition returns true, these two variables will be set to true by implementation.
-			// myPuff.collide = true;
-			// oppPuff.collide = true;
+		if(leftPuff.collides(rightPuff)){
+			leftPuff.stop();
+			rightPuff.stop();
 		}
 		
 		//UserPuff loses
-		if (myPuff.getX() < 15){
-			myPuff.stop();
-			oppPuff.stop();
+		if (leftPuff.getX() < 15){
+			leftPuff.stop();
+			rightPuff.stop();
 			currentState = GameState.GAMEOVER;
 		}
 		
 		//OpponentPuff loses
-		if (oppPuff.getX() > 110){
-			myPuff.stop();
-			oppPuff.stop();
+		if (rightPuff.getX() > 110){
+			leftPuff.stop();
+			rightPuff.stop();
 			currentState = GameState.GAMEOVER;
 		}
 		
@@ -123,12 +119,12 @@ public class GameWorld {
 		// since the renderer renders the ready state items automatically, nothing is called here.
 	}
 	
-	public Puff getUserPuff(){
-		return myPuff;
+	public Puff getLeftPuff(){
+		return leftPuff;
 	}
 
-	public Puff getOppPuff(){
-		return oppPuff;
+	public Puff getRightPuff(){
+		return rightPuff;
 	}
 	
 	public boolean isReady() {
@@ -139,14 +135,18 @@ public class GameWorld {
 	public void start() {
         currentState = GameState.RUNNING;
     }
+
+    public boolean isStart(){
+        return currentState == GameState.RUNNING;
+    }
 	
 	public void restart() {
         currentState = GameState.READY;
         gameOverReady = false;
-        myPuff.reset(midPointX-45, 120, 13, 24);
-        oppPuff.reset(midPointX+10, 120, 13, 24);
-        myPuff.collide = false;
-        oppPuff.collide = false;
+        leftPuff.reset(midPointX-45, 120, 13, 24);
+        rightPuff.reset(midPointX+10, 120, 13, 24);
+        leftPuff.collide = false;
+        rightPuff.collide = false;
         currentState = GameState.READY;
     }
 	
@@ -157,5 +157,13 @@ public class GameWorld {
 	 public boolean isGameOverReady(){
 		return gameOverReady;
 	 }
+
+	public int getMidPoint(){
+		return midPointX;
+	}
+
+	public float getGameHeight(){
+		return gameHeight;
+	}
 
 }

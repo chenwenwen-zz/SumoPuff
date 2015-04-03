@@ -2,81 +2,81 @@ package com.mygdx.helpers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.mygdx.gameobjects.Puff;
+import com.mygdx.gameworld.GameRenderer;
 import com.mygdx.gameworld.GameWorld;
 
-public class InputHandler implements InputProcessor {
+
+public class InputHandler implements InputProcessor,GestureDetector.GestureListener {
 	
 	private GameWorld myWorld;
-	private Puff userPuff;
-	private Puff oppPuff;
+	private Puff LeftPuff;
+	private Puff RightPuff;
     private ActionResolver actionResolver;
-    private int count=0;
+    private int myCount=0;
+    private boolean activateSend = true;
+    private boolean addCount = false;
+
 
 	public InputHandler(GameWorld myWorld,ActionResolver actionResolver) {
 		this.myWorld = myWorld;
         this.actionResolver = actionResolver;
-		userPuff = myWorld.getUserPuff();
-		oppPuff = myWorld.getOppPuff();
+		LeftPuff = myWorld.getLeftPuff();
+	    RightPuff = myWorld.getRightPuff();
 	 }
 
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-	
-		//System.out.println(screenX + " " + screenY + " " + pointer + " " + button);
-
-		if (myWorld.isReady()) {
-			System.out.println("Game Start!");
-			SpriteBatch batcher = new SpriteBatch();
+        //Conversion to scaled of X and Y coords to scaled values
+        Vector3 coords=new Vector3(screenX,screenY,0);
+        Vector3 coords2= GameRenderer.unprojectCoords(coords);
+        screenX=(int) coords2.x;
+        screenY=(int) coords2.y;
+		 if (myWorld.isReady()) {
 			myWorld.start();
-			return true;
+            return true;
 		}
-		
-		// increment userPuff press whenever touchDown is pressed. 
-		/* Need to change here when integrating with GooglePlayService/ServerSocket */
-		userPuff.incrementCounterPress();
-		userPuff.onClick(oppPuff);
-		oppPuff.onClick(userPuff);
-        actionResolver.BroadCastMessage(count);
-        count+=1;
-			
-		// only when gameover screen finish loading
-		// ERROR: The screen separation is relative to the screen that one is using. 
-		// The value separation doesn't work on the phone as of Friday.
 
-		/* @Ching Yan, the values you put are ABSOLUTE values. Need to change them so that it works on every phone. */
-		/* I commented your co-ordinates already */
 		if (myWorld.isGameOverReady()) {
-			Gdx.app.log("touchDownTesting", myWorld.isGameOverReady() + "");
-			Gdx.app.log("ScreenVariablesReading", screenX + " " + screenY + " " + pointer + " " + button);
-				// Reset all variables, go to GameState.READ
+
+			// Reset all variables, go to GameState.READ
 			
 			//play again clicked 
-			// if(16<=screenX && 213>=screenX && 148<=screenY && 215>=screenY){
-			if(212<=screenX && 920>=screenX && 736<=screenY && 925>=screenY){
-				// Reset all variables, go to GameState.READY
-				myWorld.restart();
-			}
-			
-			//quit screen is clicked
-			if(302<=screenX && 465>=screenX && 114<=screenY && 219>=screenY){
-			// System.out.println("quit");
-				Gdx.app.log("QuitTesting", "Exitted");
-			}
+            if(6<=screenX && 60>=screenX && 80<=screenY && 100>=screenY){
+//			if (screenX < myWorld.getMidPoint() && screenY > 0){
+                // Reset all variables, go to GameState.READY
+                Gdx.app.log("QuitTesting","Restarted");
+                myCount=0;
+                actionResolver.BroadCastCount(myCount);
+                myWorld.restart();
+
+            }
+
+            //quit screen is clicked
+            if(66<screenX && 100>=screenX && 80<=screenY && 100>=screenY){
+//			if (screenX >= myWorld.getMidPoint() && screenY > 0){
+                // System.out.println("quit");
+                Gdx.app.log("QuitTesting", "Exitted");
+                myCount=0;
+                Gdx.app.exit();
+            }
 		}
+
 			return true;
 	}
-
+    public int getCount(){return myCount;}
 	@Override
 	public boolean keyDown(int keycode) {
-			return false;
+	    return true;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-			return false;
+        return false;
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-			return false;
+        return true;
 	}
 
 	@Override
@@ -104,4 +104,44 @@ public class InputHandler implements InputProcessor {
 			return false;
 	}
 
+
+    @Override
+    public boolean touchDown(float x, float y, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean tap(float x, float y, int count, int button) {
+        return true;
+    }
+
+    @Override
+    public boolean longPress(float x, float y) {
+        return false;
+    }
+
+    @Override
+    public boolean fling(float velocityX, float velocityY, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean pan(float x, float y, float deltaX, float deltaY) {
+        return false;
+    }
+
+    @Override
+    public boolean panStop(float x, float y, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean zoom(float initialDistance, float distance) {
+        return false;
+    }
+
+    @Override
+    public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+        return false;
+    }
 }
