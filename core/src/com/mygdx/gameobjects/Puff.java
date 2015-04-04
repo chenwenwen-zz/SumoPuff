@@ -33,19 +33,10 @@ public class Puff {
     private ActionResolver actionResolver;
     // initial collide value. Puffs start from the far end.
     public static Boolean collide = false;
-<<<<<<< Updated upstream
 
 
     // UserPuff's constructor.
     public Puff(float x, float y, int width, int height, ActionResolver actionResolver,String run,String id) {
-=======
-    private String directions = "left";
-    // test count variables for checking movement.
-    private int thisCounterPress = 1; // = 2;
-    private String direction;
-    // UserPuff's constructor.
-    public Puff(float x, float y, int width, int height, ActionResolver actionResolver,String direction) {
->>>>>>> Stashed changes
         this.width = width;
         this.height = height;
         this.actionResolver=actionResolver;
@@ -54,7 +45,6 @@ public class Puff {
         position = new Vector2(x, y);
         velocity = new Vector2(0, 0);
         boundingCircle = new Circle();
-
 
     }
 
