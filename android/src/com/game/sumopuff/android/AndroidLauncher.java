@@ -685,6 +685,16 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     }
 
     @Override
+    public void updateScreen(int move) {
+
+    }
+
+    @Override
+    public int requestUpdateScreen() {
+        return 0;
+    }
+
+    @Override
     public String getMyId() {
         return mMyId;
     }

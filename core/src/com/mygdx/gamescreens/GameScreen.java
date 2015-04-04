@@ -69,7 +69,6 @@ public class GameScreen implements Screen {
     // render called by the framework at delta fps.
     public void render(float delta) {
         runTime += delta;
-
         // update the gameWorld.
         world.update(delta);
         // render the gameGraphics.

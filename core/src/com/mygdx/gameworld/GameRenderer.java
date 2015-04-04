@@ -194,6 +194,7 @@ public class GameRenderer {
                 rightPuff.onClick(leftPuff, handler.getCount());
                 oldCount = actionResolver.requestOppoCount();
             }
+
            // handler.update();
             AssetLoader.font.draw(batcher,actionResolver.requestOppoCount()+"",rightPuff.getX(),rightPuff.getY()-50);
             ArrayList<String> participants = actionResolver.getParticipants();

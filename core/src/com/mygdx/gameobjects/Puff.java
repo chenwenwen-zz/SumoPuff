@@ -1,6 +1,5 @@
 package com.mygdx.gameobjects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
@@ -32,14 +31,10 @@ public class Puff {
     // circle object used for detecting collision.
     private Circle boundingCircle;
     private ActionResolver actionResolver;
-    // initial collide value. Puffs start from the far end.
     public static Boolean collide = false;
-
 
     // UserPuff's constructor.
     public Puff(float x, float y, int width, int height, ActionResolver actionResolver,String run,String id) {
-
-        //testing overhere
         this.width = width;
         this.height = height;
         this.actionResolver=actionResolver;
@@ -52,40 +47,7 @@ public class Puff {
     }
 
     public void update(float delta) {
-        // updates the position delta times by copying the velocity vector.
-//        if(onClick(opponentPuff,myCount)) {
-//            position.add(velocity.cpy().scl(delta));
-//        }
-
-        if (Gdx.input.isTouched()){
-            if ((id == "me" && run == "runtoright")) {
-
-                position.add(velocity.cpy().scl(delta));
-
-
-            } else if ((id == "notme" && run == "runtoleft")) {
-                position.add(velocity.cpy().scl(delta));
-
-            } else if (id == "notme" && run == "runtoright") {
-                position.add(velocity.cpy().scl(delta));
-
-            } else if ((id == "me" && run == "runtoleft")) {
-                position.add(velocity.cpy().scl(delta));
-
-            }
-
-
-
-
-
-
-        }
-        if(onClickcurrentstatus()){
-//            position.add((velocity.x)/1f);
-//            position.add(velocity.cpy().scl(delta));
-//              position.x+=delta;
-        }
-        // updates the position of the boundingCircle to move along with the puffs.
+        position.add(velocity.cpy().scl(delta));
         boundingCircle.set(position.x + 6.5f, position.y, 6.4f);
     }
 
@@ -93,23 +55,12 @@ public class Puff {
     public boolean collides(Puff pufftarget) {
         return (collide = (Intersector.overlaps(pufftarget.getBoundingCircle(), this.getBoundingCircle())));
     }
-	public boolean onClickcurrentstatus(){
-        return true;
-    }
-
-
-    // method to increase the CounterPress value with each touchdown();
-    // momentarily fixed the counterPressValues for debugging issues.
-
 
     // method called at every click/tap for updating the position.
     public boolean onClick(Puff opponentPuff, int myCount) {
-
-
-
         if (collides(opponentPuff)){
             if(Math.abs(myCount-actionResolver.requestOppoCount())<2){
-               velocity.x = 0;
+                  velocity.x = 0;
             }
             else {
                 if ((id == "me" && run == "runtoright")) {
@@ -130,19 +81,15 @@ public class Puff {
 
             }
 
-
-
             // handles default case: userPuff is running
         else {
-            if(run=="runtoright"){
-                velocity.x=10;
-            }
-            else{
-                velocity.x=-10;
+            if (run == "runtoright") {
+                velocity.x = 5;
+            } else {
+                velocity.x = -5;
             }
 
         }
-        onClickcurrentstatus();
         return true;
     }
 
@@ -155,12 +102,9 @@ public class Puff {
     public void reset(float x, float y, int width, int height){
         this.width = width;
         this.height = height;
-
         position = new Vector2(x, y);
         velocity = new Vector2(0, 0);
-
         boundingCircle = new Circle();
-
     }
 
 

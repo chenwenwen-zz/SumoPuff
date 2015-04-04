@@ -19,6 +19,7 @@ public class InputHandler implements InputProcessor {
 
 
 
+
 	public InputHandler(GameWorld myWorld,ActionResolver actionResolver) {
 		this.myWorld = myWorld;
         this.actionResolver = actionResolver;
@@ -41,9 +42,8 @@ public class InputHandler implements InputProcessor {
         if(myWorld.isStart()){
            myCount++;
            actionResolver.BroadCastCount(myCount);
-           LeftPuff.onClick(RightPuff,myCount);
-           RightPuff.onClick(LeftPuff,myCount);
-
+           LeftPuff.onClick(RightPuff, myCount);
+           RightPuff.onClick(LeftPuff, myCount);
         }
 
 		if (myWorld.isGameOverReady()) {
@@ -88,6 +88,7 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        actionResolver.updateScreen(0);
         return true;
 	}
 

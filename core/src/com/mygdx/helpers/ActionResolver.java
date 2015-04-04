@@ -13,7 +13,10 @@ public interface ActionResolver {
     public void BroadCastCount(int count);
     public int requestOppoCount();
 
+    public void updateGameState(int state);
     public int requestOppGameState();
-    public void updateGameState(int count);
+
+    public void updateScreen(int move);
+    public int  requestUpdateScreen();
 
 }
