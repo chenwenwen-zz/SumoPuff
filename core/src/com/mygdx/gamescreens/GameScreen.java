@@ -2,6 +2,7 @@ package com.mygdx.gamescreens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.mygdx.gameobjects.Puff;
 import com.mygdx.gameworld.GameRenderer;
 import com.mygdx.gameworld.GameWorld;
 import com.mygdx.helpers.ActionResolver;
@@ -12,7 +13,8 @@ public class GameScreen implements Screen {
     // initialize the gameworld, gamerenderer variables.
     private GameWorld world;
     private GameRenderer renderer;
-
+    private Puff leftPuff;
+    private Puff rightPuff;
     // variable for updating renderer at runTime.
     private float runTime;
 
@@ -32,7 +34,35 @@ public class GameScreen implements Screen {
         InputHandler handler = new InputHandler(world,actionResolver);
         Gdx.input.setInputProcessor(handler);
         renderer = new GameRenderer(world, (int) gameWidth,(int)gameHeight, midPointX,actionResolver,handler) ;
-
+//        try{
+//            ArrayList<String> participants = actionResolver.getParticipants();
+//            String myId = actionResolver.getMyId();
+//            int player1 = participants.get(0).hashCode();
+//            int player2 = participants.get(1).hashCode();
+//            int me = myId.hashCode();
+//            if(player1 > player2){
+//                if(player1 == me){
+//                    leftPuff = new Puff(20, 120, 13, 24, actionResolver,"runtoright","me");
+//                    rightPuff = new Puff(105, 120, 13, 24, actionResolver,"runtoleft","notme");}
+//                else{
+//                    leftPuff = new Puff(20, 120, 13, 24, actionResolver,"runtoright","notme");
+//                    rightPuff = new Puff(105, 120, 13, 24, actionResolver,"runtoleft","me");
+//                }
+//
+//            }
+//            else{
+//                if(player1 == me){
+//                    leftPuff = new Puff(20, 120, 13, 24, actionResolver,"runtoright","notme");
+//                    rightPuff = new Puff(105, 120, 13, 24, actionResolver,"runtoleft","me");}
+//                else{
+//                    leftPuff = new Puff(20, 120, 13, 24, actionResolver,"runtoright","me");
+//                    rightPuff = new Puff(105, 120, 13, 24, actionResolver,"runtoleft","notme");
+//                }
+//            }
+//        }
+//        finally {
+//
+//        }
     }
 
     @Override
@@ -44,6 +74,10 @@ public class GameScreen implements Screen {
         world.update(delta);
         // render the gameGraphics.
         renderer.render(runTime);
+//        leftPuff.update(delta);
+//        rightPuff.update(delta);
+
+
     }
 
 

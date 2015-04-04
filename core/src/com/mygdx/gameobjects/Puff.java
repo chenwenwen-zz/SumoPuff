@@ -1,5 +1,6 @@
 package com.mygdx.gameobjects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
@@ -50,11 +51,20 @@ public class Puff {
 
     }
 
-    public void update(float delta, Puff opponentPuff, int myCount) {
+    public void update(float delta) {
         // updates the position delta times by copying the velocity vector.
-        if (onClick(opponentPuff, myCount)) {
-            position.add(velocity.cpy().scl(delta));}
+//        if(onClick(opponentPuff,myCount)) {
+//            position.add(velocity.cpy().scl(delta));
+//        }
 
+        if (Gdx.input.isTouched()){
+            position.add(velocity.cpy().scl(delta));
+        }
+        if(onClickcurrentstatus()){
+//            position.add((velocity.x)/1f);
+//            position.add(velocity.cpy().scl(delta));
+//              position.x+=delta;
+        }
         // updates the position of the boundingCircle to move along with the puffs.
         boundingCircle.set(position.x + 6.5f, position.y, 6.4f);
     }
@@ -63,7 +73,9 @@ public class Puff {
     public boolean collides(Puff pufftarget) {
         return (collide = (Intersector.overlaps(pufftarget.getBoundingCircle(), this.getBoundingCircle())));
     }
-	
+	public boolean onClickcurrentstatus(){
+        return true;
+    }
 
 
     // method to increase the CounterPress value with each touchdown();
@@ -72,6 +84,9 @@ public class Puff {
 
     // method called at every click/tap for updating the position.
     public boolean onClick(Puff opponentPuff, int myCount) {
+
+
+
         if (collides(opponentPuff)){
             if(Math.abs(myCount-actionResolver.requestOppoCount())<2){
                velocity.x = 0;
@@ -107,6 +122,7 @@ public class Puff {
             }
 
         }
+        onClickcurrentstatus();
         return true;
     }
 
