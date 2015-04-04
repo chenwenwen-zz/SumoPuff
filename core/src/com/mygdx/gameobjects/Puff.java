@@ -50,9 +50,11 @@ public class Puff {
 
     }
 
-    public void update(float delta) {
+    public void update(float delta, Puff opponentPuff, int myCount) {
         // updates the position delta times by copying the velocity vector.
-        position.add(velocity.cpy().scl(delta));
+        if (onClick(opponentPuff, myCount)) {
+            position.add(velocity.cpy().scl(delta));}
+
         // updates the position of the boundingCircle to move along with the puffs.
         boundingCircle.set(position.x + 6.5f, position.y, 6.4f);
     }
@@ -69,7 +71,7 @@ public class Puff {
 
 
     // method called at every click/tap for updating the position.
-    public void onClick(Puff opponentPuff, int myCount) {
+    public boolean onClick(Puff opponentPuff, int myCount) {
         if (collides(opponentPuff)){
             if(Math.abs(myCount-actionResolver.requestOppoCount())<2){
                velocity.x = 0;
@@ -105,6 +107,7 @@ public class Puff {
             }
 
         }
+        return true;
     }
 
     // the velocity is changed whenever the puff is starting to collide.

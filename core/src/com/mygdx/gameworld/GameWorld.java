@@ -69,7 +69,7 @@ public class GameWorld {
 	}
 
 	// world is updated delta time by the render method at game screen. 
-	public void update(float delta) {
+	public void update(float delta,Puff opponentPuff, int myCount) {
 		// update different objects depending on currentState.
 		 switch (currentState) {
 
@@ -82,15 +82,16 @@ public class GameWorld {
 	       	// case Running and default are the same case.
 	        case RUNNING:
 	        default:
-	            updateRunning(delta);
+	            updateRunning(delta,opponentPuff,myCount );
 	            break;
 	        }
 	}
 
-	private void updateRunning(float delta) {
+	private void updateRunning(float delta, Puff opponentPuff, int myCount) {
 		// updating the myPuff at delta times.
-		leftPuff.update(delta);
-		rightPuff.update(delta);
+
+		leftPuff.update(delta, opponentPuff,myCount);
+		rightPuff.update(delta,opponentPuff, myCount);
 		
 		// if the puff collides, momentarily change their velocity to zero.	
 		if(leftPuff.collides(rightPuff)){
