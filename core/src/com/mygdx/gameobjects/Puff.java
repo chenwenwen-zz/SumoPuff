@@ -47,9 +47,9 @@ public class Puff {
     }
 
     public void update(float delta) {
-        position.add(velocity.cpy().scl(delta));
+        position.add(velocity.cpy());
 //        boundingCircle.set(position.x + 6.5f, position.y, 6.4f);
-        boundingCircle.set(position.x + 10f, position.y, 10f);
+        boundingCircle.set(position.x + 6.5f, position.y, 6.4f);
 
     }
 
@@ -59,41 +59,40 @@ public class Puff {
     }
 
     // method called at every click/tap for updating the position.
-    public boolean onClick(Puff opponentPuff, int myCount) {
-        if (collides(opponentPuff)){
-            if(Math.abs(myCount-actionResolver.requestOppoCount())<2){
-                  velocity.x = 0;
-            }
-            else {
+    public void onClick(Puff opponentPuff, int myCount) {
+
+            if (collides(opponentPuff)) {
+                if(Math.abs(myCount-actionResolver.requestOppoCount())<2){
+                    velocity.x=0;
+                }
+                else{
                 if ((id == "me" && run == "runtoright")) {
-                    Collision.updatedposition(myCount, actionResolver.requestOppoCount(), position.x);
+                    Collision.updatedposition(myCount,actionResolver.requestOppoCount());
                     velocity.x = Collision.getpositions();
                 } else if ((id == "notme" && run == "runtoleft")) {
-                    Collision.updatedposition(myCount, actionResolver.requestOppoCount(), opponentPuff.getPuff().getX());
+                    Collision.updatedposition(myCount,actionResolver.requestOppoCount());
                     velocity.x = Collision.getpositions();
                 } else if (id == "notme" && run == "runtoright") {
-                    Collision.updatedposition(myCount, actionResolver.requestOppoCount(), opponentPuff.getPuff().getX());
+                    Collision.updatedposition(myCount,actionResolver.requestOppoCount());
                     velocity.x = -Collision.getpositions();
                 } else if ((id == "me" && run == "runtoleft")) {
-                    Collision.updatedposition(myCount, actionResolver.requestOppoCount(), position.x);
+                    Collision.updatedposition(myCount,actionResolver.requestOppoCount());
                     velocity.x = -Collision.getpositions();
                 }
+                }
             }
+                // handles default case: userPuff is running
+           else {
 
+                    if (run == "runtoright") {
+                        velocity.x = 1;
+                    } else {
+                        velocity.x = -1;
+                    }
 
-            }
+                }
+          }
 
-            // handles default case: userPuff is running
-        else {
-            if (run == "runtoright") {
-                velocity.x = 5;
-            } else {
-                velocity.x = -5;
-            }
-
-        }
-        return true;
-    }
 
     // the velocity is changed whenever the puff is starting to collide.
     public void stop(){

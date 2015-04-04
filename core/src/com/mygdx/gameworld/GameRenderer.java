@@ -40,7 +40,8 @@ public class GameRenderer {
 	private Puff rightPuff;
     private ActionResolver actionResolver;
     private InputHandler handler;
-    private int oldCount=0;
+    private int oldMyCount=0;
+    private int oldOppoCount=0;
 
     //Aspect Ratio and Scaling Components
     private static final int VIRTUAL_WIDTH = 620;
@@ -85,7 +86,7 @@ public class GameRenderer {
 	}
 
 	// renders everything. 
-	public void render(float runTime) {
+	public synchronized void render(float runTime) {
 
         //Begin Aspect Ratio Conversion
         cam.update();
@@ -187,34 +188,41 @@ public class GameRenderer {
 			}
 			++showStart;
 
-            if(actionResolver.requestOppoCount()>oldCount) {
+            actionResolver.BroadCastCount(handler.getMyCount());
+            if(actionResolver.requestOppoCount()>oldOppoCount) {
+                leftPuff.onClick(rightPuff, handler.getMyCount());
+                rightPuff.onClick(leftPuff, handler.getMyCount());
+                oldOppoCount = actionResolver.requestOppoCount();
+            }
+           // actionResolver.BroadCastCount(handler.getCount());
+          /*  if(handler.getCount()>oldMyCount){
                 leftPuff.onClick(rightPuff, handler.getCount());
                 rightPuff.onClick(leftPuff, handler.getCount());
-                oldCount = actionResolver.requestOppoCount();
+                oldMyCount = handler.getCount();
             }
-
+*/
            // handler.update();
-           // AssetLoader.font.draw(batcher,actionResolver.requestOppoCount()+"",rightPuff.getX(),rightPuff.getY()-100);
-            /*ArrayList<String> participants = actionResolver.getParticipants();
+         /*   AssetLoader.font.draw(batcher,actionResolver.requestOppoCount()+"",rightPuff.getX(),rightPuff.getY()-100);
+            ArrayList<String> participants = actionResolver.getParticipants();
             String myId = actionResolver.getMyId();
             int player1 = participants.get(0).hashCode();
             int player2 = participants.get(1).hashCode();
             int me = myId.hashCode();
             if(player1 > player2){
                 if(player1 == me){
-                    AssetLoader.font.draw(batcher,leftPuff.getX()+" "+leftPuff.getY(),leftPuff.getX(),leftPuff.getY()-50);}
+                    AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);}
                 else{
-                    AssetLoader.font.draw(batcher,rightPuff.getX()+" "+rightPuff.getY(),rightPuff.getX(),rightPuff.getY()-100);}}
+                    AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);}}
 
             else{
                 if(player1 == me){
-                    AssetLoader.font.draw(batcher,rightPuff.getX()+" "+rightPuff.getY(),rightPuff.getX(),rightPuff.getY()-100);
+                    AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);
                 }
                 else{
-                    AssetLoader.font.draw(batcher,handler.getCount()+"",leftPuff.getX(),leftPuff.getY()-50);}
+                    AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);}
 
             }*/
-            AssetLoader.font.draw(batcher,leftPuff.getX()+" ",leftPuff.getX(),leftPuff.getY()-50);
+            AssetLoader.font.draw(batcher, leftPuff.getX() + " ", leftPuff.getX(), leftPuff.getY() - 80);
             AssetLoader.font.draw(batcher,rightPuff.getX()+" ",rightPuff.getX(),rightPuff.getY()-100);
 
 			batcher.draw(AssetLoader.runningAnimation.getKeyFrame(runTime), leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());

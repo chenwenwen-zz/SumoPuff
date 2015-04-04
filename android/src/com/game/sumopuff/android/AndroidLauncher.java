@@ -643,8 +643,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 continue;
             if (p.getStatus() != Participant.STATUS_JOINED)
                 continue;
-            Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId, p.getParticipantId());
-
+            //Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(mGoogleApiClient,bytes,mRoomId);
+            Games.RealTimeMultiplayer.sendUnreliableMessage(mGoogleApiClient,bytes,mRoomId,p.getParticipantId());
         }
 
     }
@@ -661,7 +661,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 continue;
             if (p.getStatus() != Participant.STATUS_JOINED)
                 continue;
-            Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId, p.getParticipantId());
+           // Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId, p.getParticipantId());
+            Games.RealTimeMultiplayer.sendUnreliableMessage(mGoogleApiClient,bytes,mRoomId,p.getParticipantId());
 
         }
     }

@@ -11,20 +11,19 @@ import com.mygdx.gameworld.GameWorld;
 public class InputHandler implements InputProcessor {
 	
 	private GameWorld myWorld;
-	private Puff LeftPuff;
-	private Puff RightPuff;
+	private Puff leftPuff;
+	private Puff rightPuff;
     private ActionResolver actionResolver;
     private int myCount=0;
-
-
+    private int myPreviousCount=1;
 
 
 
 	public InputHandler(GameWorld myWorld,ActionResolver actionResolver) {
 		this.myWorld = myWorld;
         this.actionResolver = actionResolver;
-		LeftPuff = myWorld.getLeftPuff();
-	    RightPuff = myWorld.getRightPuff();
+		leftPuff = myWorld.getLeftPuff();
+	    rightPuff = myWorld.getRightPuff();
 	 }
 
 
@@ -36,14 +35,18 @@ public class InputHandler implements InputProcessor {
         screenX=(int) coords2.x;
         screenY=(int) coords2.y;
 		 if (myWorld.isReady()) {
-			myWorld.start();
-            return true;
+			 myWorld.start();
+             return true;
 		}
         if(myWorld.isStart()){
-           myCount++;
-           actionResolver.BroadCastCount(myCount);
-           LeftPuff.onClick(RightPuff, myCount);
-           RightPuff.onClick(LeftPuff, myCount);
+               myCount++;
+               if(myCount==myPreviousCount){
+               actionResolver.BroadCastCount(myCount);
+               myPreviousCount += myPreviousCount;
+               }
+               leftPuff.onClick(rightPuff, myCount);
+               rightPuff.onClick(leftPuff, myCount);
+
         }
 
 		if (myWorld.isGameOverReady()) {
@@ -69,7 +72,8 @@ public class InputHandler implements InputProcessor {
 			return true;
 	}
 
-    public int getCount(){return myCount;}
+    public int getMyCount(){return myCount;}
+   // public int getOppoCount(){return OppoCount;}
 
 	@Override
 	public boolean keyDown(int keycode) {
@@ -88,7 +92,6 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        actionResolver.updateScreen(0);
         return true;
 	}
 

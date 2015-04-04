@@ -2,20 +2,21 @@ package com.mygdx.helpers;
 
 public class Collision {
 
-	private static Float velocity = Float.valueOf(0);
+	private static int velocity = 0;
 
 
-	public static void updatedposition(int myCount,int oppCount, float thisPuffXVal){
+	public static void updatedposition(int myCount,int oppCount){
 			if(myCount > oppCount){
-				velocity = 20f;
+				velocity = 1;
 			}
             else if (myCount<oppCount) {
-				velocity = -20f;
+				velocity = -1;
 			}
+
 		}
 //	}
 
-	public static Float getpositions(){
+	public static int getpositions(){
 		return velocity;
 	}
 
