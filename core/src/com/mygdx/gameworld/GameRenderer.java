@@ -15,8 +15,6 @@ import com.mygdx.helpers.ActionResolver;
 import com.mygdx.helpers.AssetLoader;
 import com.mygdx.helpers.InputHandler;
 
-import java.util.ArrayList;
-
 // class which renders everything
 public class GameRenderer {
 
@@ -196,26 +194,29 @@ public class GameRenderer {
             }
 
            // handler.update();
-            AssetLoader.font.draw(batcher,actionResolver.requestOppoCount()+"",rightPuff.getX(),rightPuff.getY()-50);
-            ArrayList<String> participants = actionResolver.getParticipants();
+           // AssetLoader.font.draw(batcher,actionResolver.requestOppoCount()+"",rightPuff.getX(),rightPuff.getY()-100);
+            /*ArrayList<String> participants = actionResolver.getParticipants();
             String myId = actionResolver.getMyId();
             int player1 = participants.get(0).hashCode();
             int player2 = participants.get(1).hashCode();
             int me = myId.hashCode();
             if(player1 > player2){
                 if(player1 == me){
-                    AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY());}
+                    AssetLoader.font.draw(batcher,leftPuff.getX()+" "+leftPuff.getY(),leftPuff.getX(),leftPuff.getY()-50);}
                 else{
-                    AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY());}}
+                    AssetLoader.font.draw(batcher,rightPuff.getX()+" "+rightPuff.getY(),rightPuff.getX(),rightPuff.getY()-100);}}
 
             else{
                 if(player1 == me){
-                    AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY());
+                    AssetLoader.font.draw(batcher,rightPuff.getX()+" "+rightPuff.getY(),rightPuff.getX(),rightPuff.getY()-100);
                 }
                 else{
-                    AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY());}
+                    AssetLoader.font.draw(batcher,handler.getCount()+"",leftPuff.getX(),leftPuff.getY()-50);}
 
-            }
+            }*/
+            AssetLoader.font.draw(batcher,leftPuff.getX()+" ",leftPuff.getX(),leftPuff.getY()-50);
+            AssetLoader.font.draw(batcher,rightPuff.getX()+" ",rightPuff.getX(),rightPuff.getY()-100);
+
 			batcher.draw(AssetLoader.runningAnimation.getKeyFrame(runTime), leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
 			batcher.draw(AssetLoader.runningAnimation1.getKeyFrame(runTime), rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
 		}

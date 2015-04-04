@@ -6,12 +6,11 @@ public class Collision {
 
 
 	public static void updatedposition(int myCount,int oppCount, float thisPuffXVal){
-            int tapCounterDiff=0;
 			if(myCount > oppCount){
-				velocity = 10f;
+				velocity = 20f;
 			}
             else if (myCount<oppCount) {
-				velocity = -10f;
+				velocity = -20f;
 			}
 		}
 //	}

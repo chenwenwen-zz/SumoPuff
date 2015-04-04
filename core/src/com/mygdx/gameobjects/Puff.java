@@ -48,7 +48,9 @@ public class Puff {
 
     public void update(float delta) {
         position.add(velocity.cpy().scl(delta));
-        boundingCircle.set(position.x + 6.5f, position.y, 6.4f);
+//        boundingCircle.set(position.x + 6.5f, position.y, 6.4f);
+        boundingCircle.set(position.x + 10f, position.y, 10f);
+
     }
 
     // collision detection method
