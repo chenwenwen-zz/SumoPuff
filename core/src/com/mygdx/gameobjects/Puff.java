@@ -98,10 +98,10 @@ public class Puff {
             // handles default case: userPuff is running
         else {
             if(run=="runtoright"){
-                velocity.x+=5;
+                velocity.x=1;
             }
             else{
-                velocity.x-=5;
+                velocity.x=-1;
             }
 
         }
