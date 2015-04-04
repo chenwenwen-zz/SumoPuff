@@ -58,7 +58,27 @@ public class Puff {
 //        }
 
         if (Gdx.input.isTouched()){
-            position.add(velocity.cpy().scl(delta));
+            if ((id == "me" && run == "runtoright")) {
+
+                position.add(velocity.cpy().scl(delta));
+
+
+            } else if ((id == "notme" && run == "runtoleft")) {
+                position.add(velocity.cpy().scl(delta));
+
+            } else if (id == "notme" && run == "runtoright") {
+                position.add(velocity.cpy().scl(delta));
+
+            } else if ((id == "me" && run == "runtoleft")) {
+                position.add(velocity.cpy().scl(delta));
+
+            }
+
+
+
+
+
+
         }
         if(onClickcurrentstatus()){
 //            position.add((velocity.x)/1f);
@@ -115,10 +135,10 @@ public class Puff {
             // handles default case: userPuff is running
         else {
             if(run=="runtoright"){
-                velocity.x=1;
+                velocity.x=10;
             }
             else{
-                velocity.x=-1;
+                velocity.x=-10;
             }
 
         }
