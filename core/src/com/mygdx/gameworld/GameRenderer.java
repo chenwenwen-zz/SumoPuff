@@ -223,11 +223,8 @@ public class GameRenderer {
 		batcher.end();
 		shapeRenderer.begin(ShapeType.Filled);
 
-
-		// the code takes care of DISPLAYING BOUNDING circle for debugging.
-		// TO-DO: make the bounding circle transparent.
+        
 		if (myWorld.isGameOver()){
-			// Don't display the bounding circle.
 		}
 		else{
 			shapeRenderer.setColor(Color.RED);

@@ -90,7 +90,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private int oppoCount = 0;
     private ArrayList<String> participants = new ArrayList<String>();
     private  byte[] bytes = new byte[5];
-    private int isPressed = 0;
+    private int gameState = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -211,6 +211,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                     // this means leaving the room too. In more elaborate games, this could mean
                     // something else (like minimizing the waiting room UI).
                     leaveRoom();
+
                 }
                 break;
             case RC_SIGN_IN:
@@ -350,6 +351,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Leave the room.
     void leaveRoom() {
         Log.d(TAG, "Leaving room.");
+        resetGame();
         stopKeepingScreenOn();
         if (mRoomId != null) {
             Games.RealTimeMultiplayer.leave(mGoogleApiClient, this, mRoomId);
@@ -556,7 +558,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     @Override
     public void onPeerLeft(Room room, List<String> peersWhoLeft) {
+        resetGame();
         updateRoom(room);
+
     }
 
     @Override
@@ -577,6 +581,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     @Override
     public void onPeersDisconnected(Room room, List<String> peers) {
         updateRoom(room);
+        resetGame();
     }
 
     void updateRoom(Room room) {
@@ -616,18 +621,18 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     @Override
     public void onRealTimeMessageReceived(RealTimeMessage rtm) {
         byte[] buf = rtm.getMessageData();
-        if (buf[0] == 'o'){
+        if (buf[0] == 'c'){
             oppoCount = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
         }
-        if (buf[0] == 'u'){
-            isPressed = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
+        if (buf[0] == 's'){
+            gameState = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
         }
 
     }
 
     @Override
     public void BroadCastCount(int count) {
-        bytes[0] = 'o';
+        bytes[0] = 'c';
         bytes[1] = (byte) ((count >> 24) & 0xFF);
         bytes[2] = (byte) ((count >> 16) & 0xFF);
         bytes[3] = (byte) ((count >> 8) & 0xFF);
@@ -643,11 +648,24 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
 
     }
-
     @Override
-    public void updateGameStatus(int count) {
+    public void updateGameState(int count) {
+        bytes[0] = 's';
+        bytes[1] = (byte) ((gameState >> 24) & 0xFF);
+        bytes[2] = (byte) ((gameState >> 16) & 0xFF);
+        bytes[3] = (byte) ((gameState >> 8) & 0xFF);
+        bytes[4] = (byte) (gameState & 0xFF);
 
+        for (Participant p : mParticipants) {
+            if (p.getParticipantId().equals(mMyId))
+                continue;
+            if (p.getStatus() != Participant.STATUS_JOINED)
+                continue;
+            Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId, p.getParticipantId());
+
+        }
     }
+
 
     @Override
     public ArrayList<String> getParticipants() {
@@ -661,15 +679,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public int requestOppoCount(){
         return oppoCount;
     }
-
     @Override
-    public int requestUpdates() {
-        return isPressed;
-    }
-
-    @Override
-    public int requestOppGameStatus() {
-        return 0;
+    public int requestOppGameState() {
+        return gameState;
     }
 
     @Override
@@ -677,23 +689,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         return mMyId;
     }
 
-    @Override
-    public void updateScreen(int status) {
-        bytes[0] = 'u';
-        bytes[1] = (byte) ((status >> 24) & 0xFF);
-        bytes[2] = (byte) ((status >> 16) & 0xFF);
-        bytes[3] = (byte) ((status >> 8) & 0xFF);
-        bytes[4] = (byte) (status & 0xFF);
 
-        for (Participant p : mParticipants) {
-            if (p.getParticipantId().equals(mMyId))
-                continue;
-            if (p.getStatus() != Participant.STATUS_JOINED)
-                continue;
-            Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId, p.getParticipantId());
-
-        }
-    }
 
 
 
@@ -766,9 +762,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     }
     public void resetGame(){
         this.oppoCount = 0;
-        participants = new ArrayList<>();
-        bytes = new byte[5];
-        isPressed = 0;
+        this.participants = new ArrayList<>();
+        this.bytes = new byte[5];
+        this.gameState = 1;
     }
 
 

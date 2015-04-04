@@ -8,14 +8,12 @@ import java.util.ArrayList;
 public interface ActionResolver {
 
     public ArrayList<String> getParticipants();
-    public int requestOppoCount();
-    public int requestUpdates();
-    public int requestOppGameStatus();
     public String getMyId();
 
-    //updates = 1(touchdown)
-    public void updateScreen(int status);
     public void BroadCastCount(int count);
-    public void updateGameStatus(int count);
+    public int requestOppoCount();
+
+    public int requestOppGameState();
+    public void updateGameState(int count);
 
 }

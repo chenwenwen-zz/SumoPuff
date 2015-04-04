@@ -79,21 +79,23 @@ public class Puff {
     // method called at every click/tap for updating the position.
     public void onClick(Puff opponentPuff, int myCount) {
         if (collides(opponentPuff)){
-            if((id=="me" && run=="runtoright")){
-                Collision.updatedposition(myCount, actionResolver.requestOppoCount(), position.x);
-                velocity.x = Collision.getpositions();}
-            else if((id=="notme" && run=="runtoleft")){
-                 Collision.updatedposition(myCount,actionResolver.requestOppoCount(), opponentPuff.getPuff().getX());
-                 velocity.x = Collision.getpositions();
-                }
-            else if(id=="notme" && run=="runtoright"){
-                Collision.updatedposition(myCount,actionResolver.requestOppoCount(), opponentPuff.getPuff().getX());
-                velocity.x = -Collision.getpositions();
+            if(Math.abs(myCount-actionResolver.requestOppoCount())<2){
+               velocity.x = 0;
             }
-
-            else if((id=="me" && run=="runtoleft")){
-                Collision.updatedposition(myCount, actionResolver.requestOppoCount(), position.x);
-                velocity.x = -Collision.getpositions();
+            else {
+                if ((id == "me" && run == "runtoright")) {
+                    Collision.updatedposition(myCount, actionResolver.requestOppoCount(), position.x);
+                    velocity.x = Collision.getpositions();
+                } else if ((id == "notme" && run == "runtoleft")) {
+                    Collision.updatedposition(myCount, actionResolver.requestOppoCount(), opponentPuff.getPuff().getX());
+                    velocity.x = Collision.getpositions();
+                } else if (id == "notme" && run == "runtoright") {
+                    Collision.updatedposition(myCount, actionResolver.requestOppoCount(), opponentPuff.getPuff().getX());
+                    velocity.x = -Collision.getpositions();
+                } else if ((id == "me" && run == "runtoleft")) {
+                    Collision.updatedposition(myCount, actionResolver.requestOppoCount(), position.x);
+                    velocity.x = -Collision.getpositions();
+                }
             }
 
 

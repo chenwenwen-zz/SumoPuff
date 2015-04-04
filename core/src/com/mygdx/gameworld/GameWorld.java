@@ -44,21 +44,21 @@ public class GameWorld {
         int me = myId.hashCode();
         if(player1 > player2){
            if(player1 == me){
-             leftPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver,"runtoright","me");
-             rightPuff = new Puff(midPointX +30 , 120, 13, 24, actionResolver,"runtoleft","notme");}
+             leftPuff = new Puff(20, 120, 13, 24, actionResolver,"runtoright","me");
+             rightPuff = new Puff(105, 120, 13, 24, actionResolver,"runtoleft","notme");}
            else{
-             leftPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver,"runtoright","notme");
-             rightPuff = new Puff(midPointX +30 , 120, 13, 24, actionResolver,"runtoleft","me");
+             leftPuff = new Puff(20, 120, 13, 24, actionResolver,"runtoright","notme");
+             rightPuff = new Puff(105, 120, 13, 24, actionResolver,"runtoleft","me");
            }
 
            }
         else{
             if(player1 == me){
-                leftPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver,"runtoright","notme");
-                rightPuff = new Puff(midPointX +30 , 120, 13, 24, actionResolver,"runtoleft","me");}
+                leftPuff = new Puff(20, 120, 13, 24, actionResolver,"runtoright","notme");
+                rightPuff = new Puff(105, 120, 13, 24, actionResolver,"runtoleft","me");}
             else{
-                leftPuff = new Puff(midPointX - 30, 120, 13, 24, actionResolver,"runtoright","me");
-                rightPuff = new Puff(midPointX +30 , 120, 13, 24, actionResolver,"runtoleft","notme");
+                leftPuff = new Puff(20, 120, 13, 24, actionResolver,"runtoright","me");
+                rightPuff = new Puff(105, 120, 13, 24, actionResolver,"runtoleft","notme");
             }
         }
        }
@@ -97,7 +97,6 @@ public class GameWorld {
 			leftPuff.stop();
 			rightPuff.stop();
 		}
-		
 		//UserPuff loses
 		if (leftPuff.getX() < 15){
 			leftPuff.stop();
@@ -143,8 +142,8 @@ public class GameWorld {
 	public void restart() {
         currentState = GameState.READY;
         gameOverReady = false;
-        leftPuff.reset(midPointX-45, 120, 13, 24);
-        rightPuff.reset(midPointX+10, 120, 13, 24);
+        leftPuff.reset(20, 120, 13, 24);
+        rightPuff.reset(105, 120, 13, 24);
         leftPuff.collide = false;
         rightPuff.collide = false;
         currentState = GameState.READY;
