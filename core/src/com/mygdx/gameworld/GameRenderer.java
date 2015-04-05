@@ -146,7 +146,13 @@ public class GameRenderer {
             batcher.draw(AssetLoader.puffDefaulta, rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
             batcher.draw(AssetLoader.ready,50, 50, 50, 25);
 		}
+        else if (myWorld.isPowerUp()){
 
+
+            //do add the necessary animation
+
+//            batcher.draw
+        }
 
 		//GAMESTATE = OVER
 		else if(myWorld.isGameOver()){

@@ -17,8 +17,8 @@ public class InputHandler implements InputProcessor {
     private int myCount=0;
     private int timer=2;
     private final int readyState=1;
-
-
+    private final int powerupState=2;
+    private int TypeofPowerUp;
 
 
 	public InputHandler(GameWorld myWorld,ActionResolver actionResolver) {
@@ -26,6 +26,7 @@ public class InputHandler implements InputProcessor {
         this.actionResolver = actionResolver;
 		leftPuff = myWorld.getLeftPuff();
 	    rightPuff = myWorld.getRightPuff();
+        TypeofPowerUp=0;
 	 }
 
 
@@ -45,7 +46,36 @@ public class InputHandler implements InputProcessor {
                myCount++;
                actionResolver.BroadCastCount(myCount);
         }
+        if(myWorld.isPowerUp()){
+            if (6 <= screenX && 60 >= screenX && 80 <= screenY && 100 >= screenY) { //values to be changed accordingly
+                // Reset all variables, go to GameState.READY
+                actionResolver.BroadCastMyGameState(powerupState);
+                switch (TypeofPowerUp) {
+                    // initial game state whenever the game starts. Set by default.
+                    case 0:
+                        //initial stage there is no powerup thus remain at 0, values will be for powerup state
+                        break;
 
+                    case 1:
+                        // KO case
+                        myCount+=150;
+                        break;
+
+
+                    case 2:
+                        // power up case?
+                       //how do you want to vary the myCount value or other variables;
+                        break;
+
+                    case 3:
+                        // power up case?
+                        //how do you want to vary the myCount value or other variables;
+                        break;
+                }
+                actionResolver.BroadCastCount(myCount);
+            }
+
+        }
 		if (myWorld.isGameOverReady()) {
             if (6 <= screenX && 60 >= screenX && 80 <= screenY && 100 >= screenY) {
                 // Reset all variables, go to GameState.READY
