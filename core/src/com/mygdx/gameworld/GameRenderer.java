@@ -32,20 +32,21 @@ public class GameRenderer {
 	private SpriteBatch batcher;
 
 	private int midPointX;
-	private int gameHeight;
-    private int gameWidth;
+
 
 	// Game Objects
 	private Puff leftPuff;
 	private Puff rightPuff;
     private ActionResolver actionResolver;
     private InputHandler handler;
-    private int oldMyCount=0;
-    private int oldOppoCount=0;
+
+    // Variables
+    private int OppoCount;
+    private int timer = 0;
 
     //Aspect Ratio and Scaling Components
-    private static final int VIRTUAL_WIDTH = 620;
-    private static final int VIRTUAL_HEIGHT = 350;
+    private static final int VIRTUAL_WIDTH = 800;
+    private static final int VIRTUAL_HEIGHT = 480;
     private static final float ASPECT_RATIO = (float)VIRTUAL_WIDTH/(float)VIRTUAL_HEIGHT;
     private static Rectangle viewport;
     public static Vector2 crop = new Vector2(0f, 0f);
@@ -57,19 +58,16 @@ public class GameRenderer {
     public static float h;
     //
 
-    public GameRenderer(GameWorld world, int gameWidth, int gameHeight, int midPointX,ActionResolver actionResolver,InputHandler handler) {
+    public GameRenderer(GameWorld world, int midPointX,ActionResolver actionResolver,InputHandler handler) {
 		myWorld = world;
 		leftPuff = myWorld.getLeftPuff();
 		rightPuff = myWorld.getRightPuff();
-
-		this.gameWidth = gameWidth;
-        this.gameHeight = gameHeight;
 		this.midPointX = midPointX;
         this.actionResolver = actionResolver;
         this.handler = handler;
 
 		cam = new OrthographicCamera();
-		cam.setToOrtho(true, gameWidth, 160);
+		cam.setToOrtho(true, 136, 160);
 
 		batcher = new SpriteBatch();
 		batcher.setProjectionMatrix(cam.combined);
@@ -129,26 +127,30 @@ public class GameRenderer {
 
 		// Disable transparency
 		// This is good for performance when drawing images that do not require transparency.
-
 		batcher.disableBlending();
 		batcher.draw(AssetLoader.bg, 0, 0, 140, 160);
-
+        AssetLoader.font.draw(batcher,actionResolver.requestOppGameState()+"",rightPuff.getX(),rightPuff.getY()-50);
 		// The userPuff needs transparency, so we enable that again.
 		batcher.enableBlending();
 
+        //GAMESTATE = INITIALIZE
+        if(myWorld.isInitialized()){
+            batcher.draw(AssetLoader.puffDefault,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
+            batcher.draw(AssetLoader.puffDefaulta, rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
+        }
+
 		// GAMESTATE = READY
-		if (myWorld.isReady()) {
-			falldistance = 0;
-			batcher.draw(AssetLoader.ready, midPointX-25, 50, 50, 25);
-			batcher.draw(AssetLoader.puffDefault,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
-			batcher.draw(AssetLoader.puffDefaulta, rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
+		if (myWorld.isReady()){
+            falldistance = 0;
+            batcher.draw(AssetLoader.puffDefault,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
+            batcher.draw(AssetLoader.puffDefaulta, rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
+            batcher.draw(AssetLoader.ready,50, 50, 50, 25);
 		}
 
 
 		//GAMESTATE = OVER
 		else if(myWorld.isGameOver()){
 			showStart =0;
-
 			//if userPuff loses
 			if (myWorld.getLeftPuff().getX()<15){
 				batcher.draw(AssetLoader.puffFall,  (leftPuff.getX()+falldistance+3), leftPuff.getY()-(fallcurve(falldistance))/10, leftPuff.getWidth(), leftPuff.getHeight());
@@ -157,8 +159,8 @@ public class GameRenderer {
 					batcher.draw(AssetLoader.winner, 0, 0, 138, 160);
 				}
 				if (falldistance<-45){
-					batcher.draw(AssetLoader.playAgain, midPointX-60, 80, 50, 25);
-					batcher.draw(AssetLoader.quit, midPointX+20, 80, 40, 25);}
+					batcher.draw(AssetLoader.playAgain,8, 80, 50, 25);
+					batcher.draw(AssetLoader.quit,85, 80, 40, 25);}
 				if (falldistance<-50){
 					myWorld.gameOverReady = true;}
 				falldistance--;}
@@ -172,38 +174,35 @@ public class GameRenderer {
 					batcher.draw(AssetLoader.winner, 0, 0, 138, 160);
 				}
 				if (falldistance<-45){
-					batcher.draw(AssetLoader.playAgain, midPointX-60, 80, 50, 25);
-					batcher.draw(AssetLoader.quit, midPointX+20, 80, 40, 25);}
+					batcher.draw(AssetLoader.playAgain, 8, 80, 50, 25);
+					batcher.draw(AssetLoader.quit, 85, 80, 40, 25);}
 				if (falldistance<-50){
 					myWorld.gameOverReady = true;}
 				falldistance--;
 			}
+            actionResolver.BroadCastMyGameState(3);
 		}
 
 		//GAMESTATE = RUNNING
-		else{
-
-			if(showStart<20){
-				batcher.draw(AssetLoader.start, midPointX-25, 50, 50, 25);
+		else if(myWorld.isStart()){
+			if(showStart<60){
+				batcher.draw(AssetLoader.start,50, 50, 50, 25);
 			}
 			++showStart;
+            if(leftPuff.collides(rightPuff)){
+            OppoCount = actionResolver.requestOppoCount();}
+            if(timer==2){
+            leftPuff.onClick(rightPuff, handler.getMyCount(),OppoCount);
+            rightPuff.onClick(leftPuff, handler.getMyCount(),OppoCount);
+            timer=0;
+            }
+            else {
+                timer++;
+            }
 
-            actionResolver.BroadCastCount(handler.getMyCount());
-            if(actionResolver.requestOppoCount()>oldOppoCount) {
-                leftPuff.onClick(rightPuff, handler.getMyCount());
-                rightPuff.onClick(leftPuff, handler.getMyCount());
-                oldOppoCount = actionResolver.requestOppoCount();
-            }
-           // actionResolver.BroadCastCount(handler.getCount());
-          /*  if(handler.getCount()>oldMyCount){
-                leftPuff.onClick(rightPuff, handler.getCount());
-                rightPuff.onClick(leftPuff, handler.getCount());
-                oldMyCount = handler.getCount();
-            }
-*/
            // handler.update();
-         /*   AssetLoader.font.draw(batcher,actionResolver.requestOppoCount()+"",rightPuff.getX(),rightPuff.getY()-100);
-            ArrayList<String> participants = actionResolver.getParticipants();
+           AssetLoader.font.draw(batcher,actionResolver.requestOppGameState()+"",rightPuff.getX(),rightPuff.getY()-50);
+         /*   ArrayList<String> participants = actionResolver.getParticipants();
             String myId = actionResolver.getMyId();
             int player1 = participants.get(0).hashCode();
             int player2 = participants.get(1).hashCode();

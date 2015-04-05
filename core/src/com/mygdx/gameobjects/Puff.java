@@ -3,41 +3,34 @@ package com.mygdx.gameobjects;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.helpers.ActionResolver;
 import com.mygdx.helpers.Collision;
 
 // Main puff object. 
 // This object is the current users puff object. 
 
 public class Puff {
-
-    // contains the current postion of the puff object.
-    // updated by delta times as per the update method in the GameWorld to reflect the position.
+    //(x,y) coordinates of the Sumo
     private Vector2 position;
-
-    // It's not the velocity of the puff object.
-    // this vector allows to update the position of the puff delta times. (argument of the update method)
-    // technically, this is not required. But it does allow, separation of the two variables during click and no click.
+    //rate of change of position
     public Vector2 velocity;
 
-    // width and height;
-    // sets the width and height of the puff.
+    // sets the width and height of the Sumo.
     private int width;
     private int height;
 
+    //running direction
     private String run;
+    // indicate me
     private String id;
 
     // circle object used for detecting collision.
     private Circle boundingCircle;
-    private ActionResolver actionResolver;
     public static Boolean collide = false;
 
     // UserPuff's constructor.
-    public Puff(float x, float y, int width, int height, ActionResolver actionResolver,String run,String id) {
+    public Puff(float x, float y, int width, int height,String run,String id) {
         this.width = width;
         this.height = height;
-        this.actionResolver=actionResolver;
         this.run=run;
         this.id = id;
         position = new Vector2(x, y);
@@ -59,25 +52,25 @@ public class Puff {
     }
 
     // method called at every click/tap for updating the position.
-    public void onClick(Puff opponentPuff, int myCount) {
+    public synchronized void onClick(Puff opponentPuff, int myCount,int OppoCount) {
 
             if (collides(opponentPuff)) {
-                if(Math.abs(myCount-actionResolver.requestOppoCount())<2){
+                if(Math.abs(myCount-OppoCount)<2){
                     velocity.x=0;
                 }
                 else{
                 if ((id == "me" && run == "runtoright")) {
-                    Collision.updatedposition(myCount,actionResolver.requestOppoCount());
-                    velocity.x = Collision.getpositions();
+                    Collision.updatedposition(myCount,OppoCount);
+                    velocity.x = Collision.getVelocity();
                 } else if ((id == "notme" && run == "runtoleft")) {
-                    Collision.updatedposition(myCount,actionResolver.requestOppoCount());
-                    velocity.x = Collision.getpositions();
+                    Collision.updatedposition(myCount,OppoCount);
+                    velocity.x = Collision.getVelocity();
                 } else if (id == "notme" && run == "runtoright") {
-                    Collision.updatedposition(myCount,actionResolver.requestOppoCount());
-                    velocity.x = -Collision.getpositions();
+                    Collision.updatedposition(myCount,OppoCount);
+                    velocity.x = -Collision.getVelocity();
                 } else if ((id == "me" && run == "runtoleft")) {
-                    Collision.updatedposition(myCount,actionResolver.requestOppoCount());
-                    velocity.x = -Collision.getpositions();
+                    Collision.updatedposition(myCount,OppoCount);
+                    velocity.x = -Collision.getVelocity();
                 }
                 }
             }
@@ -85,9 +78,9 @@ public class Puff {
            else {
 
                     if (run == "runtoright") {
-                        velocity.x = 1;
+                        velocity.x = 0.5f;
                     } else {
-                        velocity.x = -1;
+                        velocity.x = -0.5f;
                     }
 
                 }

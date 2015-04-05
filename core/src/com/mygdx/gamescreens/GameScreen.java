@@ -17,36 +17,24 @@ public class GameScreen implements Screen {
     private Puff rightPuff;
     // variable for updating renderer at runTime.
     private float runTime;
+    private final int midPointX = Gdx.graphics.getWidth()/2;
 
     public GameScreen(ActionResolver actionResolver) {
         Gdx.app.log("GameScreen", "Attached");
-        // get the screenWidth and screenHeight using framework graphics.
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
-
-        // determined gameWidth.
-        float gameWidth = 136;
-        float gameHeight = screenHeight / (screenWidth / gameWidth); // not used? 
-
-        // midPoint of game screen.
-        int midPointX = (int) (gameWidth / 2);
-        world = new GameWorld(midPointX, actionResolver, gameHeight);
+        world = new GameWorld(actionResolver);
         InputHandler handler = new InputHandler(world,actionResolver);
         Gdx.input.setInputProcessor(handler);
-        renderer = new GameRenderer(world, (int) gameWidth,(int)gameHeight, midPointX,actionResolver,handler) ;
+        renderer = new GameRenderer(world,midPointX,actionResolver,handler) ;
     }
 
     @Override
     // render called by the framework at delta fps.
     public void render(float delta) {
-        runTime += delta;
+        runTime += 1/60f;
         // update the gameWorld.
         world.update(1/60f);
         // render the gameGraphics.
         renderer.render(runTime);
-//        leftPuff.update(delta);
-//        rightPuff.update(delta);
-
 
     }
 
@@ -79,6 +67,8 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         // Leave blank
+        // Need to dispose all the running class.but how?
+
     }
 
 }

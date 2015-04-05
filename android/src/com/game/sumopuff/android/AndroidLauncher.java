@@ -90,7 +90,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private int oppoCount = 0;
     private ArrayList<String> participants = new ArrayList<String>();
     private  byte[] bytes = new byte[5];
-    private int gameState = 1;
+    private int gameState = 0;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -649,23 +650,24 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     }
     @Override
-    public void updateGameState(int count) {
+    public void BroadCastMyGameState(int state) {
         bytes[0] = 's';
-        bytes[1] = (byte) ((gameState >> 24) & 0xFF);
-        bytes[2] = (byte) ((gameState >> 16) & 0xFF);
-        bytes[3] = (byte) ((gameState >> 8) & 0xFF);
-        bytes[4] = (byte) (gameState & 0xFF);
+        bytes[1] = (byte) ((state >> 24) & 0xFF);
+        bytes[2] = (byte) ((state >> 16) & 0xFF);
+        bytes[3] = (byte) ((state >> 8) & 0xFF);
+        bytes[4] = (byte) (state & 0xFF);
 
         for (Participant p : mParticipants) {
             if (p.getParticipantId().equals(mMyId))
                 continue;
             if (p.getStatus() != Participant.STATUS_JOINED)
                 continue;
-           // Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId, p.getParticipantId());
-            Games.RealTimeMultiplayer.sendUnreliableMessage(mGoogleApiClient,bytes,mRoomId,p.getParticipantId());
-
+            //Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(mGoogleApiClient,bytes,mRoomId);
+            Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient,null,bytes,mRoomId,p.getParticipantId());
         }
     }
+
+
 
 
     @Override
@@ -680,6 +682,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public int requestOppoCount(){
         return oppoCount;
     }
+
+
+
     @Override
     public int requestOppGameState() {
         return gameState;
@@ -775,7 +780,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         this.oppoCount = 0;
         this.participants = new ArrayList<>();
         this.bytes = new byte[5];
-        this.gameState = 1;
+        this.gameState = 0;
     }
 
 

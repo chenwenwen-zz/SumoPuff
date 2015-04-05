@@ -10,32 +10,25 @@ public class GameWorld {
 
 	private Puff leftPuff;
 	private Puff rightPuff;
+    private ActionResolver actionResolver;
 
 	// current game state.
 	private GameState currentState;
 	// gameOverReady is the "state" after winner picture is shown.s
 	public static boolean gameOverReady = false;
-	
-	// midPoint of the Game Screen.
-	// Only the "X" co-ordinate is used.
-	private int midPointX;
-	private float gameHeight;
+
 	
 	// Enum type for identifying game state.
 	public enum GameState {
-
-	    READY, RUNNING, GAMEOVER
-
+	   INITIALIZE, READY, RUNNING, GAMEOVER
 	}
 
 	
-	public GameWorld(int midPointX, ActionResolver actionResolver, float gameHeight) {
-		
-		this.midPointX = midPointX;
-		this.gameHeight = gameHeight;
-
+	public GameWorld(ActionResolver actionResolver) {
 		// initial state of the game when GameWorld is initialized. 
-		currentState = GameState.READY;
+		currentState = GameState.INITIALIZE;
+        this.actionResolver=actionResolver;
+
         try{
         ArrayList<String> participants = actionResolver.getParticipants();
         String myId = actionResolver.getMyId();
@@ -44,21 +37,21 @@ public class GameWorld {
         int me = myId.hashCode();
         if(player1 > player2){
            if(player1 == me){
-             leftPuff = new Puff(20, 120, 13, 24, actionResolver,"runtoright","me");
-             rightPuff = new Puff(105, 120, 13, 24, actionResolver,"runtoleft","notme");}
+             leftPuff = new Puff(20, 120, 13, 24,"runtoright","me");
+             rightPuff = new Puff(105, 120, 13, 24,"runtoleft","notme");}
            else{
-             leftPuff = new Puff(20, 120, 13, 24, actionResolver,"runtoright","notme");
-             rightPuff = new Puff(105, 120, 13, 24, actionResolver,"runtoleft","me");
+             leftPuff = new Puff(20, 120, 13, 24,"runtoright","notme");
+             rightPuff = new Puff(105, 120, 13, 24, "runtoleft","me");
            }
 
            }
         else{
             if(player1 == me){
-                leftPuff = new Puff(20, 120, 13, 24, actionResolver,"runtoright","notme");
-                rightPuff = new Puff(105, 120, 13, 24, actionResolver,"runtoleft","me");}
+                leftPuff = new Puff(20, 120, 13, 24,"runtoright","notme");
+                rightPuff = new Puff(105, 120, 13, 24,"runtoleft","me");}
             else{
-                leftPuff = new Puff(20, 120, 13, 24, actionResolver,"runtoright","me");
-                rightPuff = new Puff(105, 120, 13, 24, actionResolver,"runtoleft","notme");
+                leftPuff = new Puff(20, 120, 13, 24,"runtoright","me");
+                rightPuff = new Puff(105, 120, 13, 24,"runtoleft","notme");
             }
         }
        }
@@ -72,8 +65,11 @@ public class GameWorld {
 	public void update(float delta) {
 		// update different objects depending on currentState.
 		 switch (currentState) {
-
 		 	// initial game state whenever the game starts. Set by default.
+            case INITIALIZE:
+                updateInitialize(delta);
+                break;
+            //When Both collides
 	        case READY:
 	        	// function called just to differentiate.
 	            updateReady(delta);
@@ -87,11 +83,16 @@ public class GameWorld {
 	        }
 	}
 
+    private void updateInitialize(float delta){
+
+    }
+
+
 	private void updateRunning(float delta) {
 		// updating the myPuff at delta times.
 
-            leftPuff.update(delta);
-            rightPuff.update(delta);
+           leftPuff.update(delta);
+           rightPuff.update(delta);
 
 		// if the puff collides, momentarily change their velocity to zero.	
 		if(leftPuff.collides(rightPuff)){
@@ -117,6 +118,9 @@ public class GameWorld {
 	private void updateReady(float delta) {
 		// TODO Auto-generated method stub
 		// since the renderer renders the ready state items automatically, nothing is called here.
+        if(actionResolver.requestOppGameState()==1){
+            currentState = GameState.RUNNING;
+        }
 	}
 	
 	public Puff getLeftPuff(){
@@ -126,44 +130,36 @@ public class GameWorld {
 	public Puff getRightPuff(){
 		return rightPuff;
 	}
-	
-	public boolean isReady() {
-		
-        return currentState == GameState.READY;
-    }
-	
-	public void start() {
-        currentState = GameState.RUNNING;
-    }
 
+    public void ready() {currentState =GameState.READY;}
+	public void start() {
+     currentState = GameState.RUNNING;
+    }
+    public void gameOver(){currentState = GameState.GAMEOVER;}
+
+    public boolean isInitialized(){ return currentState== GameState.INITIALIZE;}
+    public boolean isReady() {return currentState == GameState.READY;}
     public boolean isStart(){
         return currentState == GameState.RUNNING;
     }
-	
+    public boolean isGameOver() {
+        return currentState == GameState.GAMEOVER;
+    }
+    public boolean isGameOverReady(){
+        return gameOverReady;
+    }
+
 	public void restart() {
-        currentState = GameState.READY;
+        currentState = GameState.INITIALIZE;
         gameOverReady = false;
         leftPuff.reset(20, 120, 13, 24);
         rightPuff.reset(105, 120, 13, 24);
         leftPuff.collide = false;
         rightPuff.collide = false;
-        currentState = GameState.READY;
+        actionResolver.BroadCastMyGameState(0);
+
     }
 	
-	 public boolean isGameOver() {
-	        return currentState == GameState.GAMEOVER;
-	 }
-	
-	 public boolean isGameOverReady(){
-		return gameOverReady;
-	 }
 
-	public int getMidPoint(){
-		return midPointX;
-	}
-
-	public float getGameHeight(){
-		return gameHeight;
-	}
 
 }

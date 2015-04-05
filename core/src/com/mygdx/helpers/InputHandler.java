@@ -15,7 +15,9 @@ public class InputHandler implements InputProcessor {
 	private Puff rightPuff;
     private ActionResolver actionResolver;
     private int myCount=0;
-    private int myPreviousCount=1;
+    private int timer=2;
+    private final int readyState=1;
+
 
 
 
@@ -34,40 +36,34 @@ public class InputHandler implements InputProcessor {
         Vector3 coords2= GameRenderer.unprojectCoords(coords);
         screenX=(int) coords2.x;
         screenY=(int) coords2.y;
-		 if (myWorld.isReady()) {
-			 myWorld.start();
-             return true;
-		}
-        if(myWorld.isStart()){
-               myCount++;
-               if(myCount==myPreviousCount){
-               actionResolver.BroadCastCount(myCount);
-               myPreviousCount += myPreviousCount;
-               }
-               leftPuff.onClick(rightPuff, myCount);
-               rightPuff.onClick(leftPuff, myCount);
+        if(myWorld.isInitialized()){
+            actionResolver.BroadCastMyGameState(readyState);
+            myWorld.ready();
+        }
 
+        if(myWorld.isStart()&& actionResolver.requestOppGameState()!=3){
+               myCount++;
+               actionResolver.BroadCastCount(myCount);
         }
 
 		if (myWorld.isGameOverReady()) {
-            if(6<=screenX && 60>=screenX && 80<=screenY && 100>=screenY){
-//			if (screenX < myWorld.getMidPoint() && screenY > 0){
+            if (6 <= screenX && 60 >= screenX && 80 <= screenY && 100 >= screenY) {
                 // Reset all variables, go to GameState.READY
-                Gdx.app.log("QuitTesting","Restarted");
-                myCount=0;
+                Gdx.app.log("QuitTesting", "Restarted");
+                myCount = 0;
                 actionResolver.BroadCastCount(myCount);
                 myWorld.restart();
             }
 
             //quit screen is clicked
-            if(66<screenX && 100>=screenX && 80<=screenY && 100>=screenY){
+            if (66 < screenX && 100 >= screenX && 80 <= screenY && 100 >= screenY) {
 //			if (screenX >= myWorld.getMidPoint() && screenY > 0){
                 // System.out.println("quit");
                 Gdx.app.log("QuitTesting", "Exitted");
-                myCount=0;
+                myCount = 0;
                 Gdx.app.exit();
             }
-		}
+        }
 
 			return true;
 	}
