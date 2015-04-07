@@ -43,6 +43,8 @@ public class GameRenderer {
     // Variables
     private int OppoCount;
     private int timer = 0;
+    private float leftPuffX=0;
+    private float rightPuffX=0;
 
     //Aspect Ratio and Scaling Components
     private static final int VIRTUAL_WIDTH = 800;
@@ -146,13 +148,7 @@ public class GameRenderer {
             batcher.draw(AssetLoader.puffDefaulta, rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
             batcher.draw(AssetLoader.ready,50, 50, 50, 25);
 		}
-        else if (myWorld.isPowerUp()){
 
-
-            //do add the necessary animation
-
-//            batcher.draw
-        }
 
 		//GAMESTATE = OVER
 		else if(myWorld.isGameOver()){
@@ -187,6 +183,9 @@ public class GameRenderer {
 				falldistance--;
 			}
             actionResolver.BroadCastMyGameState(3);
+            if(leftPuff.getId().equals("player1")&& actionResolver.requestOppGameState()!=3){
+                actionResolver.updateLeftPuffX(leftPuff.getX());
+                actionResolver.updateRightPuffX(rightPuff.getX());}
 		}
 
 		//GAMESTATE = RUNNING
@@ -196,10 +195,17 @@ public class GameRenderer {
 			}
 			++showStart;
             if(leftPuff.collides(rightPuff)){
-            OppoCount = actionResolver.requestOppoCount();}
+            OppoCount = actionResolver.requestOppoCount();
+            }
+            leftPuffX=actionResolver.requestLeftPuffX();
+            rightPuffX=actionResolver.requestRightPuffX();
             if(timer==2){
-            leftPuff.onClick(rightPuff, handler.getMyCount(),OppoCount);
-            rightPuff.onClick(leftPuff, handler.getMyCount(),OppoCount);
+                if(leftPuff.getId().equals("player1")){
+                    actionResolver.updateLeftPuffX(leftPuff.getX());
+                    actionResolver.updateRightPuffX(rightPuff.getX());}
+
+            leftPuff.onClick(rightPuff, handler.getMyCount(),OppoCount,leftPuffX,rightPuffX);
+            rightPuff.onClick(leftPuff, handler.getMyCount(),OppoCount,leftPuffX,rightPuffX);
             timer=0;
             }
             else {
@@ -227,7 +233,7 @@ public class GameRenderer {
                     AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);}
 
             }*/
-            AssetLoader.font.draw(batcher, leftPuff.getX() + " ", leftPuff.getX(), leftPuff.getY() - 80);
+            AssetLoader.font.draw(batcher,leftPuff.getX()+" ", leftPuff.getX(), leftPuff.getY() - 80);
             AssetLoader.font.draw(batcher,rightPuff.getX()+" ",rightPuff.getX(),rightPuff.getY()-100);
 
 			batcher.draw(AssetLoader.runningAnimation.getKeyFrame(runTime), leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());

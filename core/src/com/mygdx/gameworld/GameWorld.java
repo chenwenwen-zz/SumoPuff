@@ -1,6 +1,5 @@
 package com.mygdx.gameworld;
 
-import com.badlogic.gdx.utils.Timer;
 import com.mygdx.gameobjects.Puff;
 import com.mygdx.helpers.ActionResolver;
 
@@ -21,7 +20,7 @@ public class GameWorld {
 	
 	// Enum type for identifying game state.
 	public enum GameState {
-	   INITIALIZE, READY, RUNNING, GAMEOVER, POWERUP
+	   INITIALIZE, READY, RUNNING, GAMEOVER
 	}
 
 	
@@ -38,21 +37,21 @@ public class GameWorld {
         int me = myId.hashCode();
         if(player1 > player2){
            if(player1 == me){
-             leftPuff = new Puff(20, 120, 13, 24,"runtoright","me");
-             rightPuff = new Puff(105, 120, 13, 24,"runtoleft","notme");}
+             leftPuff = new Puff(20, 120, 13, 24,"runtoright","player1");
+             rightPuff = new Puff(105, 120, 13, 24,"runtoleft","player1");}
            else{
-             leftPuff = new Puff(20, 120, 13, 24,"runtoright","notme");
-             rightPuff = new Puff(105, 120, 13, 24, "runtoleft","me");
+             leftPuff = new Puff(20, 120, 13, 24,"runtoright","player2");
+             rightPuff = new Puff(105, 120, 13, 24, "runtoleft","player2");
            }
 
            }
         else{
             if(player1 == me){
-                leftPuff = new Puff(20, 120, 13, 24,"runtoright","notme");
-                rightPuff = new Puff(105, 120, 13, 24,"runtoleft","me");}
+                leftPuff = new Puff(20, 120, 13, 24,"runtoright","player2");
+                rightPuff = new Puff(105, 120, 13, 24,"runtoleft","player2");}
             else{
-                leftPuff = new Puff(20, 120, 13, 24,"runtoright","me");
-                rightPuff = new Puff(105, 120, 13, 24,"runtoleft","notme");
+                leftPuff = new Puff(20, 120, 13, 24,"runtoright","player1");
+                rightPuff = new Puff(105, 120, 13, 24,"runtoleft","player1");
             }
         }
        }
@@ -81,10 +80,6 @@ public class GameWorld {
 	        default:
 	            updateRunning(delta);
 	            break;
-
-             case POWERUP:
-                 updatePowerup(delta);
-                 break;
 	        }
 	}
 
@@ -117,16 +112,8 @@ public class GameWorld {
 			rightPuff.stop();
 			currentState = GameState.GAMEOVER;
 		}
-        //implementing timer
-        Timer timer = new Timer();
-        Timer.schedule(new Timer.Task(){
-            @Override
-            public void run() {
-                currentState=GameState.POWERUP;
-            }
-        }, 5f);
-
-    }
+		
+	}
 	
 	private void updateReady(float delta) {
 		// TODO Auto-generated method stub
@@ -134,33 +121,8 @@ public class GameWorld {
         if(actionResolver.requestOppGameState()==1){
             currentState = GameState.RUNNING;
         }
-
-
-
-    }
-
-    private void updatePowerup(float delta) {
-        // TODO Auto-generated method stub
-        // since the renderer renders the ready state items automatically, nothing is called here.
-        if(actionResolver.requestOppGameState()==2){   //number has to double check, most prob wrong
-            currentState = GameState.POWERUP;
-        }
-        Timer.schedule(new Timer.Task(){
-            @Override
-            public void run() {
-                currentState=GameState.RUNNING;
-            }
-        }, 50f);
-
-
-
-    }
-
-
-
-
-
-
+	}
+	
 	public Puff getLeftPuff(){
 		return leftPuff;
 	}
@@ -195,11 +157,6 @@ public class GameWorld {
         leftPuff.collide = false;
         rightPuff.collide = false;
         actionResolver.BroadCastMyGameState(0);
-
-    }
-    public boolean isPowerUp(){
-        actionResolver.BroadCastMyGameState(2);
-        return currentState == GameState.POWERUP;
 
     }
 	

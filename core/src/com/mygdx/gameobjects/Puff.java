@@ -14,14 +14,19 @@ public class Puff {
     //rate of change of position
     public Vector2 velocity;
 
+  //  private Vector2 newPosition;
+
     // sets the width and height of the Sumo.
     private int width;
     private int height;
 
     //running direction
     private String run;
-    // indicate me
+    // indicate player
     private String id;
+
+    //
+    private final float y;
 
     // circle object used for detecting collision.
     private Circle boundingCircle;
@@ -33,6 +38,7 @@ public class Puff {
         this.height = height;
         this.run=run;
         this.id = id;
+        this.y = y;
         position = new Vector2(x, y);
         velocity = new Vector2(0, 0);
         boundingCircle = new Circle();
@@ -40,7 +46,11 @@ public class Puff {
     }
 
     public void update(float delta) {
-        position.add(velocity.cpy());
+        if(collide==false || id.equals("player1"))
+          position.add(velocity.cpy());
+        /*else {
+          position.cpy();
+        }*/
 //        boundingCircle.set(position.x + 6.5f, position.y, 6.4f);
         boundingCircle.set(position.x + 6.5f, position.y, 6.4f);
 
@@ -52,32 +62,30 @@ public class Puff {
     }
 
     // method called at every click/tap for updating the position.
-    public synchronized void onClick(Puff opponentPuff, int myCount,int OppoCount) {
+    public synchronized void onClick(Puff opponentPuff, int myCount,int OppoCount,float leftPuffX,float rightPuffX) {
 
             if (collides(opponentPuff)) {
-                if(Math.abs(myCount-OppoCount)<2){
-                    velocity.x=0;
-                }
-                else{
-                if ((id == "me" && run == "runtoright")) {
-                    Collision.updatedposition(myCount,OppoCount);
+            if(id.equals("player1")) {
+                if (Math.abs(myCount - OppoCount)==0) {
+                    velocity.x = 0;
+                } else {
+                    Collision.updatedposition(myCount, OppoCount);
                     velocity.x = Collision.getVelocity();
-                } else if ((id == "notme" && run == "runtoleft")) {
-                    Collision.updatedposition(myCount,OppoCount);
-                    velocity.x = Collision.getVelocity();
-                } else if (id == "notme" && run == "runtoright") {
-                    Collision.updatedposition(myCount,OppoCount);
-                    velocity.x = -Collision.getVelocity();
-                } else if ((id == "me" && run == "runtoleft")) {
-                    Collision.updatedposition(myCount,OppoCount);
-                    velocity.x = -Collision.getVelocity();
                 }
-                }
+
             }
-                // handles default case: userPuff is running
+            else if(id.equals("player2")){
+                 if(run.equals("runtoright"))
+                     position.set(leftPuffX,y);
+                 else
+                     position.set(rightPuffX,y);
+            }
+
+            }
+             // handles default case: userPuff is running
            else {
 
-                    if (run == "runtoright") {
+                    if(run.equals("runtoright")) {
                         velocity.x = 0.5f;
                     } else {
                         velocity.x = -0.5f;
@@ -102,6 +110,9 @@ public class Puff {
     }
 
 
+    public String getId(){
+        return id;
+    }
 
     public float getX() {
         return position.x;
