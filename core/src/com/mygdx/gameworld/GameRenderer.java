@@ -15,6 +15,8 @@ import com.mygdx.helpers.ActionResolver;
 import com.mygdx.helpers.AssetLoader;
 import com.mygdx.helpers.InputHandler;
 
+import java.util.ArrayList;
+
 // class which renders everything
 public class GameRenderer {
 
@@ -69,7 +71,7 @@ public class GameRenderer {
         this.handler = handler;
 
 		cam = new OrthographicCamera();
-		cam.setToOrtho(true, 136, 160);
+		cam.setToOrtho(true, 150, 160);
 
 		batcher = new SpriteBatch();
 		batcher.setProjectionMatrix(cam.combined);
@@ -124,29 +126,76 @@ public class GameRenderer {
         Gdx.gl.glViewport((int) viewport.x, (int) viewport.y, (int) viewport.width, (int) viewport.height);
         //End aspect ratio conversion
 
+
+        ArrayList<String> participants = actionResolver.getParticipants();
+        String myId = actionResolver.getMyId();
+        int player1 = participants.get(0).hashCode();
+        int player2 = participants.get(1).hashCode();
+        int me = myId.hashCode();
+
 		// Begin SpriteBatch
 		batcher.begin();
 
 		// Disable transparency
 		// This is good for performance when drawing images that do not require transparency.
 		batcher.disableBlending();
-		batcher.draw(AssetLoader.bg, 0, 0, 140, 160);
+		batcher.draw(AssetLoader.background, 0, 0, 150, 160);
         AssetLoader.font.draw(batcher,actionResolver.requestOppGameState()+"",rightPuff.getX(),rightPuff.getY()-50);
 		// The userPuff needs transparency, so we enable that again.
 		batcher.enableBlending();
 
         //GAMESTATE = INITIALIZE
         if(myWorld.isInitialized()){
-            batcher.draw(AssetLoader.puffDefault,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
-            batcher.draw(AssetLoader.puffDefaulta, rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
+            batcher.draw(AssetLoader.defaultRed,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
+            batcher.draw(AssetLoader.defaultBlue, rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
+            if(player1 > player2){
+                if(player1 == me){
+                    batcher.draw(AssetLoader.arrow,leftPuff.getX()+4,leftPuff.getY()-15,10,15);
+                    //AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);
+                }
+                else{
+                    batcher.draw(AssetLoader.arrow,rightPuff.getX()+4,rightPuff.getY()-15,10,15);
+                    //AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);
+                }
+            }
+            else{
+                if(player1 == me){
+                    batcher.draw(AssetLoader.arrow,rightPuff.getX()+4,rightPuff.getY()-15,10,15);
+                    //AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);
+                }
+                else{
+                    batcher.draw(AssetLoader.arrow,leftPuff.getX()+4,leftPuff.getY()-15,10,15);
+                    //AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);
+                }
+            }
         }
 
 		// GAMESTATE = READY
 		if (myWorld.isReady()){
             falldistance = 0;
-            batcher.draw(AssetLoader.puffDefault,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
-            batcher.draw(AssetLoader.puffDefaulta, rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
+            batcher.draw(AssetLoader.defaultRed,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
+            batcher.draw(AssetLoader.defaultBlue, rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
             batcher.draw(AssetLoader.ready,50, 50, 50, 25);
+            if(player1 > player2){
+                if(player1 == me){
+                    batcher.draw(AssetLoader.arrow,leftPuff.getX()+4,leftPuff.getY()-15,10,15);
+                    //AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);
+                }
+                else{
+                    batcher.draw(AssetLoader.arrow,rightPuff.getX()+4,rightPuff.getY()-15,10,15);
+                    //AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);
+                }
+            }
+            else{
+                if(player1 == me){
+                    batcher.draw(AssetLoader.arrow,rightPuff.getX()+4,rightPuff.getY()-15,10,15);
+                    //AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);
+                }
+                else{
+                    batcher.draw(AssetLoader.arrow,leftPuff.getX()+4,leftPuff.getY()-15,10,15);
+                    //AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);
+                }
+            }
 		}
 
 
@@ -155,14 +204,39 @@ public class GameRenderer {
 			showStart =0;
 			//if userPuff loses
 			if (myWorld.getLeftPuff().getX()<15){
-				batcher.draw(AssetLoader.puffFall,  (leftPuff.getX()+falldistance+3), leftPuff.getY()-(fallcurve(falldistance))/10, leftPuff.getWidth(), leftPuff.getHeight());
-				batcher.draw(AssetLoader.puffDefaulta,  rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
+				batcher.draw(AssetLoader.redFall,  (leftPuff.getX()+falldistance+3), leftPuff.getY()-(fallcurve(falldistance))/10, leftPuff.getWidth(), leftPuff.getHeight());
+				batcher.draw(AssetLoader.defaultBlue,  rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
 				if (falldistance<-40){
-					batcher.draw(AssetLoader.winner, 0, 0, 138, 160);
-				}
+
+                    if(player1 > player2){
+                        if(player1 == me){
+                            batcher.draw(AssetLoader.redLoser, 0, 0, 150, 160);
+                            //batcher.draw(AssetLoader.arrow,leftPuff.getX()+4,leftPuff.getY()-15,10,15);
+                            //AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);
+                        }
+                        else{
+                            batcher.draw(AssetLoader.blueWinner, 0, 0, 150, 160);
+                            //batcher.draw(AssetLoader.arrow,rightPuff.getX()+4,rightPuff.getY()-15,10,15);
+                            //AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);
+                        }
+                    }
+                    else{
+                        if(player1 == me){
+                            batcher.draw(AssetLoader.blueWinner, 0, 0, 150, 160);
+                            //batcher.draw(AssetLoader.arrow,rightPuff.getX()+4,rightPuff.getY()-15,10,15);
+                            //AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);
+                        }
+                        else{
+                            batcher.draw(AssetLoader.redLoser, 0, 0, 150, 160);
+                            //batcher.draw(AssetLoader.arrow,leftPuff.getX()+4,leftPuff.getY()-15,10,15);
+                            //AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);
+                        }
+                    }
+
+                }
 				if (falldistance<-45){
-					batcher.draw(AssetLoader.playAgain,8, 80, 50, 25);
-					batcher.draw(AssetLoader.quit,85, 80, 40, 25);}
+					batcher.draw(AssetLoader.playAgain,5, 80, 40, 30);
+					batcher.draw(AssetLoader.quit,112 , 85, 25, 15);}
 				if (falldistance<-50){
 					myWorld.gameOverReady = true;}
 				falldistance--;}
@@ -170,14 +244,40 @@ public class GameRenderer {
 			//if oppPuff loses
 			if (myWorld.getRightPuff().getX()>110){
 
-				batcher.draw(AssetLoader.puffFalla,  (rightPuff.getX()-falldistance-3), rightPuff.getY()-(fallcurve(falldistance))/10, rightPuff.getWidth(), rightPuff.getHeight());
-				batcher.draw(AssetLoader.puffDefault,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
+				batcher.draw(AssetLoader.blueFall,  (rightPuff.getX()-falldistance-3), rightPuff.getY()-(fallcurve(falldistance))/10, rightPuff.getWidth(), rightPuff.getHeight());
+				batcher.draw(AssetLoader.defaultRed,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
 				if (falldistance<-40){
-					batcher.draw(AssetLoader.winner, 0, 0, 138, 160);
+
+                    if(player1 > player2){
+                        if(player1 == me){
+                            batcher.draw(AssetLoader.redWinner, 0, 0, 150, 160);
+                            //batcher.draw(AssetLoader.arrow,leftPuff.getX()+4,leftPuff.getY()-15,10,15);
+                            //AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);
+                        }
+                        else{
+                            batcher.draw(AssetLoader.blueLoser, 0, 0, 150, 160);
+                            //batcher.draw(AssetLoader.arrow,rightPuff.getX()+4,rightPuff.getY()-15,10,15);
+                            //AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);
+                        }
+                    }
+                    else{
+                        if(player1 == me){
+                            batcher.draw(AssetLoader.blueLoser, 0, 0, 150, 160);
+                            //batcher.draw(AssetLoader.arrow,rightPuff.getX()+4,rightPuff.getY()-15,10,15);
+                            //AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);
+                        }
+                        else{
+                            batcher.draw(AssetLoader.redWinner, 0, 0, 150, 160);
+                            //batcher.draw(AssetLoader.arrow,leftPuff.getX()+4,leftPuff.getY()-15,10,15);
+                            //AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);
+                        }
+                    }
+
+
 				}
 				if (falldistance<-45){
-					batcher.draw(AssetLoader.playAgain, 8, 80, 50, 25);
-					batcher.draw(AssetLoader.quit, 85, 80, 40, 25);}
+					batcher.draw(AssetLoader.playAgain, 5, 80, 40, 30);
+					batcher.draw(AssetLoader.quit, 112, 85, 25, 15);}
 				if (falldistance<-50){
 					myWorld.gameOverReady = true;}
 				falldistance--;
@@ -218,46 +318,53 @@ public class GameRenderer {
             String myId = actionResolver.getMyId();
             int player1 = participants.get(0).hashCode();
             int player2 = participants.get(1).hashCode();
-            int me = myId.hashCode();
+            int me = myId.hashCode();*/
             if(player1 > player2){
                 if(player1 == me){
-                    AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);}
+                    batcher.draw(AssetLoader.arrow,leftPuff.getX()+4,leftPuff.getY()-15,10,15);
+                    //AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);
+                    }
                 else{
-                    AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);}}
-
+                    batcher.draw(AssetLoader.arrow,rightPuff.getX()+4,rightPuff.getY()-15,10,15);
+                    //AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);
+                }
+            }
             else{
                 if(player1 == me){
-                    AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);
+                    batcher.draw(AssetLoader.arrow,rightPuff.getX()+4,rightPuff.getY()-15,10,15);
+                    //AssetLoader.font.draw(batcher,"me",rightPuff.getX(),rightPuff.getY()-50);
                 }
                 else{
-                    AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);}
+                    batcher.draw(AssetLoader.arrow,leftPuff.getX()+4,leftPuff.getY()-15,10,15);
+                    //AssetLoader.font.draw(batcher,"me",leftPuff.getX(),leftPuff.getY()-50);
+                    }
+            }
 
-            }*/
             AssetLoader.font.draw(batcher,leftPuff.getX()+" ", leftPuff.getX(), leftPuff.getY() - 80);
             AssetLoader.font.draw(batcher,rightPuff.getX()+" ",rightPuff.getX(),rightPuff.getY()-100);
 
-			batcher.draw(AssetLoader.runningAnimation.getKeyFrame(runTime), leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
-			batcher.draw(AssetLoader.runningAnimation1.getKeyFrame(runTime), rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
+			batcher.draw(AssetLoader.runningAnimationRed.getKeyFrame(runTime), leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
+			batcher.draw(AssetLoader.runningAnimationBlue.getKeyFrame(runTime), rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
 		}
 		// End SpriteBatch
 
 		batcher.end();
-		shapeRenderer.begin(ShapeType.Filled);
+		//shapeRenderer.begin(ShapeType.Filled);
 
         
 		if (myWorld.isGameOver()){
 		}
 		else{
-			shapeRenderer.setColor(Color.RED);
-			shapeRenderer.circle(leftPuff.getBoundingCircle().x, leftPuff.getBoundingCircle().y, leftPuff.getBoundingCircle().radius);
-			shapeRenderer1.begin(ShapeType.Line);
-			shapeRenderer1.setColor(Color.BLUE);
-			shapeRenderer1.circle(rightPuff.getBoundingCircle().x, rightPuff.getBoundingCircle().y, rightPuff.getBoundingCircle().radius);
+//			shapeRenderer.setColor(Color.RED);
+//			shapeRenderer.circle(leftPuff.getBoundingCircle().x, leftPuff.getBoundingCircle().y, leftPuff.getBoundingCircle().radius);
+//			shapeRenderer1.begin(ShapeType.Line);
+//			shapeRenderer1.setColor(Color.BLUE);
+//			shapeRenderer1.circle(rightPuff.getBoundingCircle().x, rightPuff.getBoundingCircle().y, rightPuff.getBoundingCircle().radius);
 		}
 
 
-        shapeRenderer.end();
-        shapeRenderer1.end();
+        //shapeRenderer.end();
+        //shapeRenderer1.end();
 	}
     //method to convert real phone coordinates to scaled coordinates, used by input handler
     public static Vector3 unprojectCoords(Vector3 coords){

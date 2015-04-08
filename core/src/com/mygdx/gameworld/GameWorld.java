@@ -37,21 +37,21 @@ public class GameWorld {
         int me = myId.hashCode();
         if(player1 > player2){
            if(player1 == me){
-             leftPuff = new Puff(20, 120, 13, 24,"runtoright","player1");
-             rightPuff = new Puff(105, 120, 13, 24,"runtoleft","player1");}
+             leftPuff = new Puff(20, 100, 22, 45,"runtoright","player1");
+             rightPuff = new Puff(108, 100, 22, 45,"runtoleft","player1");}
            else{
-             leftPuff = new Puff(20, 120, 13, 24,"runtoright","player2");
-             rightPuff = new Puff(105, 120, 13, 24, "runtoleft","player2");
+             leftPuff = new Puff(20, 100, 22, 45,"runtoright","player2");
+             rightPuff = new Puff(108, 100, 22, 45, "runtoleft","player2");
            }
 
            }
         else{
             if(player1 == me){
-                leftPuff = new Puff(20, 120, 13, 24,"runtoright","player2");
-                rightPuff = new Puff(105, 120, 13, 24,"runtoleft","player2");}
+                leftPuff = new Puff(20, 100, 22, 45,"runtoright","player2");
+                rightPuff = new Puff(108, 100, 22, 45,"runtoleft","player2");}
             else{
-                leftPuff = new Puff(20, 120, 13, 24,"runtoright","player1");
-                rightPuff = new Puff(105, 120, 13, 24,"runtoleft","player1");
+                leftPuff = new Puff(20, 100, 22, 45,"runtoright","player1");
+                rightPuff = new Puff(108, 100, 22, 45,"runtoleft","player1");
             }
         }
        }
@@ -107,7 +107,7 @@ public class GameWorld {
 		}
 		
 		//OpponentPuff loses
-		if (rightPuff.getX() > 110){
+		if (rightPuff.getX() > 115){
 			leftPuff.stop();
 			rightPuff.stop();
 			currentState = GameState.GAMEOVER;
@@ -152,8 +152,8 @@ public class GameWorld {
 	public void restart() {
         currentState = GameState.INITIALIZE;
         gameOverReady = false;
-        leftPuff.reset(20, 120, 13, 24);
-        rightPuff.reset(105, 120, 13, 24);
+        leftPuff.reset(20, 100, 22, 45);
+        rightPuff.reset(108, 100, 22, 45);
         leftPuff.collide = false;
         rightPuff.collide = false;
         actionResolver.BroadCastMyGameState(0);

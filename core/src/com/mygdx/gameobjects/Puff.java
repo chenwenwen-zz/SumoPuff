@@ -52,7 +52,7 @@ public class Puff {
           position.cpy();
         }*/
 //        boundingCircle.set(position.x + 6.5f, position.y, 6.4f);
-        boundingCircle.set(position.x + 6.5f, position.y, 6.4f);
+        boundingCircle.set(position.x + 10f, position.y, 10f);
 
     }
 

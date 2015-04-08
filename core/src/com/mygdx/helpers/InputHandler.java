@@ -47,7 +47,7 @@ public class InputHandler implements InputProcessor {
         }
 
 		if (myWorld.isGameOverReady()) {
-            if (6 <= screenX && 60 >= screenX && 80 <= screenY && 100 >= screenY) {
+            if (4<=screenX && 45>=screenX && 45<=screenY && 110>=screenY) {
                 // Reset all variables, go to GameState.READY
                 Gdx.app.log("QuitTesting", "Restarted");
                 myCount = 0;
@@ -56,7 +56,7 @@ public class InputHandler implements InputProcessor {
             }
 
             //quit screen is clicked
-            if (66 < screenX && 100 >= screenX && 80 <= screenY && 100 >= screenY) {
+            if (113<=screenX && 140>=screenX && 83<=screenY && 101>=screenY) {
 //			if (screenX >= myWorld.getMidPoint() && screenY > 0){
                 // System.out.println("quit");
                 Gdx.app.log("QuitTesting", "Exitted");
