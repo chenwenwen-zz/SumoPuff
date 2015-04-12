@@ -173,12 +173,21 @@ public class GameRenderer {
 
         //GAMESTATE = INITIALIZE
         if(myWorld.isInitialized()){
+
+           batcher.draw(AssetLoader.powerupBackground, 0,0,150,160);
+           batcher.draw(AssetLoader.chooseapower,10,10,130,25);
            if(powerUpsSelection.get("ramen")==false)
-           batcher.draw(AssetLoader.ramen,50,50,15,20);
+                batcher.draw(AssetLoader.ramenpower,27,45,30,100);
+            else
+                batcher.draw(AssetLoader.bwramenpower,27,45,30,100);
            if(powerUpsSelection.get("riceBall")==false)
-           batcher.draw(AssetLoader.riceball,70,50,15,20);
+                batcher.draw(AssetLoader.riceballpower,60,45,30,100);
+            else
+                batcher.draw(AssetLoader.bwriceballpower,60,45,30,100);
            if(powerUpsSelection.get("iceCream")==false)
-           batcher.draw(AssetLoader.iceCream,90,50,15,20);
+                batcher.draw(AssetLoader.iceCreampower,93, 45,30,100);
+            else
+                batcher.draw(AssetLoader.bwiceCreampower,93, 45,30,100);
 
         }
 

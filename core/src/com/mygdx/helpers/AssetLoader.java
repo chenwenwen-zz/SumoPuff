@@ -8,13 +8,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AssetLoader {
     public static Texture texture;
-    public static TextureRegion background,initialBackGround;
+    public static TextureRegion background,powerupBackground;
+    public static TextureRegion redFlash;
+
 
     public static Animation runningAnimationRed,runningAnimationBlue;
+
+     public static TextureRegion ramen,bwramen,riceball,bwriceball,iceCream,bwiceCream,ramenpower, bwramenpower, riceballpower, bwriceballpower, iceCreampower,bwiceCreampower, chooseapower;
+
     public static TextureRegion defaultRed, defaultBlue, redRun1, redRun2, redFall, blueRun1 ,blueRun2, blueFall;
     public static TextureRegion egg0,egg1,egg2,egg3,egg4,egg5,egg6,egg7,egg8,egg9;
-
-    public static TextureRegion ramen,riceball,iceCream;
     
     public static TextureRegion arrow,ready,start,redWinner, blueWinner, redLoser,blueLoser,playAgain,quit;
     public static BitmapFont font,shadow;
@@ -26,11 +29,13 @@ public class AssetLoader {
         /* @ Ching Yan, your part to comment if need be. */
         background = new TextureRegion(new Texture(Gdx.files.internal("background.png")));
         background.flip(false, true);
-        initialBackGround = new TextureRegion(new Texture(Gdx.files.internal("powerupscreen.png")));
-        initialBackGround.flip(false,true);
+        powerupBackground = new TextureRegion(new Texture(Gdx.files.internal("powerupbackground.png")));
+        powerupBackground.flip(false,true);
 
-        
-     	defaultRed = new TextureRegion(new Texture(Gdx.files.internal("defaultred.png")));
+        redFlash = new TextureRegion(new Texture(Gdx.files.internal("redflash.png")));
+        redFlash.flip(false, true);
+     	
+        defaultRed = new TextureRegion(new Texture(Gdx.files.internal("defaultred.png")));
         defaultRed.flip(false, true);
 
         redRun1 = new TextureRegion(new Texture(Gdx.files.internal("redrun1.png")));
@@ -86,11 +91,34 @@ public class AssetLoader {
         playAgain.flip(false, true);
 
         ramen = new TextureRegion(new Texture(Gdx.files.internal("ramen.png")));
-        ramen.flip(false,true);
+        ramen.flip(false, true);
+        bwramen = new TextureRegion(new Texture(Gdx.files.internal("bwramen.png")));
+        bwramen.flip(false, true);
+        ramenpower = new TextureRegion(new Texture(Gdx.files.internal("ramenpower.png")));
+        ramenpower.flip(false, true);
+        bwramenpower = new TextureRegion(new Texture(Gdx.files.internal("bwramenpower.png")));
+        bwramenpower.flip(false, true);
+        
         riceball = new TextureRegion(new Texture(Gdx.files.internal("riceball.png")));
-        riceball.flip(false,true);
+        riceball.flip(false, true);
+        bwriceball = new TextureRegion(new Texture(Gdx.files.internal("bwriceball.png")));
+        bwriceball.flip(false, true);
+        riceballpower = new TextureRegion(new Texture(Gdx.files.internal("riceballpower.png")));
+        riceballpower.flip(false, true);
+        bwriceballpower = new TextureRegion(new Texture(Gdx.files.internal("bwriceballpower.png")));
+        bwriceballpower.flip(false, true);
+        
         iceCream = new TextureRegion(new Texture(Gdx.files.internal("icecream.png")));
-        iceCream.flip(false,true);
+        iceCream.flip(false, true);
+        bwiceCream = new TextureRegion(new Texture(Gdx.files.internal("bwicecream.png")));
+        bwiceCream.flip(false, true);
+        iceCreampower = new TextureRegion(new Texture(Gdx.files.internal("icecreampower.png")));
+        iceCreampower.flip(false, true);
+        bwiceCreampower = new TextureRegion(new Texture(Gdx.files.internal("bwicecreampower.png")));
+        bwiceCreampower.flip(false, true);
+        
+        chooseapower = new TextureRegion(new Texture(Gdx.files.internal("chooseapower.png")));
+        chooseapower.flip(false, true);
 
         egg0 = new TextureRegion(new Texture(Gdx.files.internal("egg0.png")));
         egg0.flip(false, true);
