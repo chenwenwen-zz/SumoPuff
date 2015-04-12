@@ -34,11 +34,7 @@ import com.mygdx.sumogame.SPGame;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class AndroidLauncher extends AndroidApplication implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener, RealTimeMessageReceivedListener,
@@ -89,12 +85,14 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     // Create game view
     private View gameView;
+    private LinearLayout linearLayout;
     private int oppoCount = 0;
     private ArrayList<String> participants = new ArrayList<String>();
     private  byte[] bytes = new byte[5];
     private int gameState = 0;
     private float leftPuffx=0;
     private float rightPuffx=0;
+    private int powerUpType=0;
 
 
     @Override
@@ -115,7 +113,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             findViewById(id).setOnClickListener(this);
         }
         gameView = initializeForView(new SPGame(this),new AndroidApplicationConfiguration());
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.screen_game);
+        linearLayout = (LinearLayout) findViewById(R.id.screen_game);
         linearLayout.addView(gameView,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
         }
 
@@ -605,18 +603,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     }
 
 
-    /*
-     * COMMUNICATIONS SECTION. Methods that implement the game's network
-     * protocol.
-     */
-
-    // Score of other participants. We update this as we receive their scores
-    // from the network.
-    Map<String, Integer> mParticipantScore = new HashMap<String, Integer>();
-
-    // Participants who sent us their final score.
-    Set<String> mFinishedParticipants = new HashSet<String>();
-
     // Called when we receive a real-time message from the network.
     // Messages in our game are made up of 2 bytes: the first one is 'F' or 'U'
     // indicating
@@ -639,6 +625,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         if (buf[0] == 'r'){
             byte[] bytes_cp = Arrays.copyOfRange(buf,1,5);
             rightPuffx = ByteBuffer.wrap(bytes_cp).getFloat();
+        }
+        if (buf[0] == 'p'){
+            powerUpType = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
         }
 
     }
@@ -716,6 +705,24 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
         }
     }
+    @Override
+    public void sendPowerUpAttack(int type) {
+        bytes[0] = 'p';
+        bytes[1] = (byte) ((type >> 24) & 0xFF);
+        bytes[2] = (byte) ((type >> 16) & 0xFF);
+        bytes[3] = (byte) ((type >> 8) & 0xFF);
+        bytes[4] = (byte) (type & 0xFF);
+
+        for (Participant p : mParticipants) {
+            if (p.getParticipantId().equals(mMyId))
+                continue;
+            if (p.getStatus() != Participant.STATUS_JOINED)
+                continue;
+            //Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(mGoogleApiClient,bytes,mRoomId);
+            Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient,null,bytes,mRoomId,p.getParticipantId());
+        }
+
+    }
 
 
 
@@ -729,36 +736,27 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     }
 
+
+
+
     public int requestOppoCount(){
         return oppoCount;
     }
-
-
-
     @Override
     public int requestOppGameState() {
         return gameState;
     }
-
-    @Override
-    public void updateScreen(int move) {
-
-    }
-
-    @Override
-    public int requestUpdateScreen() {
-        return 0;
-    }
-
-
     @Override
     public float requestLeftPuffX() {
         return leftPuffx;
     }
-
     @Override
     public float requestRightPuffX() {
         return rightPuffx;
+    }
+    @Override
+    public int checkPowerUpAttack() {
+        return powerUpType;
     }
 
     @Override
@@ -842,6 +840,11 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         this.participants = new ArrayList<>();
         this.bytes = new byte[5];
         this.gameState = 0;
+        this.powerUpType=0;
+        linearLayout.removeViewAt(0);
+        gameView = initializeForView(new SPGame(this),new AndroidApplicationConfiguration());
+        linearLayout.addView(gameView,0,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
+
     }
 
 

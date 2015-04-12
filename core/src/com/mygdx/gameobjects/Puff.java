@@ -86,14 +86,13 @@ public class Puff {
            else {
 
                     if(run.equals("runtoright")) {
-                        velocity.x = 0.5f;
+                        velocity.x = 0.4f;
                     } else {
-                        velocity.x = -0.5f;
+                        velocity.x = -0.4f;
                     }
 
                 }
           }
-
 
     // the velocity is changed whenever the puff is starting to collide.
     public void stop(){

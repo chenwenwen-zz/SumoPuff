@@ -8,11 +8,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AssetLoader {
     public static Texture texture;
-    public static TextureRegion background;
+    public static TextureRegion background,initialBackGround;
 
     public static Animation runningAnimationRed,runningAnimationBlue;
     public static TextureRegion defaultRed, defaultBlue, redRun1, redRun2, redFall, blueRun1 ,blueRun2, blueFall;
-     public static TextureRegion egg0,egg1,egg2,egg3,egg4,egg5,egg6,egg7,egg8,egg9;
+    public static TextureRegion egg0,egg1,egg2,egg3,egg4,egg5,egg6,egg7,egg8,egg9;
+
+    public static TextureRegion ramen,riceball,iceCream;
     
     public static TextureRegion arrow,ready,start,redWinner, blueWinner, redLoser,blueLoser,playAgain,quit;
     public static BitmapFont font,shadow;
@@ -24,6 +26,8 @@ public class AssetLoader {
         /* @ Ching Yan, your part to comment if need be. */
         background = new TextureRegion(new Texture(Gdx.files.internal("background.png")));
         background.flip(false, true);
+        initialBackGround = new TextureRegion(new Texture(Gdx.files.internal("powerupscreen.png")));
+        initialBackGround.flip(false,true);
 
         
      	defaultRed = new TextureRegion(new Texture(Gdx.files.internal("defaultred.png")));
@@ -80,6 +84,13 @@ public class AssetLoader {
         quit.flip(false, true);
         playAgain = new TextureRegion(new Texture(Gdx.files.internal("PlayAgain.png")));
         playAgain.flip(false, true);
+
+        ramen = new TextureRegion(new Texture(Gdx.files.internal("ramen.png")));
+        ramen.flip(false,true);
+        riceball = new TextureRegion(new Texture(Gdx.files.internal("riceball.png")));
+        riceball.flip(false,true);
+        iceCream = new TextureRegion(new Texture(Gdx.files.internal("icecream.png")));
+        iceCream.flip(false,true);
 
         egg0 = new TextureRegion(new Texture(Gdx.files.internal("egg0.png")));
         egg0.flip(false, true);

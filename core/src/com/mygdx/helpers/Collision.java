@@ -7,10 +7,10 @@ public class Collision {
 
 	public static void updatedposition(int myCount,int oppCount){
 			if(myCount > oppCount){
-				velocity = 0.4f;
+				velocity = 0.1f;
 			}
             else if (myCount<oppCount) {
-				velocity = -0.4f;
+				velocity = -0.1f;
 			}
 
 		}

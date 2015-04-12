@@ -3,6 +3,7 @@ package com.mygdx.gamescreens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.mygdx.gameobjects.Puff;
+import com.mygdx.gameobjects.Timer;
 import com.mygdx.gameworld.GameRenderer;
 import com.mygdx.gameworld.GameWorld;
 import com.mygdx.helpers.ActionResolver;
@@ -20,21 +21,30 @@ public class GameScreen implements Screen {
     private final int midPointX = Gdx.graphics.getWidth()/2;
 
     public GameScreen(ActionResolver actionResolver) {
+        Timer timer = new Timer(5);
         Gdx.app.log("GameScreen", "Attached");
-        world = new GameWorld(actionResolver);
+        world = new GameWorld(actionResolver,timer);
         InputHandler handler = new InputHandler(world,actionResolver);
         Gdx.input.setInputProcessor(handler);
-        renderer = new GameRenderer(world,midPointX,actionResolver,handler) ;
+        renderer = new GameRenderer(world,midPointX,actionResolver,handler,timer) ;
     }
 
     @Override
     // render called by the framework at delta fps.
     public void render(float delta) {
-        runTime += 1/60f;
+        runTime += delta;
         // update the gameWorld.
-        world.update(1/60f);
+        try {
+            world.update(delta);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         // render the gameGraphics.
-        renderer.render(runTime);
+        try {
+            renderer.render(runTime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
