@@ -13,6 +13,8 @@ public class GameWorld {
 	private Puff rightPuff;
     private ActionResolver actionResolver;
     private Timer attackTimer;
+    private Timer taskTimer;
+
 	// current game state.
 	private GameState currentState;
 	// gameOverReady is the "state" after winner picture is shown.s
@@ -25,11 +27,12 @@ public class GameWorld {
 	}
 
 	
-	public GameWorld(ActionResolver actionResolver,Timer attackTimer) {
+	public GameWorld(ActionResolver actionResolver,Timer attackTimer,Timer taskTimer) {
 		// initial state of the game when GameWorld is initialized. 
 		currentState = GameState.INITIALIZE;
         this.actionResolver=actionResolver;
         this.attackTimer = attackTimer;
+        this.taskTimer = taskTimer;
 
         try{
         ArrayList<String> participants = actionResolver.getParticipants();
@@ -86,8 +89,9 @@ public class GameWorld {
                 break;
 	       	// case Running and default are the same case.
 	        case RUNNING:
+                updateRunning(delta);
+                break;
 	        default:
-	            updateRunning(delta);
 	            break;
 	        }
 	}
@@ -96,20 +100,23 @@ public class GameWorld {
 
     }
 
-    private void updatePowerup(float delta){
-
-
+    private void updatePowerup(float delta) throws InterruptedException {
+        //Set Timer for powerUp state
+        taskTimer.start();
+        if(taskTimer.isTimeUp()){
+            currentState = GameState.RUNNING;
+        }
     }
     private void updatePowerupAttack(float delta) throws InterruptedException {
-            /*attackTimer.start();
+           // Set timer
+            attackTimer.start();
             if(attackTimer.isTimeUp()){
                currentState = GameState.RUNNING;
-            }*/
+            }
     }
 
 	private void updateRunning(float delta) {
-        //Reset Timer
-           //attackTimer.stop();
+
 		// updating the myPuff at delta times.
            leftPuff.update(delta);
            rightPuff.update(delta);
@@ -150,6 +157,8 @@ public class GameWorld {
 	public Puff getRightPuff(){
 		return rightPuff;
 	}
+
+
 
     public void ready() {currentState =GameState.READY;}
 	public void start() {

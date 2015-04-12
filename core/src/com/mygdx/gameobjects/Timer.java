@@ -21,6 +21,7 @@ public class Timer {
     public boolean isTimeUp(){
        if(isTimerOn) {
            if ((TimeUtils.millis() / 1000 - start) >= duration) {
+               isTimerOn=false;
                return true;
            } else
                return false;

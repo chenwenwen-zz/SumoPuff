@@ -21,12 +21,13 @@ public class GameScreen implements Screen {
     private final int midPointX = Gdx.graphics.getWidth()/2;
 
     public GameScreen(ActionResolver actionResolver) {
-        Timer timer = new Timer(5);
+        Timer attackTimer = new Timer(5);
+        Timer taskTimer = new Timer(2);
         Gdx.app.log("GameScreen", "Attached");
-        world = new GameWorld(actionResolver,timer);
+        world = new GameWorld(actionResolver,attackTimer,taskTimer);
         InputHandler handler = new InputHandler(world,actionResolver);
         Gdx.input.setInputProcessor(handler);
-        renderer = new GameRenderer(world,midPointX,actionResolver,handler,timer) ;
+        renderer = new GameRenderer(world,midPointX,actionResolver,handler,attackTimer,taskTimer) ;
     }
 
     @Override

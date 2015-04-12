@@ -27,6 +27,8 @@ public class InputHandler implements InputProcessor {
     private HashMap<String,Boolean> powerUpsSelection= new HashMap<String,Boolean>();
     private HashMap<String,PowerUps> powerUps = new HashMap<String,PowerUps>();
     private HashMap<Vector2,Boolean> powerUpCords = new HashMap<Vector2,Boolean>();
+    private boolean isPowerUpFreeze = true;
+
 
 
     public InputHandler(GameWorld myWorld,ActionResolver actionResolver) {
@@ -50,21 +52,21 @@ public class InputHandler implements InputProcessor {
 
         //Initialize state
         if(myWorld.isInitialized()){
-            if(50<=screenX && screenX<=65 && 50<=screenY && screenY<=70){
+            if(27<=screenX && screenX<= 57 && 45<=screenY && screenY<=92){
                 if(powerUpsSelection.get("ramen").equals(false)){
                   powerUpCount++;
                   powerUpsSelection.put("ramen",true);
                   powerUps.put(""+powerUpCount,new PowerUps("ramen"));
                 }
             }
-            else if(70<=screenX && screenX<=85 && 50<=screenY && screenY<=70){
+            else if(60<=screenX && screenX<=90 && 45<=screenY && screenY<=92){
                 if(powerUpsSelection.get("riceBall").equals(false)){
                 powerUpCount++;
                 powerUpsSelection.put("riceBall",true);
                 powerUps.put(""+powerUpCount,new PowerUps("riceBall"));
                 }
             }
-            else if(90<=screenX && screenX<=105 && 50<=screenY && screenY<=70){
+            else if(92<=screenX && screenX<=122 && 45<=screenY && screenY<=92){
                if(powerUpsSelection.get("iceCream").equals(false)){
                    powerUpCount++;
                    powerUpsSelection.put("iceCream",true);
@@ -82,20 +84,21 @@ public class InputHandler implements InputProcessor {
         if(myWorld.isStart() && actionResolver.requestOppGameState()!=3){
             myCount++;
             actionResolver.BroadCastCount(myCount);
-            if(10<=screenX && screenX<=20 && 30<=screenY && screenY<=40){
-                   if(!isCordGenerated){
-                       powerUpCords.putAll(powerUps.get("1").generateCord());
-                       whichPowerUp = powerUps.get("1").getPowerUpType();
-                       myWorld.powerup();
-                   }
-               }
-               else if(10<=screenX && screenX<=20 && 50<=screenY && screenY<=60){
-                   if(!isCordGenerated){
-                       powerUpCords.putAll(powerUps.get("2").generateCord());
-                       whichPowerUp = powerUps.get("2").getPowerUpType();
-                       myWorld.powerup();
-                   }
-               }
+            if(isPowerUpFreeze==false) {
+                if (3 <= screenX && screenX <= 21 && 7 <= screenY && screenY <= 33) {
+                    if (!isCordGenerated) {
+                        powerUpCords.putAll(powerUps.get("1").generateCord());
+                        whichPowerUp = powerUps.get("1").getPowerUpType();
+                        myWorld.powerup();
+                    }
+                } else if (3 <= screenX && screenX <= 22 && 39 <= screenY && screenY <= 66) {
+                    if (!isCordGenerated) {
+                        powerUpCords.putAll(powerUps.get("2").generateCord());
+                        whichPowerUp = powerUps.get("2").getPowerUpType();
+                        myWorld.powerup();
+                    }
+                }
+            }
         }
 
         //PowerUp State
@@ -104,9 +107,17 @@ public class InputHandler implements InputProcessor {
             actionResolver.BroadCastCount(myCount);
             //Iterat through to check if eggs is touched
             for(Vector2 cord: powerUpCords.keySet()){
+                if(powerUpCords.get(cord)==true){
+                    continue;
+                }
+                else{
                 if (cord.x <= screenX  && screenX<= (cord.x +15) && cord.y <= screenY && screenY<= cord.y+15){
                     powerUpCords.put(cord, true);
                 }
+                else{
+                    break;
+                }
+               }
             }
 
         }
@@ -134,7 +145,7 @@ public class InputHandler implements InputProcessor {
                 myWorld.restart();
             }
 
-            //quit screen is clicked
+           //quit screen is clicked
             if (113<=screenX && 140>=screenX && 83<=screenY && 101>=screenY) {
 //			if (screenX >= myWorld.getMidPoint() && screenY > 0){
                 // System.out.println("quit");
@@ -152,6 +163,11 @@ public class InputHandler implements InputProcessor {
 	}
 
     public int getMyCount(){return myCount;}
+    public void resetMyCount(){this.myCount=0;}
+
+    public boolean isPowerUpFreezed(){return isPowerUpFreeze;}
+    public void setPowerUpFreeze(boolean isPowerUpFreeze){this.isPowerUpFreeze = isPowerUpFreeze;}
+
     public HashMap<String,PowerUps> getPowerUps(){return powerUps;}
     public HashMap<String,Boolean> getPowerUpsSelection(){return powerUpsSelection;}
     public HashMap<Vector2,Boolean> getPowerUpCords(){return powerUpCords;}
@@ -161,13 +177,10 @@ public class InputHandler implements InputProcessor {
         isCordGenerated = false;
         whichPowerUp = " ";
         // private boolean ramenSelected=false;
-        powerUpsSelection= new HashMap<String,Boolean>();
-        powerUps = new HashMap<String,PowerUps>();
-        powerUpCords = new HashMap<Vector2,Boolean>();
+      //  powerUpsSelection= new HashMap<String,Boolean>();
+      //  powerUps = new HashMap<String,PowerUps>();
+        powerUpCords.clear();
     }
-
-    //Reset count
-    public void resetMyCount(){this.myCount=0;}
 
 	@Override
 	public boolean keyDown(int keycode) {

@@ -52,11 +52,12 @@ public class GameRenderer {
     private HashMap<String,PowerUps> powerUps;
     private HashMap<Vector2,Boolean> powerUpCords;
     private Timer attackTimer;
+    private Timer taskTimer;
     private ArrayList<TextureRegion> eggs = new ArrayList<TextureRegion>();
-    private int eggIndex = 0;
+    private static int eggIndex = 0;
     private int broadcastNoAttack = 0;
     private int broadcastAttack = 0;
-    private Timer powerUpTaskTimer = new Timer(2);
+    private Timer freezeTimer = new Timer(10);
 
 
 
@@ -74,7 +75,7 @@ public class GameRenderer {
     public static float h;
     //
 
-    public GameRenderer(GameWorld world, int midPointX,ActionResolver actionResolver,InputHandler handler,Timer attackTimer) {
+    public GameRenderer(GameWorld world, int midPointX,ActionResolver actionResolver,InputHandler handler,Timer attackTimer,Timer taskTimer) {
 		myWorld = world;
 		leftPuff = myWorld.getLeftPuff();
 		rightPuff = myWorld.getRightPuff();
@@ -85,7 +86,7 @@ public class GameRenderer {
         this.powerUps = handler.getPowerUps();
         this.powerUpCords = handler.getPowerUpCords();
         this.attackTimer = attackTimer;
-
+        this.taskTimer = taskTimer;
 
 
         this.eggs.add(AssetLoader.egg0);
@@ -173,12 +174,11 @@ public class GameRenderer {
 
         //GAMESTATE = INITIALIZE
         if(myWorld.isInitialized()){
-
            batcher.draw(AssetLoader.powerupBackground, 0,0,150,160);
            batcher.draw(AssetLoader.chooseapower,10,10,130,25);
            if(powerUpsSelection.get("ramen")==false)
                 batcher.draw(AssetLoader.ramenpower,27,45,30,100);
-            else
+           else
                 batcher.draw(AssetLoader.bwramenpower,27,45,30,100);
            if(powerUpsSelection.get("riceBall")==false)
                 batcher.draw(AssetLoader.riceballpower,60,45,30,100);
@@ -192,7 +192,7 @@ public class GameRenderer {
         }
 
 		// GAMESTATE = READY
-		if (myWorld.isReady()){
+		else if (myWorld.isReady()){
             falldistance = 0;
             batcher.draw(AssetLoader.defaultRed,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
             batcher.draw(AssetLoader.defaultBlue, rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
@@ -203,22 +203,28 @@ public class GameRenderer {
 
 
         //GAMESTATE = RUNNING
-        if(myWorld.isStart()){
+       else if(myWorld.isStart()){
             if(showStart<60){
                 batcher.draw(AssetLoader.start,50, 50, 50, 25);
             }
             ++showStart;
-           //Timer reset
-            attackTimer.stop();
+            handler.resetPowerupVar();
 
-
-            //sends 3 no attack Packet to ensure the opponent count will be reset
+            //sends 3 no attack Packet to end Reset Count
             broadcastAttack=0;
             while(broadcastNoAttack<3){
             actionResolver.sendPowerUpAttack(0);
             broadcastNoAttack++;
             }
             //end of sending
+           if(handler.isPowerUpFreezed()){
+              freezeTimer.start();
+           }
+           if(freezeTimer.isTimeUp()){
+               handler.setPowerUpFreeze(false);
+            }
+
+
 
             if(leftPuff.collides(rightPuff)) {
                 OppoCount = actionResolver.requestOppoCount();
@@ -249,7 +255,8 @@ public class GameRenderer {
 
 
         //GameState = PowerUp
-        if(myWorld.isPowerUp()){
+       else if(myWorld.isPowerUp()){
+            handler.setPowerUpFreeze(true);
             eggIndex=0;
             broadcastNoAttack = 0;
             for(Vector2 key:powerUpCords.keySet()){
@@ -262,6 +269,31 @@ public class GameRenderer {
             }
             else{
                 myWorld.powerupAttack();
+            }
+            //Disable the powerUp image button
+            for(int i=1; i<3;i++){
+                if(i==1){
+                    if(powerUps.get("1").getPowerUpType().equals("ramen")){
+                        batcher.draw(AssetLoader.bwramen,4,1,18,30);
+                    }
+                    else if(powerUps.get("1").getPowerUpType().equals("riceBall")){
+                        batcher.draw(AssetLoader.bwriceball,4,1,18,30);
+                    }
+                    else{
+                        batcher.draw(AssetLoader.bwiceCream,4,1,18,30);
+                    }
+                }
+                if(i==2){
+                    if(powerUps.get("2").getPowerUpType().equals("ramen")){
+                        batcher.draw(AssetLoader.bwramen,4,34,18,30);
+                    }
+                    else if(powerUps.get("2").getPowerUpType().equals("riceBall")){
+                        batcher.draw(AssetLoader.bwriceball,4,34,18,30);
+                    }
+                    else{
+                        batcher.draw(AssetLoader.bwiceCream,4,34,18,30);
+                    }
+                }
             }
 
 
@@ -292,11 +324,8 @@ public class GameRenderer {
         }
 
         //GameState = PowerUpAttack
-        if(myWorld.isPowerUpAttack()){
-            attackTimer.start();
-            if(attackTimer.isTimeUp()){
-                myWorld.start();
-            }
+      else if(myWorld.isPowerUpAttack()){
+
             //Normal Game Routine
             Gdx.app.log("whichPowerUp",handler.getWhichPowerUp());
             if(leftPuff.collides(rightPuff)) {
@@ -335,6 +364,7 @@ public class GameRenderer {
             }
             else if(handler.getWhichPowerUp().equals("iceCream")){
                 //freeze the powerUp
+
                actionResolver.sendPowerUpAttack(2);
                attackTimer.stop();
                myWorld.start();
@@ -348,7 +378,7 @@ public class GameRenderer {
 
 
 		//GAMESTATE = OVER
-		if(myWorld.isGameOver()){
+	    else if(myWorld.isGameOver()){
 			showStart =0;
 			//if userPuff loses
 			if (myWorld.getLeftPuff().getX()<15){
@@ -416,7 +446,7 @@ public class GameRenderer {
 		}
 
         // Common events for all the State except GameOver State
-        if(myWorld.isReady() || myWorld.isStart()||myWorld.isPowerUp()||myWorld.isPowerUpAttack()){
+        if(myWorld.isReady() || myWorld.isStart()){
             //Draws Arrow on top of the player
             if(player1 > player2){
                 if(player1 == me){
@@ -435,32 +465,59 @@ public class GameRenderer {
                 }
             }
 
-            //Draws Powerup Labels on the Screen
-            for(int i=1; i<3;i++){
-                if(i==1){
-                    if(powerUps.get("1").getPowerUpType().equals("ramen")){
-                        batcher.draw(AssetLoader.ramen,10,30,10,10);
+
+            if(handler.isPowerUpFreezed()){
+                //Disable the powerUp image button
+                for(int i=1; i<3;i++){
+                    if(i==1){
+                        if(powerUps.get("1").getPowerUpType().equals("ramen")){
+                            batcher.draw(AssetLoader.bwramen,4,1,18,30);
+                        }
+                        else if(powerUps.get("1").getPowerUpType().equals("riceBall")){
+                            batcher.draw(AssetLoader.bwriceball,4,1,18,30);
+                        }
+                        else{
+                            batcher.draw(AssetLoader.bwiceCream,4,1,18,30);
+                        }
                     }
-                    else if(powerUps.get("1").getPowerUpType().equals("riceBall")){
-                        batcher.draw(AssetLoader.riceball,10,30,10,10);
-                    }
-                    else{
-                        batcher.draw(AssetLoader.iceCream,10,30,10,10);
+                    if(i==2){
+                        if(powerUps.get("2").getPowerUpType().equals("ramen")){
+                            batcher.draw(AssetLoader.bwramen,4,34,18,30);
+                        }
+                        else if(powerUps.get("2").getPowerUpType().equals("riceBall")){
+                            batcher.draw(AssetLoader.bwriceball,4,34,18,30);
+                        }
+                        else{
+                            batcher.draw(AssetLoader.bwiceCream,4,34,18,30);
+                        }
                     }
                 }
-                if(i==2){
-                    if(powerUps.get("2").getPowerUpType().equals("ramen")){
-                        batcher.draw(AssetLoader.ramen,10,50,10,10);
+
+
+            }
+            else {
+                //Draws Powerup Labels on the Screen
+                for (int i = 1; i < 3; i++) {
+                    if (i == 1) {
+                        if (powerUps.get("1").getPowerUpType().equals("ramen")) {
+                            batcher.draw(AssetLoader.ramen, 4, 1, 18, 30);
+                        } else if (powerUps.get("1").getPowerUpType().equals("riceBall")) {
+                            batcher.draw(AssetLoader.riceball, 4, 1, 18, 30);
+                        } else {
+                            batcher.draw(AssetLoader.iceCream, 4, 1, 18, 30);
+                        }
                     }
-                    else if(powerUps.get("2").getPowerUpType().equals("riceBall")){
-                        batcher.draw(AssetLoader.riceball,10,50,10,10);
-                    }
-                    else{
-                        batcher.draw(AssetLoader.iceCream,10,50,10,10);
+                    if (i == 2) {
+                        if (powerUps.get("2").getPowerUpType().equals("ramen")) {
+                            batcher.draw(AssetLoader.ramen, 4, 34, 18, 30);
+                        } else if (powerUps.get("2").getPowerUpType().equals("riceBall")) {
+                            batcher.draw(AssetLoader.riceball, 4, 34, 18, 30);
+                        } else {
+                            batcher.draw(AssetLoader.iceCream, 4, 34, 18, 30);
+                        }
                     }
                 }
             }
-
             if(actionResolver.checkPowerUpAttack()==1){
                 //handler.resetMycount
                 handler.resetMyCount();
@@ -469,10 +526,67 @@ public class GameRenderer {
 
             else if(actionResolver.checkPowerUpAttack()==2) {
                 // freeze Powerup
+                handler.setPowerUpFreeze(true);
 
             }
         }
 
+        else if(myWorld.isPowerUpAttack() || myWorld.isPowerUp()){
+            //Draws Arrow on top of the player
+            if(player1 > player2){
+                if(player1 == me){
+                    batcher.draw(AssetLoader.arrow,leftPuff.getX()+4,leftPuff.getY()-15,10,15);
+                }
+                else{
+                    batcher.draw(AssetLoader.arrow,rightPuff.getX()+4,rightPuff.getY()-15,10,15);
+                }
+            }
+            else{
+                if(player1 == me){
+                    batcher.draw(AssetLoader.arrow,rightPuff.getX()+4,rightPuff.getY()-15,10,15);
+                }
+                else{
+                    batcher.draw(AssetLoader.arrow,leftPuff.getX()+4,leftPuff.getY()-15,10,15);
+                }
+            }
+
+            //Disable the powerUp image button
+            for(int i=1; i<3;i++){
+                if(i==1){
+                    if(powerUps.get("1").getPowerUpType().equals("ramen")){
+                        batcher.draw(AssetLoader.bwramen,4,1,18,30);
+                    }
+                    else if(powerUps.get("1").getPowerUpType().equals("riceBall")){
+                        batcher.draw(AssetLoader.bwriceball,4,1,18,30);
+                    }
+                    else{
+                        batcher.draw(AssetLoader.bwiceCream,4,1,18,30);
+                    }
+                }
+                if(i==2){
+                    if(powerUps.get("2").getPowerUpType().equals("ramen")){
+                        batcher.draw(AssetLoader.bwramen,4,34,18,30);
+                    }
+                    else if(powerUps.get("2").getPowerUpType().equals("riceBall")){
+                        batcher.draw(AssetLoader.bwriceball,4,34,18,30);
+                    }
+                    else{
+                        batcher.draw(AssetLoader.bwiceCream,4,34,18,30);
+                    }
+                }
+            }
+
+
+            if(actionResolver.checkPowerUpAttack()==1){
+                //handler.resetMycount
+                handler.resetMyCount();
+                actionResolver.BroadCastCount(handler.getMyCount());
+            }
+
+            else if(actionResolver.checkPowerUpAttack()==2) {
+                 handler.setPowerUpFreeze(true);
+            }
+        }
 		batcher.end();
 
 

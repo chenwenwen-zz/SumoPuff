@@ -26,7 +26,6 @@ public class AssetLoader {
     // Called when SPGame is intialized. 
     public static void load(){
 
-        /* @ Ching Yan, your part to comment if need be. */
         background = new TextureRegion(new Texture(Gdx.files.internal("background.png")));
         background.flip(false, true);
         powerupBackground = new TextureRegion(new Texture(Gdx.files.internal("powerupbackground.png")));
