@@ -16,13 +16,21 @@ public interface ActionResolver {
     public void BroadCastMyGameState(int state);// Initialize = 0, Ready=1, Running=2, GameOver=3
     public int requestOppGameState();
 
-    public void updateLeftPuffX(float x1);
-    public void updateRightPuffX(float x2);
+    public void broadCastLeftPuffX(float x1);
+    public void broadCastRightPuffX(float x2);
     public float requestLeftPuffX();
     public float requestRightPuffX();
 
 
-    public void sendPowerUpAttack(int type);// type 0 = no Attack, type 1 = reset count(ramen), type 2 = freeze powerup(iceCream)
+    public void sendPowerUpAttack(int type);// type 0 = no Attack, type 1 = reset count(ramen), type 2 = freeze powerup(iceCream) type 3= double count powerUp(riceBall)
     public int  checkPowerUpAttack();
+
+
+    public void sendMove(int move); // Move = 1, Stop = 0;
+    public int  checkMove(); // Move = 1, Stop = 0;
+
+
+    public void broadCastTimeLeft(int sec);
+    public int getTimeLeft();
 
 }

@@ -46,12 +46,8 @@ public class Puff {
     }
 
     public void update(float delta) {
-        if(collide==false || id.equals("player1"))
-          position.add(velocity.cpy());
-        /*else {
-          position.cpy();
-        }*/
-//        boundingCircle.set(position.x + 6.5f, position.y, 6.4f);
+        if(collide==false || id.equals("player1")){ position.add(velocity.cpy());}
+
         boundingCircle.set(position.x + 10f, position.y, 10f);
 
     }
@@ -63,7 +59,6 @@ public class Puff {
 
     // method called at every click/tap for updating the position.
     public synchronized void onClick(Puff opponentPuff, int myCount,int OppoCount,float leftPuffX,float rightPuffX) {
-
             if (collides(opponentPuff)) {
             if(id.equals("player1")) {
                 if (Math.abs(myCount - OppoCount)==0) {
@@ -131,10 +126,6 @@ public class Puff {
 
     public Circle getBoundingCircle() {
         return boundingCircle;
-    }
-
-    public Puff getPuff(){
-        return this;
     }
 
 }

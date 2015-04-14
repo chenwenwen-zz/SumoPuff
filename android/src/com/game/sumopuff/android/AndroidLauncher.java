@@ -47,7 +47,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     final static String TAG = "SumoPuff";
 
-
     // Request codes for the UIs that we show with startActivityForResult:
     final static int RC_SELECT_PLAYERS = 10000;
     final static int RC_INVITATION_INBOX = 10001;
@@ -86,6 +85,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // Create game view
     private View gameView;
     private LinearLayout linearLayout;
+
+
+    //Variables for message passing
     private int oppoCount = 0;
     private ArrayList<String> participants = new ArrayList<String>();
     private  byte[] bytes = new byte[5];
@@ -93,6 +95,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     private float leftPuffx=0;
     private float rightPuffx=0;
     private int powerUpType=0;
+    private int move=0;
+    private int timeLeft=0;
 
 
     @Override
@@ -407,13 +411,11 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.d(TAG, "onConnected() called. Sign in successful!");
-
         Log.d(TAG, "Sign-in succeeded.");
 
         // register listener so we are notified if we receive an invitation to play
         // while we are in the game
         Games.Invitations.registerInvitationListener(mGoogleApiClient, this);
-
         if (connectionHint != null) {
             Log.d(TAG, "onConnected: connection hint provided. Checking for invite.");
             Invitation inv = connectionHint
@@ -629,6 +631,12 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         if (buf[0] == 'p'){
             powerUpType = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
         }
+        if (buf[0] == 'm'){
+            move = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
+        }
+        if (buf[0] == 't'){
+            timeLeft = (buf[4] & 0xFF)| ((buf[3] & 0xFF) << 8)| ((buf[2] & 0xFF) << 16)| ((buf[1] & 0xFF) << 24);
+        }
 
     }
 
@@ -639,14 +647,14 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         bytes[2] = (byte) ((count >> 16) & 0xFF);
         bytes[3] = (byte) ((count >> 8) & 0xFF);
         bytes[4] = (byte) (count & 0xFF);
-
-        for (Participant p : mParticipants) {
-            if (p.getParticipantId().equals(mMyId))
-                continue;
-            if (p.getStatus() != Participant.STATUS_JOINED)
-                continue;
-            //Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(mGoogleApiClient,bytes,mRoomId);
-            Games.RealTimeMultiplayer.sendUnreliableMessage(mGoogleApiClient,bytes,mRoomId,p.getParticipantId());
+        if(mRoomId!=null) {
+            for (Participant p : mParticipants) {
+                if (p.getParticipantId().equals(mMyId))
+                    continue;
+                if (p.getStatus() != Participant.STATUS_JOINED)
+                    continue;
+                Games.RealTimeMultiplayer.sendUnreliableMessage(mGoogleApiClient, bytes, mRoomId, p.getParticipantId());
+            }
         }
 
     }
@@ -657,18 +665,19 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         bytes[2] = (byte) ((state >> 16) & 0xFF);
         bytes[3] = (byte) ((state >> 8) & 0xFF);
         bytes[4] = (byte) (state & 0xFF);
-
-        for (Participant p : mParticipants) {
-            if (p.getParticipantId().equals(mMyId))
-                continue;
-            if (p.getStatus() != Participant.STATUS_JOINED)
-                continue;
-            //Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(mGoogleApiClient,bytes,mRoomId);
-            Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient,null,bytes,mRoomId,p.getParticipantId());
+        if(mRoomId!=null) {
+            for (Participant p : mParticipants) {
+                if (p.getParticipantId().equals(mMyId))
+                    continue;
+                if (p.getStatus() != Participant.STATUS_JOINED)
+                    continue;
+                //Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(mGoogleApiClient,bytes,mRoomId);
+                Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null, bytes, mRoomId, p.getParticipantId());
+            }
         }
     }
     @Override
-    public void updateLeftPuffX(float x1) {
+    public void broadCastLeftPuffX(float x1) {
         int leftx = Float.floatToIntBits(x1);
         bytes[0] = 'l';
         bytes[1] = (byte) ((leftx >> 24) & 0xFF);
@@ -676,33 +685,37 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         bytes[3] = (byte) ((leftx >> 8) & 0xFF);
         bytes[4] = (byte) (leftx & 0xFF);
 
-        for (Participant p : mParticipants) {
-            if (p.getParticipantId().equals(mMyId))
-                continue;
-            if (p.getStatus() != Participant.STATUS_JOINED)
-                continue;
-            // Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId, p.getParticipantId());
-            Games.RealTimeMultiplayer.sendUnreliableMessage(mGoogleApiClient,bytes,mRoomId,p.getParticipantId());
-
+        if(mRoomId!=null) {
+            for (Participant p : mParticipants) {
+                if (p.getParticipantId().equals(mMyId))
+                    continue;
+                if (p.getStatus() != Participant.STATUS_JOINED)
+                    continue;
+                // Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId, p.getParticipantId());
+                Games.RealTimeMultiplayer.sendUnreliableMessage(mGoogleApiClient, bytes, mRoomId, p.getParticipantId());
+            }
         }
+
     }
 
     @Override
-    public void updateRightPuffX(float x2) {
+    public void broadCastRightPuffX(float x2) {
         int rightx = Float.floatToIntBits(x2);
         bytes[0] = 'r';
         bytes[1] = (byte) ((rightx >> 24) & 0xFF);
         bytes[2] = (byte) ((rightx >> 16) & 0xFF);
         bytes[3] = (byte) ((rightx >> 8) & 0xFF);
         bytes[4] = (byte) (rightx & 0xFF);
-        for (Participant p : mParticipants) {
-            if (p.getParticipantId().equals(mMyId))
-                continue;
-            if (p.getStatus() != Participant.STATUS_JOINED)
-                continue;
-            // Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId, p.getParticipantId());
-            Games.RealTimeMultiplayer.sendUnreliableMessage(mGoogleApiClient,bytes,mRoomId,p.getParticipantId());
 
+        if(mRoomId!=null) {
+            for (Participant p : mParticipants) {
+                if (p.getParticipantId().equals(mMyId))
+                    continue;
+                if (p.getStatus() != Participant.STATUS_JOINED)
+                    continue;
+                // Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null,bytes, mRoomId, p.getParticipantId());
+                Games.RealTimeMultiplayer.sendUnreliableMessage(mGoogleApiClient, bytes, mRoomId, p.getParticipantId());
+            }
         }
     }
     @Override
@@ -713,19 +726,58 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         bytes[3] = (byte) ((type >> 8) & 0xFF);
         bytes[4] = (byte) (type & 0xFF);
 
-        for (Participant p : mParticipants) {
-            if (p.getParticipantId().equals(mMyId))
-                continue;
-            if (p.getStatus() != Participant.STATUS_JOINED)
-                continue;
-            //Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(mGoogleApiClient,bytes,mRoomId);
-            Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient,null,bytes,mRoomId,p.getParticipantId());
+        if(mRoomId!=null) {
+            for (Participant p : mParticipants) {
+                if (p.getParticipantId().equals(mMyId))
+                    continue;
+                if (p.getStatus() != Participant.STATUS_JOINED)
+                    continue;
+                //Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(mGoogleApiClient,bytes,mRoomId);
+                Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null, bytes, mRoomId, p.getParticipantId());
+            }
         }
+    }
 
+    @Override
+    public void sendMove(int move) {
+        bytes[0] = 'm';
+        bytes[1] = (byte) ((move >> 24) & 0xFF);
+        bytes[2] = (byte) ((move >> 16) & 0xFF);
+        bytes[3] = (byte) ((move >> 8) & 0xFF);
+        bytes[4] = (byte) (move & 0xFF);
+
+        if(mRoomId!=null) {
+            for (Participant p : mParticipants) {
+                if (p.getParticipantId().equals(mMyId))
+                    continue;
+                if (p.getStatus() != Participant.STATUS_JOINED)
+                    continue;
+                //Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(mGoogleApiClient,bytes,mRoomId);
+                Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null, bytes, mRoomId, p.getParticipantId());
+            }
+        }
     }
 
 
+    @Override
+    public void broadCastTimeLeft(int sec) {
+        bytes[0] = 't';
+        bytes[1] = (byte) ((sec >> 24) & 0xFF);
+        bytes[2] = (byte) ((sec >> 16) & 0xFF);
+        bytes[3] = (byte) ((sec >> 8) & 0xFF);
+        bytes[4] = (byte) (sec & 0xFF);
 
+        if(mRoomId!=null) {
+            for (Participant p : mParticipants) {
+                if (p.getParticipantId().equals(mMyId))
+                    continue;
+                if (p.getStatus() != Participant.STATUS_JOINED)
+                    continue;
+                //Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(mGoogleApiClient,bytes,mRoomId);
+                Games.RealTimeMultiplayer.sendReliableMessage(mGoogleApiClient, null, bytes, mRoomId, p.getParticipantId());
+            }
+        }
+    }
 
     @Override
     public ArrayList<String> getParticipants() {
@@ -758,6 +810,10 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     public int checkPowerUpAttack() {
         return powerUpType;
     }
+    @Override
+    public int checkMove() {return move;}
+    @Override
+    public int getTimeLeft() { return timeLeft ;}
 
     @Override
     public String getMyId() {
@@ -839,8 +895,11 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         this.oppoCount = 0;
         this.participants = new ArrayList<>();
         this.bytes = new byte[5];
+        this.leftPuffx=0;
+        this.rightPuffx=0;
         this.gameState = 0;
         this.powerUpType=0;
+        this.move=0;
         linearLayout.removeViewAt(0);
         gameView = initializeForView(new SPGame(this),new AndroidApplicationConfiguration());
         linearLayout.addView(gameView,0,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));

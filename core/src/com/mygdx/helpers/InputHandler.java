@@ -28,6 +28,7 @@ public class InputHandler implements InputProcessor {
     private HashMap<String,PowerUps> powerUps = new HashMap<String,PowerUps>();
     private HashMap<Vector2,Boolean> powerUpCords = new HashMap<Vector2,Boolean>();
     private boolean isPowerUpFreeze = true;
+    private boolean isTouched = false;
 
 
 
@@ -49,7 +50,8 @@ public class InputHandler implements InputProcessor {
         Vector3 coords2= GameRenderer.unprojectCoords(coords);
         screenX=(int) coords2.x;
         screenY=(int) coords2.y;
-
+        actionResolver.sendMove(1);
+        isTouched = true;
         //Initialize state
         if(myWorld.isInitialized()){
             if(27<=screenX && screenX<= 57 && 45<=screenY && screenY<=92){
@@ -135,9 +137,7 @@ public class InputHandler implements InputProcessor {
             if (4<=screenX && 45>=screenX && 45<=screenY && 110>=screenY) {
                 // Reset all variables, go to GameState.READY
                 Gdx.app.log("QuitTesting", "Restarted");
-                myCount = 0;
-                powerUpCount=0;
-                isCordGenerated = false;
+                resetGameVar();
                 powerUpsSelection.put("ramen",false);
                 powerUpsSelection.put("riceBall",false);
                 powerUpsSelection.put("iceCream",false);
@@ -147,12 +147,8 @@ public class InputHandler implements InputProcessor {
 
            //quit screen is clicked
             if (113<=screenX && 140>=screenX && 83<=screenY && 101>=screenY) {
-//			if (screenX >= myWorld.getMidPoint() && screenY > 0){
-                // System.out.println("quit");
                 Gdx.app.log("QuitTesting", "Exitted");
-                myCount = 0;
-                powerUpCount=0;
-                isCordGenerated = false;
+                resetGameVar();
                 powerUpsSelection.put("ramen",false);
                 powerUpsSelection.put("riceBall",false);
                 powerUpsSelection.put("iceCream",false);
@@ -164,6 +160,7 @@ public class InputHandler implements InputProcessor {
 
     public int getMyCount(){return myCount;}
     public void resetMyCount(){this.myCount=0;}
+    public boolean getIsTouched(){return isTouched;}
 
     public boolean isPowerUpFreezed(){return isPowerUpFreeze;}
     public void setPowerUpFreeze(boolean isPowerUpFreeze){this.isPowerUpFreeze = isPowerUpFreeze;}
@@ -176,10 +173,13 @@ public class InputHandler implements InputProcessor {
     public void resetPowerupVar(){
         isCordGenerated = false;
         whichPowerUp = " ";
-        // private boolean ramenSelected=false;
-      //  powerUpsSelection= new HashMap<String,Boolean>();
-      //  powerUps = new HashMap<String,PowerUps>();
         powerUpCords.clear();
+    }
+    public void resetGameVar(){
+        myCount = 0;
+        powerUpCount=0;
+        isCordGenerated = false;
+        isPowerUpFreeze = true;
     }
 
 	@Override
@@ -199,6 +199,8 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        actionResolver.sendMove(0);
+        isTouched=false;
         return true;
 	}
 

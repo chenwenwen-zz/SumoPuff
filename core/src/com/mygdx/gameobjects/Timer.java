@@ -30,6 +30,9 @@ public class Timer {
            else
            return false;
        }
+    public int checkTimeLeft(){
+        return (int) (duration-((TimeUtils.millis() / 1000 - start)));
+    }
 
     public void stop() {
         isTimerOn = false;

@@ -14,6 +14,7 @@ public class GameWorld {
     private ActionResolver actionResolver;
     private Timer attackTimer;
     private Timer taskTimer;
+    private final int gameOverState = 3;
 
 	// current game state.
 	private GameState currentState;
@@ -91,6 +92,9 @@ public class GameWorld {
 	        case RUNNING:
                 updateRunning(delta);
                 break;
+            case GAMEOVER:
+                updateGameOver();
+                break;
 	        default:
 	            break;
 	        }
@@ -98,6 +102,14 @@ public class GameWorld {
 
     private void updateInitialize(float delta){
 
+    }
+
+    private void updateReady(float delta) {
+        // TODO Auto-generated method stub
+        //Game starts when opponent is also ready
+        if(actionResolver.requestOppGameState()==1){
+            currentState = GameState.RUNNING;
+        }
     }
 
     private void updatePowerup(float delta) throws InterruptedException {
@@ -141,15 +153,11 @@ public class GameWorld {
 		}
 		
 	}
-	
-	private void updateReady(float delta) {
-		// TODO Auto-generated method stub
-        //Game starts when opponent is also ready
-        if(actionResolver.requestOppGameState()==1){
-            currentState = GameState.RUNNING;
-        }
-	}
-	
+
+    public void updateGameOver(){
+        actionResolver.BroadCastMyGameState(gameOverState);
+    }
+
 	public Puff getLeftPuff(){
 		return leftPuff;
 	}

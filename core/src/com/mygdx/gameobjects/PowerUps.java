@@ -64,7 +64,7 @@ public class PowerUps {
         for (int i = 15; i>0;i--) {
             if (i < numberofPower) {
                 if (i != 0) {
-                    tempNo = random.nextInt(15) / 1000;
+                    tempNo = random.nextInt(15);
                     tempMap.put(tempList.get(tempNo), false);
                     tempList.remove(tempNo);
                 } else {
