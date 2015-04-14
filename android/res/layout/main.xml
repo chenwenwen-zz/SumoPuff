@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
+<!-- <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true" >
+    android:fillViewport="true" > -->
 <FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!-- SIGN-IN SCREEN -->
-    <LinearLayout android:id="@+id/screen_sign_in" style="@style/LLScreen">
-        <TextView style="@style/GameTitle" />
+    <LinearLayout android:id="@+id/screen_sign_in" style="@style/SignInScreen">
+        <!-- <TextView style="@style/GameTitle" /> -->
+        <ImageView android:id="@+id/company_logo" style="@style/CompanyTitle"/>
         <TextView style="@style/GameBlurb" />
-        <com.google.android.gms.common.SignInButton android:id="@+id/button_sign_in"
-            style="@style/SignInButton" />
+<!--         <com.google.android.gms.common.SignInButton android:id="@+id/button_sign_in"
+            style="@style/SignInButton" /> -->
+        <Button android:id="@+id/button_sign_in" style="@style/SignInButton"/>
     </LinearLayout>
 
     <!-- MAIN SCREEN -->
     <LinearLayout android:id="@+id/screen_main" style="@style/LLScreen">
-        <TextView style="@style/GameTitle" />
+        <!-- <TextView style="@style/GameTitle" /> -->
+        <!-- <View android:layout_width="match_parent" android:layout_height="50dp"></View> -->
         <Button android:id="@+id/button_quick_game"
-            style="@style/MainScreenButton"
-            android:text="@string/quick_game" />
+            style="@style/PlayGameButton" />
         <!--<TextView style="@style/MainScreenButtonBlurb"
             android:text="@string/quick_game_explanation" />-->
         <Button android:id="@+id/button_invite_players"
-            style="@style/MainScreenButton"
-            android:text="@string/invite_players" />
+            style="@style/InviteButton" />
      <!--   <TextView style="@style/MainScreenButtonBlurb"
             android:text="@string/invite_players_explanation" />-->
-        <Button android:id="@+id/button_see_invitations"
-            style="@style/MainScreenButton"
-            android:text="@string/see_invitations" />
-       <!-- <TextView style="@style/MainScreenButtonBlurb"
-            android:text="@string/see_invitations_explanation" />-->
         <Button android:id="@+id/button_sign_out"
-            style="@style/SignOutButton"
-            android:text="@string/sign_out" />
+            style="@style/SignOutButton" />
+
+<!--         <Button android:id="@+id/button_see_invitations"
+            style="@style/MainScreenButton"
+            android:text="@string/see_invitations" /> -->
     </LinearLayout>
 
     <!-- INVITATION POPUP -->
@@ -50,7 +51,7 @@
     </LinearLayout>
 
     <!-- "PLEASE WAIT" SCREEN -->
-    <LinearLayout android:id="@+id/screen_wait" style="@style/LLScreen">
+    <LinearLayout android:id="@+id/screen_wait" android:gravity="center" style="@style/LLScreen">
         <TextView style="@style/Blurb" android:text="@string/please_wait" />
     </LinearLayout>
 
@@ -58,4 +59,4 @@
     <LinearLayout android:id="@+id/screen_game" style="@style/LLScreen">
     </LinearLayout>
 </FrameLayout>
-</ScrollView>
+<!-- </ScrollView> -->

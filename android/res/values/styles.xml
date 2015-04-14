@@ -6,6 +6,7 @@
     <color name="BlurbColor">#a0a0a0</color>
     <color name="SignOutButtonBackground">#e0e0e0</color>
     <color name="SignOutButtonTextColor">#404040</color>
+    <color name="mainScreenBackground">#ffffff</color>
     <dimen name="TitleSize">30sp</dimen>
 
     <style name="GdxTheme" parent="android:Theme">
@@ -17,6 +18,15 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="SignInScreen">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@color/mainScreenBackground</item>
+    </style>
+
     <style name="GameScreen">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -24,14 +34,16 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="LLScreen" parent="@style/GameScreen">
+    <style name="LLScreen">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:gravity">center</item>
-
+        <item name="android:gravity">center|bottom</item>
+        <item name="android:background">@drawable/mainscreen</item>
     </style>
 
     <style name="GameplayScreen" parent="@style/LLScreen">
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">center</item>]
     </style>
 
 
@@ -39,10 +51,19 @@
         <item name="android:background">@color/PopupColor</item>
         <!--<item name="android:padding">10dp</item>-->
         <item name="android:layout_gravity">top|right</item>
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="CompanyTitle">
+        <item name="android:src">@drawable/companylogo</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:layout_marginLeft">17dp</item>
     </style>
 
     <style name="GameTitle">
@@ -57,6 +78,7 @@
     <style name="Blurb">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">40dp</item>
         <item name="android:textColor">@color/BlurbColor</item>
     </style>
 
@@ -65,23 +87,61 @@
         <item name="android:layout_marginBottom">40dp</item>
     </style>
 
+    <!-- Button styles in the game -->
+
     <style name="SignInButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">40dp</item>
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">45dp</item>
+        <!-- <item name="android:layout_marginTop">1dp</item> -->
+        <item name="android:background">@drawable/customsignin</item>
     </style>
 
+    <style name="SignOutButton" parent="@style/GameButton">
+        <!-- <item name="android:layout_weight">0.5</item> -->
+        <item name="android:background">@drawable/customsignout</item>
+        <!-- <item name="android:layout_marginTop">5dp</item> -->
+        <item name="android:layout_width">140dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:gravity">bottom</item>
+    </style>
+
+    <style name="PlayGameButton">
+        <!-- <item name="android:layout_weight">0.5</item> -->
+        <item name="android:background">@drawable/customplaygame</item>
+        <!-- <item name="android:paddingTop">20dp</item> -->
+        <!-- <item name="android:layout_marginTop">20dp</item> -->
+        <item name="android:layout_width">140dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:gravity">bottom</item>
+    </style>
+
+    <style name="InviteButton">
+        <!-- <item name="android:layout_weight">0.5</item> -->
+        <item name="android:background">@drawable/custominvite</item>
+        <!-- <item name="android:layout_marginTop">5dp</item> -->
+        <item name="android:layout_width">140dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:gravity">bottom</item>
+    </style>
+
+
     <style name="GameButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_width">300dp</item>
+        <item name="android:layout_height">45dp</item>
         <item name="android:background">@color/AccentColor</item>
         <item name="android:textColor">@color/ButtonTextColor</item>
         <!--<item name="android:paddingLeft">10dp</item>
         <item name="android:paddingRight">10dp</item>-->
     </style>
 
+    <!-- Button styles end -->
+
     <style name="MainScreenButton" parent="@style/GameButton">
-        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:background">@drawable/custominvite</item>
     </style>
 
     <style name="MainScreenButtonBlurb" parent="@style/GameBlurb">
@@ -100,11 +160,6 @@
     <style name="InvPopupButton" parent="@style/GameButton">
         <item name="android:background">@color/ButtonTextColor</item>
         <item name="android:textColor">@color/AccentColor</item>
-    </style>
-
-    <style name="SignOutButton" parent="@style/GameButton">
-        <item name="android:background">@color/SignOutButtonBackground</item>
-        <item name="android:textColor">@color/SignOutButtonTextColor</item>
     </style>
 
     <style name="FigureView">
