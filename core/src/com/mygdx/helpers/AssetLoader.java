@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class AssetLoader {
     public static Texture texture;
     public static TextureRegion background,powerupBackground;
-    public static TextureRegion redFlash;
-
+    public static TextureRegion powerupScreen;
+    public static TextureRegion manual1, manual2, manual3;
 
     public static Animation runningAnimationRed,runningAnimationBlue;
 
@@ -19,8 +19,8 @@ public class AssetLoader {
     public static TextureRegion defaultRed, defaultBlue, redRun1, redRun2, redFall, blueRun1 ,blueRun2, blueFall;
     public static TextureRegion egg0,egg1,egg2,egg3,egg4,egg5,egg6,egg7,egg8,egg9;
     
-    public static TextureRegion arrow,ready,start,redWinner, blueWinner, redLoser,blueLoser,playAgain,quit;
-    public static BitmapFont font,shadow;
+    public static TextureRegion arrow,ready,start,redWinner, blueWinner, redLoser,blueLoser,playAgain,quit,help;
+    public static BitmapFont font,shadow,arial;
 
     // loads every texture from the disk. 
     // Called when SPGame is intialized. 
@@ -30,9 +30,15 @@ public class AssetLoader {
         background.flip(false, true);
         powerupBackground = new TextureRegion(new Texture(Gdx.files.internal("powerupbackground.png")));
         powerupBackground.flip(false,true);
+        powerupScreen = new TextureRegion(new Texture(Gdx.files.internal("powerupscreen.png")));
+        powerupScreen.flip(false, true);
 
-        redFlash = new TextureRegion(new Texture(Gdx.files.internal("redflash.png")));
-        redFlash.flip(false, true);
+        manual1 = new TextureRegion(new Texture(Gdx.files.internal("manual1.png")));
+        manual1.flip(false, true);
+        manual2 = new TextureRegion(new Texture(Gdx.files.internal("manual2.png")));
+        manual2.flip(false, true);
+        manual3 = new TextureRegion(new Texture(Gdx.files.internal("manual3.png")));
+        manual3.flip(false, true);
      	
         defaultRed = new TextureRegion(new Texture(Gdx.files.internal("defaultred.png")));
         defaultRed.flip(false, true);
@@ -46,7 +52,7 @@ public class AssetLoader {
     	redFall = new TextureRegion(new Texture(Gdx.files.internal("redfall.png")));
         redFall.flip(false, true);
         
-        
+
         
         defaultBlue = new TextureRegion(new Texture(Gdx.files.internal("defaultblue.png")));
         defaultBlue.flip(false, true);
@@ -88,6 +94,8 @@ public class AssetLoader {
         quit.flip(false, true);
         playAgain = new TextureRegion(new Texture(Gdx.files.internal("PlayAgain.png")));
         playAgain.flip(false, true);
+        help = new TextureRegion(new Texture(Gdx.files.internal("help.png")));
+        help.flip(false, true);
 
         ramen = new TextureRegion(new Texture(Gdx.files.internal("ramen.png")));
         ramen.flip(false, true);
@@ -141,10 +149,10 @@ public class AssetLoader {
         egg9.flip(false, true);
         //for displaying on screen
         font = new BitmapFont(Gdx.files.internal("fonts/text.fnt"));
-        font.setScale(.25f, -.25f);
+        font.setScale(.15f, -.15f);
         shadow = new BitmapFont(Gdx.files.internal("fonts/shadow.fnt"));
         shadow.setScale(.25f, -.25f);
-        
+        arial = new BitmapFont(Gdx.files.internal("fonts/arial.fnt"));
     }
 
     public static void dispose() {

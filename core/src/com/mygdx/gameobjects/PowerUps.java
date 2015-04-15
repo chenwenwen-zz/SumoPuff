@@ -19,29 +19,29 @@ public class PowerUps {
 
     public PowerUps(String PowerUpType){
         this.powerUpType = PowerUpType;
-        vectorList.add(new Vector2(30,10));
-        vectorList.add(new Vector2(50,10));
-        vectorList.add(new Vector2(70,10));
-        vectorList.add(new Vector2(90,10));
-        vectorList.add(new Vector2(120,10));
+        vectorList.add(new Vector2(30,5));
+        vectorList.add(new Vector2(50,5));
+        vectorList.add(new Vector2(70,5));
+        vectorList.add(new Vector2(90,5));
+        vectorList.add(new Vector2(120,5));
         vectorList.add(new Vector2(30,30));
         vectorList.add(new Vector2(50,30));
         vectorList.add(new Vector2(70,30));
         vectorList.add(new Vector2(90,30));
         vectorList.add(new Vector2(120,30));
-        vectorList.add(new Vector2(15,60));
-        vectorList.add(new Vector2(35,60));
-        vectorList.add(new Vector2(55,60));
-        vectorList.add(new Vector2(75,60));
-        vectorList.add(new Vector2(95,60));
-        vectorList.add(new Vector2(115,60));
+        vectorList.add(new Vector2(25,55));
+        vectorList.add(new Vector2(45,55));
+        vectorList.add(new Vector2(65,55));
+        vectorList.add(new Vector2(85,55));
+        vectorList.add(new Vector2(105,55));
+        vectorList.add(new Vector2(125,55));
 
     }
 
     public HashMap<Vector2,Boolean> generateCord(){
         coordEggs.clear();
         if(powerUpType.equals("ramen")){
-           coordEggs.putAll(coordinateGenerator(10));
+           coordEggs.putAll(coordinateGenerator(3));
         }
         else if(powerUpType.equals("riceBall")){
               coordEggs.putAll(coordinateGenerator(7));

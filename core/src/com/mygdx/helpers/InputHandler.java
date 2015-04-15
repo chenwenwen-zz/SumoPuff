@@ -52,8 +52,17 @@ public class InputHandler implements InputProcessor {
         screenY=(int) coords2.y;
         actionResolver.sendMove(1);
         isTouched = true;
+
+        //Opens Manual
+
+
         //Initialize state
         if(myWorld.isInitialized()){
+
+            if (135<=screenX && screenX <=150 && 135<= screenY && screenY<=160){
+                myWorld.openManual();
+            }
+
             if(27<=screenX && screenX<= 57 && 45<=screenY && screenY<=92){
                 if(powerUpsSelection.get("ramen").equals(false)){
                   powerUpCount++;
@@ -82,18 +91,35 @@ public class InputHandler implements InputProcessor {
 
         }
 
+        //Opens Manual
+        if (myWorld.isManual()){
+
+            //if exit is pressed;
+            if (30<=screenX && screenX<=120 && 140<=screenY && screenY <=160){
+                myWorld.closeManual();
+            }
+            if (120<=screenX && screenX<=150 && 0<=screenY && screenY<=130){
+                Gdx.app.log("Screen Touched","pressed right");
+                myWorld.pageTurnRight(myWorld.getPage());
+            }
+            if (0<=screenX && screenX<=30 && 0<=screenY && screenY<=130){
+                Gdx.app.log("Screen touched", "press left");
+                myWorld.pageTurnLeft(myWorld.getPage());
+            }
+        }
+
         //Running State
         if(myWorld.isStart() && actionResolver.requestOppGameState()!=3){
             myCount++;
             actionResolver.BroadCastCount(myCount);
             if(isPowerUpFreeze==false) {
-                if (3 <= screenX && screenX <= 21 && 7 <= screenY && screenY <= 33) {
+                if (3 <= screenX && screenX <= 22 && 5 <= screenY && screenY <= 35) {
                     if (!isCordGenerated) {
                         powerUpCords.putAll(powerUps.get("1").generateCord());
                         whichPowerUp = powerUps.get("1").getPowerUpType();
                         myWorld.powerup();
                     }
-                } else if (3 <= screenX && screenX <= 22 && 39 <= screenY && screenY <= 66) {
+                } else if (3 <= screenX && screenX <= 22 && 42 <= screenY && screenY <= 72) {
                     if (!isCordGenerated) {
                         powerUpCords.putAll(powerUps.get("2").generateCord());
                         whichPowerUp = powerUps.get("2").getPowerUpType();
@@ -113,7 +139,7 @@ public class InputHandler implements InputProcessor {
                     continue;
                 }
                 else{
-                if (cord.x <= screenX  && screenX<= (cord.x +15) && cord.y <= screenY && screenY<= cord.y+15){
+                if (cord.x <= screenX  && screenX<= (cord.x +18) && cord.y <= screenY && screenY<= cord.y+23){
                     powerUpCords.put(cord, true);
                 }
                 else{

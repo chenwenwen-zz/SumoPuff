@@ -15,6 +15,7 @@ public class GameWorld {
     private Timer attackTimer;
     private Timer taskTimer;
     private final int gameOverState = 3;
+    private static int pageNumber=1;
 
 	// current game state.
 	private GameState currentState;
@@ -24,7 +25,7 @@ public class GameWorld {
 	
 	// Enum type for identifying game state.
 	public enum GameState {
-	   INITIALIZE, READY, RUNNING, GAMEOVER, POWERUP,POWERUPATTACK
+	   INITIALIZE, MANUAL, READY, RUNNING, GAMEOVER, POWERUP,POWERUPATTACK
 	}
 
 	
@@ -75,6 +76,9 @@ public class GameWorld {
             case INITIALIZE:
                 updateInitialize(delta);
                 break;
+            //opens the manual page
+            case MANUAL:
+                updateManual(delta);
             //When Both collides
 	        case READY:
 	        	// function called just to differentiate.
@@ -100,10 +104,9 @@ public class GameWorld {
 	        }
 	}
 
-    private void updateInitialize(float delta){
+    private void updateInitialize(float delta){}
 
-    }
-
+    private void updateManual (float delta){}
     private void updateReady(float delta) {
         // TODO Auto-generated method stub
         //Game starts when opponent is also ready
@@ -166,9 +169,9 @@ public class GameWorld {
 		return rightPuff;
 	}
 
-
-
     public void ready() {currentState =GameState.READY;}
+    public void closeManual() {currentState = GameState.INITIALIZE;}
+    public void openManual() {currentState = GameState.MANUAL;}
 	public void start() {
      currentState = GameState.RUNNING;
     }
@@ -177,6 +180,7 @@ public class GameWorld {
     public void powerupAttack(){currentState = GameState.POWERUPATTACK;}
 
     public boolean isInitialized(){ return currentState== GameState.INITIALIZE;}
+    public boolean isManual() {return currentState == GameState.MANUAL;}
     public boolean isReady() {return currentState == GameState.READY;}
     public boolean isStart(){
         return currentState == GameState.RUNNING;
@@ -187,6 +191,24 @@ public class GameWorld {
     }
     public boolean isPowerUp(){return currentState==GameState.POWERUP;}
     public boolean isPowerUpAttack(){return currentState==GameState.POWERUPATTACK;}
+
+    public void pageTurnLeft(int pageNumber){
+        if (pageNumber == 1){
+            this.pageNumber =3;
+        }
+        else{
+            this.pageNumber--;
+        }
+    }
+    public void pageTurnRight(int pageNumber){
+        if (pageNumber == 3){
+            this.pageNumber =1;
+        }
+        else{
+            this.pageNumber++;
+        }
+    }
+    public int getPage(){return pageNumber; }
 
 	public void restart() {
         currentState = GameState.INITIALIZE;
