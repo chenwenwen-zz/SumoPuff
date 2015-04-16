@@ -29,7 +29,7 @@ public class InputHandler implements InputProcessor {
     private HashMap<Vector2,Boolean> powerUpCords = new HashMap<Vector2,Boolean>();
     private boolean isPowerUpFreeze = true;
     private boolean isTouched = false;
-
+    private Boolean musicoff=false;
 
 
     public InputHandler(GameWorld myWorld,ActionResolver actionResolver) {
@@ -141,6 +141,7 @@ public class InputHandler implements InputProcessor {
                 else{
                 if (cord.x <= screenX  && screenX<= (cord.x +18) && cord.y <= screenY && screenY<= cord.y+23){
                     powerUpCords.put(cord, true);
+                        AssetLoader.EggPressed.play();
                 }
                 else{
                     break;

@@ -3,6 +3,7 @@ package com.mygdx.gameworld;
 import com.mygdx.gameobjects.Puff;
 import com.mygdx.gameobjects.Timer;
 import com.mygdx.helpers.ActionResolver;
+import com.mygdx.helpers.AssetLoader;
 
 import java.util.ArrayList;
 
@@ -63,6 +64,8 @@ public class GameWorld {
         }
        }
         finally {
+            AssetLoader.BackgroundMusic.play();
+            AssetLoader.BackgroundMusic.setLooping(true);
 
         }
 
@@ -97,6 +100,7 @@ public class GameWorld {
                 updateRunning(delta);
                 break;
             case GAMEOVER:
+                AssetLoader.BackgroundMusic.stop();
                 updateGameOver();
                 break;
 	        default:
@@ -159,6 +163,7 @@ public class GameWorld {
 
     public void updateGameOver(){
         actionResolver.BroadCastMyGameState(gameOverState);
+
     }
 
 	public Puff getLeftPuff(){

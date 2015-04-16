@@ -1,6 +1,8 @@
 package com.mygdx.helpers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -21,10 +23,22 @@ public class AssetLoader {
     
     public static TextureRegion arrow,ready,start,redWinner, blueWinner, redLoser,blueLoser,playAgain,quit,help;
     public static BitmapFont font,shadow,arial;
-
+    public static Music BackgroundMusic;
+    public static Sound EggPressed;
+    public static Sound Fanfare;
+    public static Sound GameOver;
+    public static Sound FallingDown;
+    public static Sound PowerUp;
     // loads every texture from the disk. 
     // Called when SPGame is intialized. 
     public static void load(){
+        BackgroundMusic=Gdx.audio.newMusic(Gdx.files.internal("BackgroundMusic.mp3"));
+//        BackgroundMusic=Gdx.audio.newMusic(Gdx.files.internal("BackgroundMusic.mp3"));
+        Fanfare=Gdx.audio.newSound(Gdx.files.internal("Fanfare.mp3"));
+        GameOver=Gdx.audio.newSound(Gdx.files.internal("GameOver.mp3"));
+        EggPressed=Gdx.audio.newSound(Gdx.files.internal("EggPressed.mp3"));
+        FallingDown=Gdx.audio.newSound(Gdx.files.internal("FallingDown.mp3"));
+        PowerUp=Gdx.audio.newSound(Gdx.files.internal("PowerUp.mp3"));
 
         background = new TextureRegion(new Texture(Gdx.files.internal("background.png")));
         background.flip(false, true);

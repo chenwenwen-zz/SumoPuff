@@ -58,9 +58,9 @@ public class GameRenderer {
     private int broadcastNoAttack = 0;
     private int broadcastAttack = 0;
     private Timer freezeTimer = new Timer(10);
-
-
-
+    private Boolean musicgameover=false;
+    private Boolean musicsumofalling=false;
+    private Boolean musicpowerup=false;
     //Aspect Ratio and Scaling Components
     private static final int VIRTUAL_WIDTH = 800;
     private static final int VIRTUAL_HEIGHT = 480;
@@ -73,6 +73,8 @@ public class GameRenderer {
     public static float height;
     public static float w;
     public static float h;
+
+
 
 
     public GameRenderer(GameWorld world, int midPointX,ActionResolver actionResolver,InputHandler handler,Timer attackTimer,Timer taskTimer) {
@@ -283,7 +285,12 @@ public class GameRenderer {
                 //powerupfail
             }
             else{
+                if(musicpowerup==false){
+                    AssetLoader.PowerUp.play();
+                    musicpowerup=true;
+                }
                 myWorld.powerupAttack();
+
             }
             drawPowerUpDisable(batcher);
             //normal game render routine(Puff Animation, Draw Arrow, check PowerUpAttack)
@@ -342,27 +349,52 @@ public class GameRenderer {
 	    else if(myWorld.isGameOver()){
             //reset showStart
 			showStart =0;
+
+
             //reset myCount
             handler.resetMyCount();
             actionResolver.BroadCastCount(handler.getMyCount());
 			//if userPuff loses
 			if (myWorld.getLeftPuff().getX()<15){
+                if(musicsumofalling==false){
+                    AssetLoader.FallingDown.play();
+                    musicsumofalling=true;
+                }
 				batcher.draw(AssetLoader.redFall,  (leftPuff.getX()+falldistance+3), leftPuff.getY()-(fallcurve(falldistance))/10, leftPuff.getWidth(), leftPuff.getHeight());
 				batcher.draw(AssetLoader.defaultBlue,  rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
 				if (falldistance<-40){
                     if(player1 > player2){
                         if(player1 == me){
+
+                            if(musicgameover==false){
+                                AssetLoader.GameOver.pause();
+                            AssetLoader.GameOver.play();
+                                musicgameover=true;}
+
                             batcher.draw(AssetLoader.redLoser, 0, 0, 150, 160);
+
                         }
                         else{
+                            if(musicgameover==false){
+                            AssetLoader.Fanfare.play();
+                                musicgameover=true;}
                             batcher.draw(AssetLoader.blueWinner, 0, 0, 150, 160);
                         }
                     }
                     else{
                         if(player1 == me){
+                            if(musicgameover==false){
+                                AssetLoader.Fanfare.play();
+                                musicgameover=true;
+                            }
+
                             batcher.draw(AssetLoader.blueWinner, 0, 0, 150, 160);
                         }
                         else{
+                            if(musicgameover==false){
+                                AssetLoader.GameOver.play();
+                                musicgameover=true;
+                            }
                             batcher.draw(AssetLoader.redLoser, 0, 0, 150, 160);
                         }
                     }
@@ -377,22 +409,43 @@ public class GameRenderer {
 
 			//if oppPuff loses
 			if (myWorld.getRightPuff().getX()>110){
+                if(musicsumofalling==false){
+                    AssetLoader.FallingDown.play();
+                    musicsumofalling=true;
+                }
 				batcher.draw(AssetLoader.blueFall,  (rightPuff.getX()-falldistance-3), rightPuff.getY()-(fallcurve(falldistance))/10, rightPuff.getWidth(), rightPuff.getHeight());
 				batcher.draw(AssetLoader.defaultRed,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
 				if (falldistance<-40){
                     if(player1 > player2){
                         if(player1 == me){
+                            if(musicgameover==false){
+                                AssetLoader.Fanfare.play();
+                                musicgameover=true;
+                            }
                             batcher.draw(AssetLoader.redWinner, 0, 0, 150, 160);
                         }
                         else{
+                            if(musicgameover==false){
+                            AssetLoader.GameOver.play();
+                                musicgameover=true;}
                             batcher.draw(AssetLoader.blueLoser, 0, 0, 150, 160);
                         }
                     }
                     else{
                         if(player1 == me){
+                            if(musicgameover==false){
+                                AssetLoader.GameOver.play();
+                                musicgameover=true;
+                            }
+
                             batcher.draw(AssetLoader.blueLoser, 0, 0, 150, 160);
                         }
                         else{
+                            if(musicgameover==false){
+                                AssetLoader.Fanfare.play();
+                                musicgameover=true;
+                            }
+
                             batcher.draw(AssetLoader.redWinner, 0, 0, 150, 160);
                         }
                     }
