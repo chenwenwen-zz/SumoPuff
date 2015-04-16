@@ -23,11 +23,12 @@ public class GameScreen implements Screen {
     public GameScreen(ActionResolver actionResolver) {
         Timer attackTimer = new Timer(5);
         Timer taskTimer = new Timer(4);
+        Timer freezeTimer = new Timer(8);
         Gdx.app.log("GameScreen", "Attached");
-        world = new GameWorld(actionResolver,attackTimer,taskTimer);
+        world = new GameWorld(actionResolver,attackTimer,taskTimer,freezeTimer);
         InputHandler handler = new InputHandler(world,actionResolver);
         Gdx.input.setInputProcessor(handler);
-        renderer = new GameRenderer(world,midPointX,actionResolver,handler,attackTimer,taskTimer) ;
+        renderer = new GameRenderer(world,midPointX,actionResolver,handler,attackTimer,taskTimer,freezeTimer) ;
     }
 
     @Override

@@ -15,6 +15,7 @@ public class GameWorld {
     private ActionResolver actionResolver;
     private Timer attackTimer;
     private Timer taskTimer;
+    private Timer freezeTimer;
     private final int gameOverState = 3;
     private static int pageNumber=1;
 
@@ -30,13 +31,13 @@ public class GameWorld {
 	}
 
 	
-	public GameWorld(ActionResolver actionResolver,Timer attackTimer,Timer taskTimer) {
+	public GameWorld(ActionResolver actionResolver,Timer attackTimer,Timer taskTimer, Timer freezeTimer) {
 		// initial state of the game when GameWorld is initialized. 
 		currentState = GameState.INITIALIZE;
         this.actionResolver=actionResolver;
         this.attackTimer = attackTimer;
         this.taskTimer = taskTimer;
-
+        this.freezeTimer = freezeTimer;
         try{
         ArrayList<String> participants = actionResolver.getParticipants();
         String myId = actionResolver.getMyId();
@@ -224,6 +225,9 @@ public class GameWorld {
         rightPuff.collide = false;
         actionResolver.BroadCastMyGameState(0);
         actionResolver.sendPowerUpAttack(0);
+        freezeTimer.stop();
+        attackTimer.stop();
+        taskTimer.stop();
 
     }
 	

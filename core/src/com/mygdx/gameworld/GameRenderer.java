@@ -41,23 +41,22 @@ public class GameRenderer {
 	private Puff rightPuff;
     private ActionResolver actionResolver;
     private InputHandler handler;
+    private Timer attackTimer;
+    private Timer taskTimer;
+    private Timer freezeTimer;
 
 
     // Variables
     private int OppoCount;
-    private int delay = 0;
     private float leftPuffX=0;
     private float rightPuffX=0;
     private HashMap<String,Boolean> powerUpsSelection;
     private HashMap<String,PowerUps> powerUps;
     private HashMap<Vector2,Boolean> powerUpCords;
-    private Timer attackTimer;
-    private Timer taskTimer;
     private ArrayList<TextureRegion> eggs = new ArrayList<TextureRegion>();
     private static int eggIndex = 0;
     private int broadcastNoAttack = 0;
     private int broadcastAttack = 0;
-    private Timer freezeTimer = new Timer(10);
     private Boolean musicgameover=false;
     private Boolean musicsumofalling=false;
     private Boolean musicpowerup=false;
@@ -77,7 +76,7 @@ public class GameRenderer {
 
 
 
-    public GameRenderer(GameWorld world, int midPointX,ActionResolver actionResolver,InputHandler handler,Timer attackTimer,Timer taskTimer) {
+    public GameRenderer(GameWorld world, int midPointX,ActionResolver actionResolver,InputHandler handler,Timer attackTimer,Timer taskTimer,Timer freezeTimer) {
 		myWorld = world;
 		leftPuff = myWorld.getLeftPuff();
 		rightPuff = myWorld.getRightPuff();
@@ -89,6 +88,7 @@ public class GameRenderer {
         this.powerUpCords = handler.getPowerUpCords();
         this.attackTimer = attackTimer;
         this.taskTimer = taskTimer;
+        this.freezeTimer= freezeTimer;
 
 
         this.eggs.add(AssetLoader.egg0);
@@ -163,9 +163,7 @@ public class GameRenderer {
         int player2 = participants.get(1).hashCode();
         int me = myId.hashCode();
 
-
-
-
+        //Gdx.app.log("搞什么东西啊",actionResolver.checkPowerUpAttack()+"");
 
 		// Begin SpriteBatch
 		batcher.begin();
@@ -194,7 +192,6 @@ public class GameRenderer {
 
 
         else if (myWorld.isManual()){
-
 
             if (myWorld.getPage()==1){
                 batcher.draw(AssetLoader.manual1,0,0,150,160);
@@ -235,30 +232,18 @@ public class GameRenderer {
             ++showStart;
             handler.resetPowerupVar();
             //sends 3 no attack Packet to end Reset Count
-            broadcastAttack=0;
             while(broadcastNoAttack<3){
             actionResolver.sendPowerUpAttack(0);
             broadcastNoAttack++;
             }
             //end of sending
-
-
-           if(handler.isPowerUpFreezed()){
-              freezeTimer.start();
-              AssetLoader.font.draw(batcher,"PowerUp Frozen",35,35);
-           }
-           if(freezeTimer.isTimeUp()){
-               handler.setPowerUpFreeze(false);
-            }
-
-
-
             if(handler.isPowerUpFreezed()){
-               drawPowerUpDisable(batcher);
-               AssetLoader.font.draw(batcher,"PowerUp Frozen",35,35);
+                drawPowerUpDisable(batcher);
+                AssetLoader.font.draw(batcher,"PowerUp Frozen",35,35);
             }else{
-               drawPowerUpEnable(batcher);
+                drawPowerUpEnable(batcher);
             }
+
 
            //normal game render routine(Puff Animation, Draw Arrow, check PowerUpAttack)
            generalGameRender(runTime);
@@ -273,7 +258,6 @@ public class GameRenderer {
 
             //Render eggs that appear on the screen at powerUp state
             eggIndex=0;
-            broadcastNoAttack = 0;
             batcher.draw(AssetLoader.powerupScreen,0,0,150,80);
             for(Vector2 key:powerUpCords.keySet()){
                 if(powerUpCords.get(key)==false)
@@ -302,41 +286,48 @@ public class GameRenderer {
       else if(myWorld.isPowerUpAttack()){
             //normal game render routine(Puff Animation, Draw Arrow, check PowerUpAttack)
             generalGameRender(runTime);
-
+            broadcastNoAttack = 0;
             //Render PowerUp Display
             drawPowerUpDisable(batcher);
             if(handler.getWhichPowerUp().equals("ramen")){
                showStart=0;
                //reset both counts by sending 3 packets to ensure opponent counts being reset
                AssetLoader.font.draw(batcher,"Count Reset",40,5);
-               while(broadcastAttack<3){
+               while(this.broadcastAttack<3){
                handler.resetMyCount();
                AssetLoader.font.draw(batcher,"Count Reset",40,5);
                actionResolver.BroadCastCount(handler.getMyCount());
                actionResolver.sendPowerUpAttack(1);
-               broadcastAttack++;
+               this.broadcastAttack++;
                }
-
+               this.broadcastAttack=0;
                countDown(batcher);
 
             }
             else if(handler.getWhichPowerUp().equals("iceCream")){
                 //freeze the powerUp
                 //reset both counts by sending 3 packets to ensure opponent's powerup is freezed
-                while(broadcastAttack<3){
-                    AssetLoader.font.draw(batcher,"Powerup Frozen ",35,5);
-                    actionResolver.BroadCastCount(handler.getMyCount());
+                while(this.broadcastAttack<3){
+                    AssetLoader.font.draw(batcher, "Powerup Frozen ", 35, 5);
+                    //Gdx.app.log("你到底有没有send","也是醉了");
                     actionResolver.sendPowerUpAttack(2);
-                    broadcastAttack++;
+                    this.broadcastAttack++;
                 }
-               attackTimer.stop();
-               myWorld.start();
+               this.broadcastAttack=0;
+               //attackTimer.stop();
+              // myWorld.start();
             }
             else{
                 AssetLoader.font.draw(batcher,"Hit x2 ",60,5);
                 actionResolver.sendPowerUpAttack(3);
                 countDown(batcher);
                 showStart=0;
+            }
+            if(handler.isPowerUpFreezed()){
+                drawPowerUpDisable(batcher);
+                AssetLoader.font.draw(batcher,"PowerUp Frozen",35,35);
+            }else{
+                drawPowerUpEnable(batcher);
             }
 
 
@@ -352,8 +343,8 @@ public class GameRenderer {
 
 
             //reset myCount
-            handler.resetMyCount();
-            actionResolver.BroadCastCount(handler.getMyCount());
+            //handler.resetMyCount();
+            //actionResolver.BroadCastCount(handler.getMyCount());
 			//if userPuff loses
 			if (myWorld.getLeftPuff().getX()<15){
                 if(musicsumofalling==false){
@@ -553,22 +544,23 @@ public class GameRenderer {
         }
     }
 
-    private void checkPowerUpAttacks(SpriteBatch batcher){
+    private void checkPowerUpAttacks(SpriteBatch batcher) throws InterruptedException {
         if(actionResolver.checkPowerUpAttack()==1){
-
-            AssetLoader.font.draw(batcher,"Opp: Count Reset",40,5);
+            AssetLoader.font.draw(batcher,"Attack: Count Reset",40,5);
+            attackTimer.start();
             handler.resetMyCount();
             actionResolver.BroadCastCount(handler.getMyCount());
-            requestCountDown(batcher);
-
+            countDown(batcher);
         }
 
         else if(actionResolver.checkPowerUpAttack()==2) {
-            AssetLoader.font.draw(batcher,"Opp: Froze Count ",50,5);
+            AssetLoader.font.draw(batcher,"Attack: Froze Powerup ",50,5);
+            Gdx.app.log("freeze", String.valueOf(actionResolver.checkPowerUpAttack()));
             handler.setPowerUpFreeze(true);
         }
+
         else if(actionResolver.checkPowerUpAttack()==3){
-            AssetLoader.font.draw(batcher,"Opp: Hit x2 ",45,5);
+            AssetLoader.font.draw(batcher,"Attack: Opponent Hit x2 ",45,5);
             requestCountDown(batcher);
 
         }
@@ -576,7 +568,7 @@ public class GameRenderer {
 
 
     //update puff animation and other frames
-    private void generalGameRender(float runTime) {
+    private void generalGameRender(float runTime) throws InterruptedException {
         if (leftPuff.collides(rightPuff)) {
             OppoCount = actionResolver.requestOppoCount();
         }
@@ -592,11 +584,20 @@ public class GameRenderer {
 
                 leftPuff.onClick(rightPuff, handler.getMyCount(), OppoCount, leftPuffX, rightPuffX);
                 rightPuff.onClick(leftPuff, handler.getMyCount(), OppoCount, leftPuffX, rightPuffX);
-                delay = 0;
+
            // } //else {
             //    delay++;
            // }
         }
+
+        if(handler.isPowerUpFreezed()){
+            this.freezeTimer.start();
+           // AssetLoader.font.draw(batcher,"PowerUp Frozen",35,35);
+        }
+        if(freezeTimer.isTimeUp()){
+            handler.setPowerUpFreeze(false);
+        }
+
             AssetLoader.font.draw(batcher, "You:" + handler.getMyCount() + "", 4, 85);
             AssetLoader.font.draw(batcher, "Opp:" + actionResolver.requestOppoCount() + " ", 4, 95);
 
