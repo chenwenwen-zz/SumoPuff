@@ -173,6 +173,12 @@ public class GameRenderer {
 
         //GAMESTATE = INITIALIZE
         if(myWorld.isInitialized()){
+            //reset boolean variable for sound
+            this.musicgameover=false;
+            this.musicsumofalling=false;
+            this.musicpowerup=false;
+
+
            batcher.draw(AssetLoader.powerupBackground, 0,0,150,160);
            batcher.draw(AssetLoader.chooseapower,10,10,130,25);
            batcher.draw(AssetLoader.help, 138,138, 10,20);
@@ -358,7 +364,7 @@ public class GameRenderer {
                         if(player1 == me){
 
                             if(musicgameover==false){
-                                AssetLoader.GameOver.pause();
+                            AssetLoader.GameOver.pause();
                             AssetLoader.GameOver.play();
                                 musicgameover=true;}
 

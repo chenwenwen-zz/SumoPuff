@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.android.gms.common.ConnectionResult;
@@ -83,6 +84,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     String mIncomingInvitationId = null;
 
     // Create game view
+    private ApplicationListener listener;
     private View gameView;
     private LinearLayout linearLayout;
 
@@ -116,7 +118,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         for (int id : CLICKABLES) {
             findViewById(id).setOnClickListener(this);
         }
-        gameView = initializeForView(new SPGame(this),new AndroidApplicationConfiguration());
+        listener = new SPGame(this);
+        gameView = initializeForView(listener,new AndroidApplicationConfiguration());
         linearLayout = (LinearLayout) findViewById(R.id.screen_game);
         linearLayout.addView(gameView,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
         }
@@ -314,7 +317,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
         // if we're in a room, leave it.
         leaveRoom();
-
         // stop trying to keep the screen on
         stopKeepingScreenOn();
 
@@ -480,6 +482,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         // we have left the room; return to main screen.
         Log.d(TAG, "onLeftRoom, code " + statusCode);
         switchToMainScreen();
+        listener.dispose();
     }
 
     // Called when we get disconnected from the room. We return to the main screen.
@@ -847,8 +850,11 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         // make the requested screen visible; hide all others.
         for (int id : SCREENS) {
             findViewById(id).setVisibility(screenId == id ? View.VISIBLE : View.GONE);
+            if(screenId == R.id.screen_game){
             gameView.setVisibility(screenId == R.id.screen_game?View.VISIBLE : View.GONE);
+            }
         }
+
         mCurScreen = screenId;
 
         // should we show the invitation popup?
@@ -901,7 +907,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         this.powerUpType=0;
         this.move=0;
         linearLayout.removeViewAt(0);
-        gameView = initializeForView(new SPGame(this),new AndroidApplicationConfiguration());
+        listener=new SPGame(this);
+        gameView = initializeForView(listener,new AndroidApplicationConfiguration());
         linearLayout.addView(gameView,0,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
 
     }

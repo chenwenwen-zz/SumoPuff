@@ -157,6 +157,10 @@ public class InputHandler implements InputProcessor {
                 myCount+=2;
                 actionResolver.BroadCastCount(myCount);
             }
+            else if(whichPowerUp.equals("iceCream")){
+                myCount+=1;
+                actionResolver.BroadCastCount(myCount);
+            }
         }
 
         //GameOverState

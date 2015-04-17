@@ -65,8 +65,7 @@ public class GameWorld {
         }
        }
         finally {
-            AssetLoader.BackgroundMusic.play();
-            AssetLoader.BackgroundMusic.setLooping(true);
+
 
         }
 
@@ -228,6 +227,8 @@ public class GameWorld {
         freezeTimer.stop();
         attackTimer.stop();
         taskTimer.stop();
+        AssetLoader.BackgroundMusic.play();
+        AssetLoader.BackgroundMusic.setLooping(true);
 
     }
 	

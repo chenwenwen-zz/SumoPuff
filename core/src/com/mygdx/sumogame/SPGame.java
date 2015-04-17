@@ -19,6 +19,8 @@ public class SPGame extends Game {
 		Gdx.app.log("SPGame", "created");
 		// Loads all the texture files. 
 		AssetLoader.load();
+        AssetLoader.BackgroundMusic.play();
+        AssetLoader.BackgroundMusic.setLooping(true);
 		// changes the screen to the gameplay screen.
 		setScreen(new GameScreen(actionResolver));
 	}
@@ -27,7 +29,10 @@ public class SPGame extends Game {
 	// method called to dispose of the screen
 	// also disposes the created texture.  
     public void dispose() {
+        AssetLoader.BackgroundMusic.dispose();
         super.dispose();
-        AssetLoader.dispose();
+       // AssetLoader.dispose();
     }
+
+
 }

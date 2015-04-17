@@ -58,27 +58,27 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        Gdx.app.log("GameScreen", "show called");
+
     }
 
     @Override
     public void hide() {
-        Gdx.app.log("GameScreen", "hide called");     
+
     }
 
     @Override
     public void pause() {
-        Gdx.app.log("GameScreen", "pause called");        
+
     }
 
     @Override
     public void resume() {
-        Gdx.app.log("GameScreen", "resume called");       
+        
+        Gdx.app.log("GameScreen", "resume called");
     }
 
     @Override
     public void dispose() {
-        // Leave blank
         // Need to dispose all the running class.but how?
 
     }
