@@ -44,7 +44,11 @@ public class GameRenderer {
     private Timer attackTimer;
     private Timer taskTimer;
 <<<<<<< HEAD
+<<<<<<< HEAD
 //    private Timer freezeTimer;
+=======
+    private Timer freezeTimer;
+>>>>>>> origin/master
 =======
     private Timer freezeTimer;
 >>>>>>> origin/master
@@ -62,6 +66,7 @@ public class GameRenderer {
     private int broadcastNoAttack = 0;
     private int broadcastAttack = 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     private Timer freezeTimer = new Timer(10);
 
@@ -69,6 +74,8 @@ public class GameRenderer {
 
 
 =======
+=======
+>>>>>>> origin/master
     private Boolean musicgameover=false;
     private Boolean musicsumofalling=false;
     private Boolean musicpowerup=false;

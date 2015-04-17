@@ -29,7 +29,7 @@ public class GameScreen implements Screen {
         world = new GameWorld(actionResolver,attackTimer,taskTimer,freezeTimer);
         InputHandler handler = new InputHandler(world,actionResolver);
         Gdx.input.setInputProcessor(handler);
-<<<<<<< HEAD
+
 
 //        Gdx.input.setInputProcessor(this);
 //        Gdx.input.setCatchBackKey(true);
@@ -38,9 +38,7 @@ public class GameScreen implements Screen {
 
         renderer = new GameRenderer(world,midPointX,actionResolver,handler,attackTimer,taskTimer,freezeTimer) ;
 
-=======
-        renderer = new GameRenderer(world,midPointX,actionResolver,handler,attackTimer,taskTimer,freezeTimer) ;
->>>>>>> origin/master
+
     }
 
     @Override
