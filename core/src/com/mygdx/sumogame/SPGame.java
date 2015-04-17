@@ -17,26 +17,19 @@ public class SPGame extends Game {
 	// default method called by the framework to start the game.
 	public void create () {
 		Gdx.app.log("SPGame", "created");
-
 		// Loads all the texture files. 
 		AssetLoader.load();
-
         AssetLoader.BackgroundMusic.play();
         AssetLoader.BackgroundMusic.setLooping(true);
-
-
 		setScreen(new GameScreen(actionResolver));
 
 	}
 
 	@Override
 	// method called to dispose of the screen
-	// also disposes the created texture.  
     public void dispose() {
         AssetLoader.BackgroundMusic.dispose();
         super.dispose();
-
-
     }
 
 

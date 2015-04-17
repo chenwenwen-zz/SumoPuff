@@ -29,8 +29,6 @@ public class InputHandler implements InputProcessor {
     private HashMap<Vector2,Boolean> powerUpCords = new HashMap<Vector2,Boolean>();
     private boolean isPowerUpFreeze = true;
     private boolean isTouched = false;
-    private Boolean musicoff=false;
-
 
     public InputHandler(GameWorld myWorld,ActionResolver actionResolver) {
 		this.myWorld = myWorld;
@@ -221,20 +219,9 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-//
-//        if(keycode == Keys.BACK){
-//            // Do your optional back button handling (show pause menu?)
-//            AssetLoader.BackgroundMusic.stop();
-//            return false;
-//        }
 
         return true;
-//            return true;
-////        return true;
 
-
-
-//	       return true;
 	}
 
 	@Override

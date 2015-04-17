@@ -28,13 +28,6 @@ public class GameScreen implements Screen {
         world = new GameWorld(actionResolver,attackTimer,taskTimer,freezeTimer);
         InputHandler handler = new InputHandler(world,actionResolver);
         Gdx.input.setInputProcessor(handler);
-
-
-//        Gdx.input.setInputProcessor(this);
-//        Gdx.input.setCatchBackKey(true);
-//        Gdx.input.setCatchBackKey(false);
-//        renderer = new GameRenderer(world,midPointX,actionResolver,handler,attackTimer,taskTimer) ;
-
         renderer = new GameRenderer(world,midPointX,actionResolver,handler,attackTimer,taskTimer,freezeTimer) ;
 
 
@@ -68,7 +61,6 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
 
-        Gdx.app.log("GameScreen", "show called");
 
     }
 
@@ -80,19 +72,17 @@ public class GameScreen implements Screen {
     @Override
     public void pause() {
 
-        Gdx.app.log("GameScreen", "pause called");        
 
     }
 
     @Override
     public void resume() {
-        
-        Gdx.app.log("GameScreen", "resume called");
+
     }
 
     @Override
     public void dispose() {
-        // Need to dispose all the running class.but how?
+
 
     }
 

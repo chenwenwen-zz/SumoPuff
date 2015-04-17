@@ -43,8 +43,7 @@ public class GameRenderer {
     private InputHandler handler;
     private Timer attackTimer;
     private Timer taskTimer;
-
-//    private Timer freezeTimer;
+    private Timer freezeTimer;
 
 
 
@@ -61,13 +60,6 @@ public class GameRenderer {
     private int broadcastAttack = 0;
 
 
-    private Timer freezeTimer = new Timer(10);
-
-//
-//    private Boolean musicgameover=false;
-//    private Boolean musicsumofalling=false;
-//    private Boolean musicpowerup=false;
-
     //Aspect Ratio and Scaling Components
     private static final int VIRTUAL_WIDTH = 800;
     private static final int VIRTUAL_HEIGHT = 480;
@@ -83,7 +75,6 @@ public class GameRenderer {
     private Boolean musicgameover=false;
     private Boolean musicsumofalling=false;
     private Boolean musicpowerup=false;
-    private Boolean musicbkgd=false;
 
 
 
@@ -135,13 +126,7 @@ public class GameRenderer {
 
 	// renders everything. 
 	public synchronized void render(float runTime) throws InterruptedException {
-        if(musicbkgd==false) {
-            AssetLoader.BackgroundMusic.setVolume(0.3f);
-            AssetLoader.BackgroundMusic.play();
-            AssetLoader.BackgroundMusic.setLooping(true);
 
-            musicbkgd=true;
-        }
         //Begin Aspect Ratio Conversion
         cam.update();
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -363,14 +348,9 @@ public class GameRenderer {
 		//GAMESTATE = OVER
 	    else if(myWorld.isGameOver()){
             AssetLoader.BackgroundMusic.stop();
-
             //reset showStart
 			showStart =0;
 
-
-            //reset myCount
-            //handler.resetMyCount();
-            //actionResolver.BroadCastCount(handler.getMyCount());
 			//if userPuff loses
 			if (myWorld.getLeftPuff().getX()<15){
                 if(musicsumofalling==false){
@@ -602,7 +582,6 @@ public class GameRenderer {
         rightPuffX = actionResolver.requestRightPuffX();
         //delay is optional
         if ((actionResolver.checkMove() == 1) || (handler.getIsTouched() == true) || (!leftPuff.collides(rightPuff)) || (actionResolver.requestOppGameState() == 3)) {
-           // if (delay == 2) {
                 if (leftPuff.getId().equals("player1")) {
                     actionResolver.broadCastLeftPuffX(leftPuff.getX());
                     actionResolver.broadCastRightPuffX(rightPuff.getX());
@@ -611,14 +590,10 @@ public class GameRenderer {
                 leftPuff.onClick(rightPuff, handler.getMyCount(), OppoCount, leftPuffX, rightPuffX);
                 rightPuff.onClick(leftPuff, handler.getMyCount(), OppoCount, leftPuffX, rightPuffX);
 
-           // } //else {
-            //    delay++;
-           // }
         }
 
         if(handler.isPowerUpFreezed()){
             this.freezeTimer.start();
-           // AssetLoader.font.draw(batcher,"PowerUp Frozen",35,35);
         }
         if(freezeTimer.isTimeUp()){
             handler.setPowerUpFreeze(false);
@@ -662,9 +637,7 @@ public class GameRenderer {
             AssetLoader.font.draw(batcher,2+"",70,20);
         if(actionResolver.getTimeLeft()==3)
             AssetLoader.font.draw(batcher,3+"",70,20);
-        /*if(actionResolver.getTimeLeft()==0){
-            showStart=0;
-        }*/
+
     }
 
 

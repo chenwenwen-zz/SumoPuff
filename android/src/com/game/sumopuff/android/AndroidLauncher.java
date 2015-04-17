@@ -80,11 +80,11 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     String mMyId = null;
 
     // If non-null, this is the id of the invitation we received via the
-    // invitation listener
+    // invitation game
     String mIncomingInvitationId = null;
 
     // Create game view
-    private ApplicationListener listener;
+    private ApplicationListener game;
     private View gameView;
     private LinearLayout linearLayout;
 
@@ -114,12 +114,12 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
 
-        // set up a click listener for everything we care about
+        // set up a click game for everything we care about
         for (int id : CLICKABLES) {
             findViewById(id).setOnClickListener(this);
         }
-        listener = new SPGame(this);
-        gameView = initializeForView(listener,new AndroidApplicationConfiguration());
+        game = new SPGame(this);
+        gameView = initializeForView(game,new AndroidApplicationConfiguration());
         linearLayout = (LinearLayout) findViewById(R.id.screen_game);
         linearLayout.addView(gameView,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
         }
@@ -415,7 +415,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         Log.d(TAG, "onConnected() called. Sign in successful!");
         Log.d(TAG, "Sign-in succeeded.");
 
-        // register listener so we are notified if we receive an invitation to play
+        // register game so we are notified if we receive an invitation to play
         // while we are in the game
         Games.Invitations.registerInvitationListener(mGoogleApiClient, this);
         if (connectionHint != null) {
@@ -482,7 +482,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         // we have left the room; return to main screen.
         Log.d(TAG, "onLeftRoom, code " + statusCode);
         switchToMainScreen();
-        listener.dispose();
+        game.dispose();
     }
 
     // Called when we get disconnected from the room. We return to the main screen.
@@ -566,6 +566,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
 
     @Override
     public void onPeerLeft(Room room, List<String> peersWhoLeft) {
+        game.dispose();
         resetGame();
         updateRoom(room);
 
@@ -907,8 +908,8 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         this.powerUpType=0;
         this.move=0;
         linearLayout.removeViewAt(0);
-        listener=new SPGame(this);
-        gameView = initializeForView(listener,new AndroidApplicationConfiguration());
+        game =new SPGame(this);
+        gameView = initializeForView(game,new AndroidApplicationConfiguration());
         linearLayout.addView(gameView,0,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
 
     }

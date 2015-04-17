@@ -230,7 +230,6 @@ public class GameWorld {
         taskTimer.stop();
         AssetLoader.BackgroundMusic.play();
         AssetLoader.BackgroundMusic.setLooping(true);
-
     }
 	
 
