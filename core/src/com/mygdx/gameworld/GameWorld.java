@@ -100,7 +100,7 @@ public class GameWorld {
                 updateRunning(delta);
                 break;
             case GAMEOVER:
-                AssetLoader.BackgroundMusic.stop();
+//                AssetLoader.BackgroundMusic.stop();
                 updateGameOver();
                 break;
 	        default:
@@ -217,6 +217,7 @@ public class GameWorld {
 
 	public void restart() {
         currentState = GameState.INITIALIZE;
+
         gameOverReady = false;
         leftPuff.reset(20, 100, 22, 45);
         rightPuff.reset(108, 100, 22, 45);

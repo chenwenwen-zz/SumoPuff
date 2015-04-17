@@ -43,7 +43,9 @@ public class GameRenderer {
     private InputHandler handler;
     private Timer attackTimer;
     private Timer taskTimer;
-    private Timer freezeTimer;
+
+//    private Timer freezeTimer;
+
 
 
     // Variables
@@ -57,9 +59,15 @@ public class GameRenderer {
     private static int eggIndex = 0;
     private int broadcastNoAttack = 0;
     private int broadcastAttack = 0;
-    private Boolean musicgameover=false;
-    private Boolean musicsumofalling=false;
-    private Boolean musicpowerup=false;
+
+
+    private Timer freezeTimer = new Timer(10);
+
+//
+//    private Boolean musicgameover=false;
+//    private Boolean musicsumofalling=false;
+//    private Boolean musicpowerup=false;
+
     //Aspect Ratio and Scaling Components
     private static final int VIRTUAL_WIDTH = 800;
     private static final int VIRTUAL_HEIGHT = 480;
@@ -72,6 +80,10 @@ public class GameRenderer {
     public static float height;
     public static float w;
     public static float h;
+    private Boolean musicgameover=false;
+    private Boolean musicsumofalling=false;
+    private Boolean musicpowerup=false;
+    private Boolean musicbkgd=false;
 
 
 
@@ -123,7 +135,13 @@ public class GameRenderer {
 
 	// renders everything. 
 	public synchronized void render(float runTime) throws InterruptedException {
+        if(musicbkgd==false) {
+            AssetLoader.BackgroundMusic.setVolume(0.3f);
+            AssetLoader.BackgroundMusic.play();
+            AssetLoader.BackgroundMusic.setLooping(true);
 
+            musicbkgd=true;
+        }
         //Begin Aspect Ratio Conversion
         cam.update();
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -344,6 +362,8 @@ public class GameRenderer {
 
 		//GAMESTATE = OVER
 	    else if(myWorld.isGameOver()){
+            AssetLoader.BackgroundMusic.stop();
+
             //reset showStart
 			showStart =0;
 
