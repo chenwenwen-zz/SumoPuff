@@ -228,7 +228,6 @@ public class GameWorld {
         freezeTimer.stop();
         attackTimer.stop();
         taskTimer.stop();
-<<<<<<< HEAD
 
         GameRenderer.musicgameover=false;
         GameRenderer.musicsumofalling=false;
@@ -236,12 +235,6 @@ public class GameWorld {
         GameRenderer.musicbkgd=false;
 
 
-        freezeTimer.stop();
-        attackTimer.stop();
-        taskTimer.stop();
-
-=======
->>>>>>> origin/master
 
     }
 	

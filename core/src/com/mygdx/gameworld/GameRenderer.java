@@ -43,15 +43,9 @@ public class GameRenderer {
     private InputHandler handler;
     private Timer attackTimer;
     private Timer taskTimer;
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 //    private Timer freezeTimer;
-=======
-    private Timer freezeTimer;
->>>>>>> origin/master
-=======
-    private Timer freezeTimer;
->>>>>>> origin/master
+
 
 
     // Variables
@@ -65,21 +59,15 @@ public class GameRenderer {
     private static int eggIndex = 0;
     private int broadcastNoAttack = 0;
     private int broadcastAttack = 0;
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 
     private Timer freezeTimer = new Timer(10);
 
+//
+//    private Boolean musicgameover=false;
+//    private Boolean musicsumofalling=false;
+//    private Boolean musicpowerup=false;
 
-
-
-=======
-=======
->>>>>>> origin/master
-    private Boolean musicgameover=false;
-    private Boolean musicsumofalling=false;
-    private Boolean musicpowerup=false;
->>>>>>> origin/master
     //Aspect Ratio and Scaling Components
     private static final int VIRTUAL_WIDTH = 800;
     private static final int VIRTUAL_HEIGHT = 480;
