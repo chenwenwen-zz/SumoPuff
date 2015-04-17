@@ -141,7 +141,8 @@ public class InputHandler implements InputProcessor {
                 else{
                 if (cord.x <= screenX  && screenX<= (cord.x +18) && cord.y <= screenY && screenY<= cord.y+23){
                     powerUpCords.put(cord, true);
-                        AssetLoader.EggPressed.play();
+
+                        AssetLoader.EggPressed.play(1f);
                 }
                 else{
                     break;
@@ -165,6 +166,7 @@ public class InputHandler implements InputProcessor {
                 // Reset all variables, go to GameState.READY
                 Gdx.app.log("QuitTesting", "Restarted");
                 resetGameVar();
+
                 powerUpsSelection.put("ramen",false);
                 powerUpsSelection.put("riceBall",false);
                 powerUpsSelection.put("iceCream",false);
@@ -179,7 +181,10 @@ public class InputHandler implements InputProcessor {
                 powerUpsSelection.put("ramen",false);
                 powerUpsSelection.put("riceBall",false);
                 powerUpsSelection.put("iceCream",false);
+//                AssetLoader.BackgroundMusic.stop();
+
                 Gdx.app.exit();
+
             }
         }
 			return true;
@@ -207,11 +212,25 @@ public class InputHandler implements InputProcessor {
         powerUpCount=0;
         isCordGenerated = false;
         isPowerUpFreeze = true;
+
     }
 
 	@Override
 	public boolean keyDown(int keycode) {
-	    return true;
+//
+//        if(keycode == Keys.BACK){
+//            // Do your optional back button handling (show pause menu?)
+//            AssetLoader.BackgroundMusic.stop();
+//            return false;
+//        }
+
+        return true;
+//            return true;
+////        return true;
+
+
+
+//	       return true;
 	}
 
 	@Override

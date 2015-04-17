@@ -7,6 +7,7 @@ import com.mygdx.gameobjects.Timer;
 import com.mygdx.gameworld.GameRenderer;
 import com.mygdx.gameworld.GameWorld;
 import com.mygdx.helpers.ActionResolver;
+import com.mygdx.helpers.AssetLoader;
 import com.mygdx.helpers.InputHandler;
 
 
@@ -23,11 +24,23 @@ public class GameScreen implements Screen {
     public GameScreen(ActionResolver actionResolver) {
         Timer attackTimer = new Timer(5);
         Timer taskTimer = new Timer(4);
+        Timer freezeTimer = new Timer(8);
         Gdx.app.log("GameScreen", "Attached");
-        world = new GameWorld(actionResolver,attackTimer,taskTimer);
+        world = new GameWorld(actionResolver,attackTimer,taskTimer,freezeTimer);
         InputHandler handler = new InputHandler(world,actionResolver);
         Gdx.input.setInputProcessor(handler);
-        renderer = new GameRenderer(world,midPointX,actionResolver,handler,attackTimer,taskTimer) ;
+<<<<<<< HEAD
+
+//        Gdx.input.setInputProcessor(this);
+//        Gdx.input.setCatchBackKey(true);
+//        Gdx.input.setCatchBackKey(false);
+//        renderer = new GameRenderer(world,midPointX,actionResolver,handler,attackTimer,taskTimer) ;
+
+        renderer = new GameRenderer(world,midPointX,actionResolver,handler,attackTimer,taskTimer,freezeTimer) ;
+
+=======
+        renderer = new GameRenderer(world,midPointX,actionResolver,handler,attackTimer,taskTimer,freezeTimer) ;
+>>>>>>> origin/master
     }
 
     @Override
@@ -57,6 +70,15 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+//        Gdx.input.setInputProcessor(new InputAdapter() { public boolean keyDown(int keycode) {
+//
+//            if(keycode == Input.Keys.BACK){
+//                // Do your optional back button handling (show pause menu?)
+//                AssetLoader.BackgroundMusic.stop();
+//                return false;
+//            }
+//
+//            return true;})
         Gdx.app.log("GameScreen", "show called");
     }
 
@@ -67,6 +89,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
+        AssetLoader.BackgroundMusic.stop();
         Gdx.app.log("GameScreen", "pause called");        
     }
 
