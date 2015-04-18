@@ -158,12 +158,12 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                     switchToScreen(R.id.screen_wait);
                     startActivityForResult(intent, RC_SELECT_PLAYERS);
                     break;
-                // case R.id.button_see_invitations:
-                //     // show list of pending invitations
-                //     intent = Games.Invitations.getInvitationInboxIntent(mGoogleApiClient);
-                //     switchToScreen(R.id.screen_wait);
-                //     startActivityForResult(intent, RC_INVITATION_INBOX);
-                //     break;
+                case R.id.button_see_invitations:
+                    // show list of pending invitations
+                    intent = Games.Invitations.getInvitationInboxIntent(mGoogleApiClient);
+                    switchToScreen(R.id.screen_wait);
+                    startActivityForResult(intent, RC_INVITATION_INBOX);
+                    break;
                 case R.id.button_accept_popup_invitation:
                     // user wants to accept the invitation shown on the invitation popup
                     // (the one we got through the OnInvitationReceivedListener).
@@ -837,7 +837,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     final static int[] CLICKABLES = {
             R.id.button_accept_popup_invitation, R.id.button_invite_players,
             R.id.button_quick_game, R.id.button_sign_in, R.id.button_sign_out, 
-            // R.id.button_see_invitations
+            R.id.button_see_invitations
     };
 
     // This array lists all the individual screens our game has.

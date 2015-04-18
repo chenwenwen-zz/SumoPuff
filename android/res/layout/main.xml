@@ -34,12 +34,14 @@
             style="@style/InviteButton" />
      <!--   <TextView style="@style/MainScreenButtonBlurb"
             android:text="@string/invite_players_explanation" />-->
+
+        <Button android:id="@+id/button_see_invitations"
+            style="@style/SeeInvitations" />
+
         <Button android:id="@+id/button_sign_out"
             style="@style/SignOutButton" />
 
-<!--         <Button android:id="@+id/button_see_invitations"
-            style="@style/MainScreenButton"
-            android:text="@string/see_invitations" /> -->
+
     </LinearLayout>
 
     <!-- INVITATION POPUP -->

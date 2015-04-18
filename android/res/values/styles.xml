@@ -100,7 +100,7 @@
         <!-- <item name="android:layout_weight">0.5</item> -->
         <item name="android:background">@drawable/customsignout</item>
         <!-- <item name="android:layout_marginTop">5dp</item> -->
-        <item name="android:layout_width">140dp</item>
+        <item name="android:layout_width">160dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:gravity">bottom</item>
     </style>
@@ -110,7 +110,7 @@
         <item name="android:background">@drawable/customplaygame</item>
         <!-- <item name="android:paddingTop">20dp</item> -->
         <!-- <item name="android:layout_marginTop">20dp</item> -->
-        <item name="android:layout_width">140dp</item>
+        <item name="android:layout_width">160dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:gravity">bottom</item>
     </style>
@@ -119,7 +119,15 @@
         <!-- <item name="android:layout_weight">0.5</item> -->
         <item name="android:background">@drawable/custominvite</item>
         <!-- <item name="android:layout_marginTop">5dp</item> -->
-        <item name="android:layout_width">140dp</item>
+        <item name="android:layout_width">160dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:gravity">bottom</item>
+    </style>
+
+    <style name="SeeInvitations">
+        <item name="android:background">@drawable/customseeinvites</item>
+        <!-- <item name="android:layout_marginTop">5dp</item> -->
+        <item name="android:layout_width">160dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:gravity">bottom</item>
     </style>
@@ -137,12 +145,6 @@
 
     <!-- Button styles end -->
 
-    <style name="MainScreenButton" parent="@style/GameButton">
-        <item name="android:layout_marginBottom">5dp</item>
-        <item name="android:layout_width">120dp</item>
-        <item name="android:layout_height">45dp</item>
-        <item name="android:background">@drawable/custominvite</item>
-    </style>
 
     <style name="MainScreenButtonBlurb" parent="@style/GameBlurb">
         <item name="android:layout_marginBottom">20dp</item>
