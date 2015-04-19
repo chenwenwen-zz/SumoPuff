@@ -5,7 +5,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.gameobjects.PowerUps;
-import com.mygdx.gameobjects.Puff;
 import com.mygdx.gameworld.GameRenderer;
 import com.mygdx.gameworld.GameWorld;
 
@@ -15,8 +14,7 @@ import java.util.HashMap;
 public class InputHandler implements InputProcessor {
 	
 	private GameWorld myWorld;
-	private Puff leftPuff;
-	private Puff rightPuff;
+
     private ActionResolver actionResolver;
     private int myCount=0;
     private int powerUpCount=0;
@@ -33,8 +31,6 @@ public class InputHandler implements InputProcessor {
     public InputHandler(GameWorld myWorld,ActionResolver actionResolver) {
 		this.myWorld = myWorld;
         this.actionResolver = actionResolver;
-		leftPuff = myWorld.getLeftPuff();
-	    rightPuff = myWorld.getRightPuff();
         powerUpsSelection.put("ramen",false);
         powerUpsSelection.put("riceBall",false);
         powerUpsSelection.put("iceCream",false);
@@ -131,7 +127,7 @@ public class InputHandler implements InputProcessor {
         if(myWorld.isPowerUp()){
             myCount++;
             actionResolver.BroadCastCount(myCount);
-            //Iterat through to check if eggs is touched
+            //Iterate through to check if eggs is touched
             for(Vector2 cord: powerUpCords.keySet()){
                 if(powerUpCords.get(cord)==true){
                     continue;
@@ -139,7 +135,6 @@ public class InputHandler implements InputProcessor {
                 else{
                 if (cord.x <= screenX  && screenX<= (cord.x +18) && cord.y <= screenY && screenY<= cord.y+23){
                     powerUpCords.put(cord, true);
-
                         AssetLoader.EggPressed.play(1f);
                 }
                 else{
@@ -183,10 +178,7 @@ public class InputHandler implements InputProcessor {
                 powerUpsSelection.put("ramen",false);
                 powerUpsSelection.put("riceBall",false);
                 powerUpsSelection.put("iceCream",false);
-//                AssetLoader.BackgroundMusic.stop();
-
                 Gdx.app.exit();
-
             }
         }
 			return true;

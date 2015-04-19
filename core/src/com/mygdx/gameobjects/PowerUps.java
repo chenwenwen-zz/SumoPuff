@@ -41,10 +41,10 @@ public class PowerUps {
     public HashMap<Vector2,Boolean> generateCord(){
         coordEggs.clear();
         if(powerUpType.equals("ramen")){
-           coordEggs.putAll(coordinateGenerator(3));
+           coordEggs.putAll(coordinateGenerator(6));
         }
         else if(powerUpType.equals("riceBall")){
-              coordEggs.putAll(coordinateGenerator(7));
+              coordEggs.putAll(coordinateGenerator(6));
         }
         else{
             coordEggs.putAll(coordinateGenerator(4));
@@ -62,7 +62,7 @@ public class PowerUps {
 
         int tempNo =0;
         for (int i = 15; i>0;i--) {
-            if (i < numberofPower) {
+            if (i <= numberofPower) {
                 if (i != 0) {
                     tempNo = random.nextInt(15);
                     tempMap.put(tempList.get(tempNo), false);

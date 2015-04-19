@@ -2,7 +2,6 @@ package com.mygdx.gamescreens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.mygdx.gameobjects.Puff;
 import com.mygdx.gameobjects.Timer;
 import com.mygdx.gameworld.GameRenderer;
 import com.mygdx.gameworld.GameWorld;
@@ -14,21 +13,19 @@ public class GameScreen implements Screen {
     // initialize the gameworld, gamerenderer variables.
     private GameWorld world;
     private GameRenderer renderer;
-    private Puff leftPuff;
-    private Puff rightPuff;
     // variable for updating renderer at runTime.
     private float runTime;
     private final int midPointX = Gdx.graphics.getWidth()/2;
 
     public GameScreen(ActionResolver actionResolver) {
         Timer attackTimer = new Timer(5);
-        Timer taskTimer = new Timer(4);
-        Timer freezeTimer = new Timer(8);
+        Timer taskTimer = new Timer(3);
+        Timer freezeTimer = new Timer(10);
         Gdx.app.log("GameScreen", "Attached");
         world = new GameWorld(actionResolver,attackTimer,taskTimer,freezeTimer);
         InputHandler handler = new InputHandler(world,actionResolver);
         Gdx.input.setInputProcessor(handler);
-        renderer = new GameRenderer(world,midPointX,actionResolver,handler,attackTimer,taskTimer,freezeTimer) ;
+        renderer = new GameRenderer(world,midPointX,actionResolver,handler,attackTimer,freezeTimer,taskTimer) ;
 
 
     }

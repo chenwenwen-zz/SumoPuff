@@ -22,7 +22,6 @@ public class SPGame extends Game {
         AssetLoader.BackgroundMusic.play();
         AssetLoader.BackgroundMusic.setLooping(true);
 		setScreen(new GameScreen(actionResolver));
-
 	}
 
 	@Override

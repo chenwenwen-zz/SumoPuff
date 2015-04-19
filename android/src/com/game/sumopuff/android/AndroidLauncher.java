@@ -288,7 +288,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             switchToMainScreen();
             return;
         }
-
         Log.d(TAG, "Invitation inbox UI succeeded.");
         Invitation inv = data.getExtras().getParcelable(Multiplayer.EXTRA_INVITATION);
 
@@ -405,10 +404,6 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
     }
 
-    /*
-     * CALLBACKS SECTION. This section shows how we implement the several games
-     * API callbacks.
-     */
 
     @Override
     public void onConnected(Bundle connectionHint) {
@@ -597,9 +592,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         if (room != null) {
             mParticipants = room.getParticipants();
         }
-        if (mParticipants != null) {
-         //   updatePeerScoresDisplay();
-        }
+
     }
 
 
@@ -843,7 +836,7 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // This array lists all the individual screens our game has.
     final static int[] SCREENS = {
             R.id.screen_game, R.id.screen_main, R.id.screen_sign_in,
-            R.id.screen_wait
+            R.id.screen_wait, R.id.invitation_popup
     };
     int mCurScreen = -1;
 

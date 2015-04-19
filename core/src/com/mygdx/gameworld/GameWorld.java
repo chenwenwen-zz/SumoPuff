@@ -82,6 +82,7 @@ public class GameWorld {
             //opens the manual page
             case MANUAL:
                 updateManual(delta);
+                break;
             //When Both collides
 	        case READY:
 	        	// function called just to differentiate.
@@ -100,7 +101,6 @@ public class GameWorld {
                 updateRunning(delta);
                 break;
             case GAMEOVER:
-//                AssetLoader.BackgroundMusic.stop();
                 updateGameOver();
                 break;
 	        default:
