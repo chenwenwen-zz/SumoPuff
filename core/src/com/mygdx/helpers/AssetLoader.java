@@ -163,7 +163,7 @@ public class AssetLoader {
         egg9.flip(false, true);
         //for displaying on screen
         font = new BitmapFont(Gdx.files.internal("fonts/text.fnt"));
-        font.setScale(.15f, -.15f);
+        font.setScale(.13f, -.13f);
         shadow = new BitmapFont(Gdx.files.internal("fonts/shadow.fnt"));
         shadow.setScale(.25f, -.25f);
         arial = new BitmapFont(Gdx.files.internal("fonts/arial.fnt"));

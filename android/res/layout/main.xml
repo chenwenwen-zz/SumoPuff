@@ -27,16 +27,17 @@
         <!-- <TextView style="@style/GameTitle" /> -->
         <!-- <View android:layout_width="match_parent" android:layout_height="50dp"></View> -->
         <Button android:id="@+id/button_quick_game"
-            style="@style/PlayGameButton" />
+            style="@style/PlayGameButton"
+            />
         <!--<TextView style="@style/MainScreenButtonBlurb"
             android:text="@string/quick_game_explanation" />-->
-        <Button android:id="@+id/button_invite_players"
-            style="@style/InviteButton" />
+       <!-- <Button android:id="@+id/button_invite_players"
+            style="@style/InviteButton" />-->
      <!--   <TextView style="@style/MainScreenButtonBlurb"
             android:text="@string/invite_players_explanation" />-->
 
-        <Button android:id="@+id/button_see_invitations"
-            style="@style/SeeInvitations" />
+        <!--<Button android:id="@+id/button_see_invitations"
+            style="@style/SeeInvitations" />-->
 
         <Button android:id="@+id/button_sign_out"
             style="@style/SignOutButton" />

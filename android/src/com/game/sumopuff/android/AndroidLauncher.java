@@ -152,18 +152,18 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
                     mGoogleApiClient.disconnect();
                     switchToScreen(R.id.screen_sign_in);
                     break;
-                case R.id.button_invite_players:
+                /*case R.id.button_invite_players:
                     // show list of invitable players
                     intent = Games.RealTimeMultiplayer.getSelectOpponentsIntent(mGoogleApiClient, 1, 3);
                     switchToScreen(R.id.screen_wait);
                     startActivityForResult(intent, RC_SELECT_PLAYERS);
-                    break;
-                case R.id.button_see_invitations:
+                    break;*/
+               /* case R.id.button_see_invitations:
                     // show list of pending invitations
                     intent = Games.Invitations.getInvitationInboxIntent(mGoogleApiClient);
                     switchToScreen(R.id.screen_wait);
                     startActivityForResult(intent, RC_INVITATION_INBOX);
-                    break;
+                    break;*/
                 case R.id.button_accept_popup_invitation:
                     // user wants to accept the invitation shown on the invitation popup
                     // (the one we got through the OnInvitationReceivedListener).
@@ -345,6 +345,14 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         }
         super.onStart();
     }
+
+ /*   public void onPause(){
+       // leaveRoom();
+        //switchToMainScreen();
+        stopKeepingScreenOn();
+        super.onPause();
+    }*/
+
 
     // Handle back key to make sure we cleanly leave a game if we are in the middle of one
     @Override
@@ -828,9 +836,9 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
     // This array lists everything that's clickable, so we can install click
     // event handlers.
     final static int[] CLICKABLES = {
-            R.id.button_accept_popup_invitation, R.id.button_invite_players,
+            R.id.button_accept_popup_invitation,/* R.id.button_invite_players,*/
             R.id.button_quick_game, R.id.button_sign_in, R.id.button_sign_out, 
-            R.id.button_see_invitations
+           /* R.id.button_see_invitations*/
     };
 
     // This array lists all the individual screens our game has.
