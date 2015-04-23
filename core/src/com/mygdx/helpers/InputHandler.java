@@ -10,24 +10,35 @@ import com.mygdx.gameworld.GameWorld;
 
 import java.util.HashMap;
 
-
+/**This class handles the touches and clicks from the user by implementing the InputProcessor interface.
+ * The interface is an in built interface in Libgdx framework for receiving input events.
+ * The input events are handled differently under different game states.  Power up objects are created
+ * under this class based on the user inputs on the selection of the power ups.
+ */
 public class InputHandler implements InputProcessor {
 	
 	private GameWorld myWorld;
-
     private ActionResolver actionResolver;
     private int myCount=0;
     private int powerUpCount=0;
     private final int readyState=1;
     private boolean isCordGenerated = false;
     private String whichPowerUp = " ";
-   // private boolean ramenSelected=false;
     private HashMap<String,Boolean> powerUpsSelection= new HashMap<String,Boolean>();
     private HashMap<String,PowerUps> powerUps = new HashMap<String,PowerUps>();
     private HashMap<Vector2,Boolean> powerUpCords = new HashMap<Vector2,Boolean>();
     private boolean isPowerUpFreeze = true;
     private boolean isTouched = false;
 
+
+    /** The constructor takes in GameWorld and ActionResolver objects. GameWorld object is used to check
+     * the current game state and change the game state based on the input events. While ActionResolver
+     * Object is used to broadcast message to and request messages from opponent player based on the
+     * input events.
+     *
+     * @param myWorld                    A GameWorld object used for getting SumoPuffs and game states.
+     * @param actionResolver             An ActionResolver object used to broadcast message to players
+     */
     public InputHandler(GameWorld myWorld,ActionResolver actionResolver) {
 		this.myWorld = myWorld;
         this.actionResolver = actionResolver;
@@ -37,6 +48,15 @@ public class InputHandler implements InputProcessor {
 	 }
 
 
+    /**This method is and override method that keep track of the touch events. The touch events under
+     * different game state trigger different activity events.
+     *
+     * @param screenX               An integer that represents the X coordinate of the touch point
+     * @param screenY               An integer that represents the Y coordinate of the touch point
+     * @param pointer               Unused
+     * @param button                Unused
+     * @return                      A boolean that determines if the touch event happened
+     */
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         //Conversion to scaled of X and Y coords to scaled values
@@ -47,10 +67,11 @@ public class InputHandler implements InputProcessor {
         actionResolver.sendMove(1);
         isTouched = true;
 
-        //Opens Manual
 
-
-        //Initialize state
+        /** Initialized State
+         * Two different Power Up objects are created based on the touch events on the selection
+         * of power ups.
+         */
         if(myWorld.isInitialized()){
 
             if (135<=screenX && screenX <=150 && 135<= screenY && screenY<=160){
@@ -85,10 +106,10 @@ public class InputHandler implements InputProcessor {
 
         }
 
-        //Opens Manual
+        /** Manual State
+         *  Displaying manual pages based on the touch events
+         */
         if (myWorld.isManual()){
-
-            //if exit is pressed;
             if (30<=screenX && screenX<=120 && 140<=screenY && screenY <=160){
                 myWorld.closeManual();
             }
@@ -102,20 +123,23 @@ public class InputHandler implements InputProcessor {
             }
         }
 
-        //Running State
+        /** RUNNING State
+         *  The player's tapping counts increase by 1 for every touch event. The corresponding power
+         *  up is activated based on the touch events over the power up location on the phone screen.
+         */
         if(myWorld.isStart() && actionResolver.requestOppGameState()!=3){
             myCount++;
             actionResolver.BroadCastCount(myCount);
             if(isPowerUpFreeze==false) {
                 if (3 <= screenX && screenX <= 22 && 5 <= screenY && screenY <= 35) {
                     if (!isCordGenerated) {
-                        powerUpCords.putAll(powerUps.get("1").generateCord());
+                        powerUpCords.putAll(powerUps.get("1").generateCoord());
                         whichPowerUp = powerUps.get("1").getPowerUpType();
                         myWorld.powerup();
                     }
                 } else if (3 <= screenX && screenX <= 22 && 42 <= screenY && screenY <= 72) {
                     if (!isCordGenerated) {
-                        powerUpCords.putAll(powerUps.get("2").generateCord());
+                        powerUpCords.putAll(powerUps.get("2").generateCoord());
                         whichPowerUp = powerUps.get("2").getPowerUpType();
                         myWorld.powerup();
                     }
@@ -123,11 +147,15 @@ public class InputHandler implements InputProcessor {
             }
         }
 
-        //PowerUp State
+        /** PowerUp State
+         *  The player's tapping counts increase by 1 for every touch event.Iterate through to check
+         *  if eggs in the mini game has been touched. Set the corresponding boolean value in the
+         *  HashMap<Vector2,Boolean> of the eggs coordinates.
+         *
+         */
         if(myWorld.isPowerUp()){
             myCount++;
             actionResolver.BroadCastCount(myCount);
-            //Iterate through to check if eggs is touched
             for(Vector2 cord: powerUpCords.keySet()){
                 if(powerUpCords.get(cord)==true){
                     continue;
@@ -145,7 +173,11 @@ public class InputHandler implements InputProcessor {
 
         }
 
-        //PowerupAttackState need to change state after timer is out, will not exit in this case
+        /** PowerUpAttack State
+         *  The player's tapping counts increase by 2 for every touch event if the power up type is
+         *  rice ball, or increase by 1 otherwise.
+         *
+         */
         if(myWorld.isPowerUpAttack()){
             if(whichPowerUp.equals("riceBall")){
                 myCount+=2;
@@ -157,7 +189,10 @@ public class InputHandler implements InputProcessor {
             }
         }
 
-        //GameOverState
+        /** GameOver State
+         *  If the "Play Again" button is selected, the game is reset and players go back to the Initialization screen.
+         *  If "Quit" is selected, the player exits the game.
+         */
 		if (myWorld.isGameOverReady()) {
             if (4<=screenX && 45>=screenX && 45<=screenY && 110>=screenY) {
                 // Reset all variables, go to GameState.READY
@@ -196,11 +231,19 @@ public class InputHandler implements InputProcessor {
     public HashMap<Vector2,Boolean> getPowerUpCords(){return powerUpCords;}
     public String getWhichPowerUp(){return whichPowerUp;}
 
+
+    /*
+     * Reset all the Power Up related variables
+     */
     public void resetPowerupVar(){
         isCordGenerated = false;
         whichPowerUp = " ";
         powerUpCords.clear();
     }
+
+    /*
+     * Reset all the game related variables
+     */
     public void resetGameVar(){
         myCount = 0;
         powerUpCount=0;

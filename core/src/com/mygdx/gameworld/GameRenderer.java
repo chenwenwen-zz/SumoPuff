@@ -19,24 +19,29 @@ import com.mygdx.helpers.InputHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-// class which renders everything
+/** The GameRenderer render() method updates the game art according to the GameWorld's currentstate
+ *  and the Inputhandler's onclick() method. Apart from the game art the GameRenderer also
+ *  handles the animation, fonts and music of the game, using assets from AssetLoader.
+ *
+ */
 public class GameRenderer {
+
+    /** GameRenderer takes in GameWorld which sets the game state.*/
 	private GameWorld myWorld;
+
+    /** Objects for game orientation and display.*/
 	private static OrthographicCamera cam;
 	private ShapeRenderer shapeRenderer;
 	private ShapeRenderer shapeRenderer1;
 
-	//for calculating the falling curve
+	/** A private counter for calculating tragetory for the SumoPuff's falling animation. */
 	private static int falldistance= 1;
-	//for calculating how long to show the start sign.
+	/** A private counter for calculating how long to show the "start" sign.*/
 	private static int showStart=1;
 
 	private SpriteBatch batcher;
 
-	private int midPointX;
-
-
-	// Game Objects
+	/**GameObjects and helpers class objects*/
 	private Puff leftPuff;
 	private Puff rightPuff;
     private ActionResolver actionResolver;
@@ -45,9 +50,8 @@ public class GameRenderer {
     private Timer freezeTimer;
     private Timer taskTimer;
 
-
-
-    // Variables
+    /** Variables used to keep track of in game objects such as coordinates of SumoPuffs and
+     *  powerup selection.*/
     private int OppoCount;
     private float leftPuffX=0;
     private float rightPuffX=0;
@@ -60,7 +64,7 @@ public class GameRenderer {
     private int broadcastAttack = 0;
 
 
-    //Aspect Ratio and Scaling Components
+    /** Variable used for aspect ratio and scaling components. */
     private static final int VIRTUAL_WIDTH = 800;
     private static final int VIRTUAL_HEIGHT = 480;
     private static final float ASPECT_RATIO = (float)VIRTUAL_WIDTH/(float)VIRTUAL_HEIGHT;
@@ -72,18 +76,25 @@ public class GameRenderer {
     private static float height;
     private static float w;
     private static float h;
+
+    /** Booleans used to decide which music to play.*/
     private Boolean musicgameover=false;
     private Boolean musicsumofalling=false;
     private Boolean musicpowerup=false;
 
-
-
-
-    public GameRenderer(GameWorld world, int midPointX,ActionResolver actionResolver,InputHandler handler,Timer attackTimer,Timer freezeTimer,Timer taskTimer) {
+    /** GameRender handles all the in game display art, animation, music, and fonts.
+     *
+     * @param world                     A GameWorld object used for getting SumoPuffs and game states.
+     * @param actionResolver            An ActionResolver object used to broadcast message to players
+     * @param handler                   A InputHandler object used to detect users' inputs
+     * @param attackTimer               A Timer class object for power up effects.
+     * @param freezeTimer               A Timer class object for the power up cool-down period.
+     * @param taskTimer                 A Timer class object for the egg-cracking mini-game.
+     */
+    public GameRenderer(GameWorld world, ActionResolver actionResolver,InputHandler handler,Timer attackTimer,Timer freezeTimer,Timer taskTimer) {
 		myWorld = world;
 		leftPuff = myWorld.getLeftPuff();
 		rightPuff = myWorld.getRightPuff();
-		this.midPointX = midPointX;
         this.actionResolver = actionResolver;
         this.handler = handler;
         this.powerUpsSelection = handler.getPowerUpsSelection();
@@ -118,15 +129,24 @@ public class GameRenderer {
 
 	}
 
-	//calculating the trajectory of fall
+    /** A helper method for determine the trajectory of the SumoPuff's fall.
+     *
+     * @param x             A float that represents the SumoPuff's x coordinates.
+     * @return              A float y coordinate, calculated given x.
+     */
 	public int fallcurve (int x){
 		return (int) (-Math.pow((x+Math.sqrt(100)),2)+100);
 	}
 
-	// renders everything. 
+    /** The render methods sets the game display.
+     *
+     * @param runTime           A float that represents the accumulated running time
+     * @throws InterruptedException
+     */
 	public synchronized void render(float runTime) throws InterruptedException {
 
-        //Begin Aspect Ratio Conversion
+        /** Begin aspect ratio conversion: The game display is scaled to maintain it's aspect
+         *  ratio and resolution on different phones.*/
         cam.update();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -154,11 +174,11 @@ public class GameRenderer {
         h = (float)VIRTUAL_HEIGHT*scale;
         viewport = new Rectangle(crop.x, crop.y, w, h);
         Gdx.gl.glViewport((int) viewport.x, (int) viewport.y, (int) viewport.width, (int) viewport.height);
-        //End aspect ratio conversion
+        /**End aspect ratio conversion.*/
 
 
 
-        //Get Players ID information
+        /** Gets player ID information */
         ArrayList<String> participants = actionResolver.getParticipants();
         String myId = actionResolver.getMyId();
         int player1 = participants.get(0).hashCode();
@@ -166,21 +186,22 @@ public class GameRenderer {
         int me = myId.hashCode();
 
 
-		// Begin SpriteBatch
+		/** Begin SpriteBatch*/
 		batcher.begin();
-	    //Draw BackGround
+	    /**Draw BackGround*/
 		batcher.draw(AssetLoader.background, 0, 0, 150, 160);
 
 
-        //GAMESTATE = INITIALIZE
+        /**GAMESTATE = INITIALIZE*/
         if(myWorld.isInitialized()){
-            //reset boolean variable for sound
+            /**reset boolean variable for sound*/
             this.musicgameover=false;
             this.musicsumofalling=false;
             this.musicpowerup=false;
-           // reset showStart
+           /** reset showStart*/
             showStart=0;
 
+           /** Draw the power up selection screen */
            batcher.draw(AssetLoader.powerupBackground, 0,0,150,160);
            batcher.draw(AssetLoader.chooseapower,10,10,130,25);
            batcher.draw(AssetLoader.help, 138,138, 10,20);
@@ -198,9 +219,10 @@ public class GameRenderer {
                 batcher.draw(AssetLoader.bwiceCreampower,93, 45,30,100);
         }
 
-
+        /**GAMESTATE = MANUAL */
         else if (myWorld.isManual()){
 
+            /** Draws the differnt manual pages */
             if (myWorld.getPage()==1){
                 batcher.draw(AssetLoader.manual1,0,0,150,160);
             }
@@ -217,9 +239,13 @@ public class GameRenderer {
         }
 
 
-		// GAMESTATE = READY
+		/**GAMESTATE = READY*/
 		else if (myWorld.isReady()){
+
+            /** Reset fall distance */
             falldistance = 0;
+
+            /** Sets the left and right SumoPuff to their default expression.*/
             batcher.draw(AssetLoader.defaultRed,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
             batcher.draw(AssetLoader.defaultBlue, rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
             batcher.draw(AssetLoader.ready,50, 50, 50, 25);
@@ -232,43 +258,48 @@ public class GameRenderer {
 
 
 
-        //GAMESTATE = RUNNING
+        /**GAMESTATE = RUNNING*/
        else if(myWorld.isStart()){
+
+            /** Show "Start" for 60 counts */
             if(showStart<60){
                 batcher.draw(AssetLoader.start,50, 50, 50, 25);
             }
             ++showStart;
             handler.resetPowerupVar();
-            //sends 3 no attack Packet to end Reset Count
+            /**Sends 3 attack Packet to end Reset Count*/
             while(broadcastNoAttack<3){
             actionResolver.sendPowerUpAttack(0);
             broadcastNoAttack++;
             }
-            //end of sending
+            /*End of sending of packets.*/
+
+            /** Draws power up depending on their states, frozen or unfrozen */
             if(handler.isPowerUpFreezed()){
                 drawPowerUpDisable(batcher);
-               //
-               // AssetLoader.font.draw(batcher,"PowerUp Frozen",38,35);
+
             }else{
                 drawPowerUpEnable(batcher);
             }
 
 
-           //normal game render routine(Puff Animation, Draw Arrow, check PowerUpAttack)
+           /** For normal game play rendering (Puff Animation, Draw Arrow, check PowerUpAttack)*/
            generalGameRender(runTime);
         }
 
 
 
 
-        //GameState = PowerUp
+        /**GameState = PowerUp*/
        else if(myWorld.isPowerUp()){
-            //Disable PowerUp
+            /**Disable PowerUp */
             handler.setPowerUpFreeze(true);
             taskCountDown(batcher);
-            //Render eggs that appear on the screen at powerUp state
+            /**Render eggs that appear on the screen at powerUp state*/
             eggIndex=0;
             batcher.draw(AssetLoader.powerupScreen,0,0,150,80);
+
+            /** Render the eggs given the vector2 positions in the powerUpCords hashmap*/
             for(Vector2 key:powerUpCords.keySet()){
                 if(powerUpCords.get(key)==false)
                    batcher.draw(eggs.get(eggIndex),key.x,key.y,15,20);
@@ -276,7 +307,7 @@ public class GameRenderer {
             }
             if(powerUpCords.values().contains(false)){
 
-              //powerupfail
+              /** Power up failed */
             }
             else{
                 if(musicpowerup==false){
@@ -287,21 +318,21 @@ public class GameRenderer {
 
             }
             drawPowerUpDisable(batcher);
-            //normal game render routine(Puff Animation, Draw Arrow, check PowerUpAttack)
+            /** For normal game play rendering (Puff Animation, Draw Arrow, check PowerUpAttack)*/
             generalGameRender(runTime);
 
         }
 
         //GameState = PowerUpAttack
       else if(myWorld.isPowerUpAttack()){
-            //normal game render routine(Puff Animation, Draw Arrow, check PowerUpAttack)
+            /** For normal game play rendering (Puff Animation, Draw Arrow, check PowerUpAttack)*/
             generalGameRender(runTime);
             broadcastNoAttack = 0;
-            //Render PowerUp Display
+            /**Render PowerUp Display*/
             drawPowerUpDisable(batcher);
             if(handler.getWhichPowerUp().equals("ramen")){
-              // showStart=0;
-               //reset both counts by sending 3 packets to ensure opponent counts being reset
+               /** Count is reset */
+               /** 3 packets are sent to ensure that the opponent's count is being reset*/
                AssetLoader.font.draw(batcher,"Count Reset",45,5);
                while(this.broadcastAttack<5){
                handler.resetMyCount();
@@ -314,8 +345,9 @@ public class GameRenderer {
 
             }
             else if(handler.getWhichPowerUp().equals("iceCream")){
-                //freeze the powerUp
-                //reset both counts by sending 3 packets to ensure opponent's powerup is freezed
+                /** Opponent's power ups are frozen. */
+                /** 3 packets are sent to ensure that the opponent's count is being reset*/
+
                 while(this.broadcastAttack<8){
                     actionResolver.sendPowerUpAttack(2);
                     this.broadcastAttack++;
@@ -323,13 +355,14 @@ public class GameRenderer {
                this.broadcastAttack=0;
             }
             else{
+                /** Player's hits x2. */
+                /** 3 packets are sent to ensure that the opponent's count is being reset*/
                 AssetLoader.font.draw(batcher,"Hit x2 ",60,5);
                 actionResolver.sendPowerUpAttack(3);
                 attackCountDown(batcher);
             }
             if(handler.isPowerUpFreezed()){
                 drawPowerUpDisable(batcher);
-             //   AssetLoader.font.draw(batcher,"PowerUp Frozen",38,35);
             }else{
                 drawPowerUpEnable(batcher);
             }
@@ -340,18 +373,23 @@ public class GameRenderer {
 
 
 
-		//GAMESTATE = OVER
+		/**GAMESTATE = OVER*/
 	    else if(myWorld.isGameOver()){
             AssetLoader.BackgroundMusic.stop();
-            //reset showStart
+            /**Reset showStart*/
 			showStart =0;
 
-			//if userPuff loses
+			/**If player loses*/
 			if (myWorld.getLeftPuff().getX()<15){
                 if(musicsumofalling==false){
                     AssetLoader.FallingDown.play();
                     musicsumofalling=true;
                 }
+
+                /**Draws the player falling animation, while the opponent's SumoPuff looks on.
+                 * The animation depends on which side the player is on, this is decided using the google play ID
+                 * The falling animation's trajectory is determined by the fall distance.
+                 */
 				batcher.draw(AssetLoader.redFall,  (leftPuff.getX()+falldistance+3), leftPuff.getY()-(fallcurve(falldistance))/10, leftPuff.getWidth(), leftPuff.getHeight());
 				batcher.draw(AssetLoader.defaultBlue,  rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
 				if (falldistance<-40){
@@ -392,6 +430,10 @@ public class GameRenderer {
                     }
 
                 }
+
+                /** The SumoPuff has fallen off screen, and the winner and loser screen has been drawn.
+                 *  The GameOver animation has been complete, so GameOverReady is set to true and players
+                 *  can select "Play Again"*/
 				if (falldistance<-45){
 					batcher.draw(AssetLoader.playAgain,5, 80, 40, 30);
 					batcher.draw(AssetLoader.quit,112 , 85, 25, 15);}
@@ -399,12 +441,13 @@ public class GameRenderer {
 					myWorld.gameOverReady = true;}
 				falldistance--;}
 
-			//if oppPuff loses
+			/**If opponent loses*/
 			if (myWorld.getRightPuff().getX()>110){
                 if(musicsumofalling==false){
                     AssetLoader.FallingDown.play();
                     musicsumofalling=true;
                 }
+                /** Draws the opponent's SumoPuff falling, while the play's Sumopuff looks on. */
 				batcher.draw(AssetLoader.blueFall,  (rightPuff.getX()-falldistance-3), rightPuff.getY()-(fallcurve(falldistance))/10, rightPuff.getWidth(), rightPuff.getHeight());
 				batcher.draw(AssetLoader.defaultRed,  leftPuff.getX(), leftPuff.getY(), leftPuff.getWidth(), leftPuff.getHeight());
 				if (falldistance<-40){
@@ -449,7 +492,7 @@ public class GameRenderer {
 					myWorld.gameOverReady = true;}
 				falldistance--;
 			}
-		   // Player1 continue broadcasting the updated position to player2 if player2 gamestate!=GameOver
+		   /** Player1 continue broadcasting the updated position to player2 if player2 gamestate!=GameOver*/
             if(leftPuff.getId().equals("player1")&& actionResolver.requestOppGameState()!=3){
                 actionResolver.broadCastLeftPuffX(leftPuff.getX());
                 actionResolver.broadCastRightPuffX(rightPuff.getX());}
@@ -461,13 +504,26 @@ public class GameRenderer {
 
 	}
     //method to convert real phone coordinates to scaled coordinates, used by input handler
+
+    /** unprojectCoords is a method that converts real phone coordinates to scaled coordinates.
+     *  It is used by the InputHandler to ensure that the coordinates of user input is the same
+     *  regardless of their phone size.
+     *
+     * @param coords            A Vector3 that store the (x,y,z) coordinates of the game. Since our game is
+     *                          2 Dimensional, z is always set as 0.
+     * @return                  A converted Vector3 coordinates that corresponds to the same point regardless
+     *                          of  phone size.
+     */
     public static Vector3 unprojectCoords(Vector3 coords){
         cam.unproject(coords, viewport.x, viewport.y, viewport.width, viewport.height);
         return coords;
     }
 
 
-    //Draws Arrow on top of the player
+    /** For drawing the arrow that indicates which SumoPuff is the player controlling
+     *
+     * @param batcher           A SpriteBatcher used for drawing.
+     */
     private void drawArrow(SpriteBatch batcher) {
         ArrayList<String> participants = actionResolver.getParticipants();
         String myId = actionResolver.getMyId();
@@ -489,7 +545,10 @@ public class GameRenderer {
         }
     }
 
-     //Draw PowerUp(enable Mode)
+    /**Draws enabled power ups, according to which power up is selected in the powerUps Hashmap.
+     *
+     * @param batcher           A SpriteBatcher used for drawing.
+     */
      private void drawPowerUpEnable(SpriteBatch batcher){
          for (int i = 1; i < 3; i++) {
              if (i == 1) {
@@ -513,11 +572,10 @@ public class GameRenderer {
          }
       }
 
-
-
-
-
-    //Draw PowerUp(disable Mode)
+    /**Draws disabled power ups, according to which power up is selected in the powerUps Hashmap.
+     *
+     * @param batcher           A SpriteBatcher used for drawing.
+     */
     private void drawPowerUpDisable(SpriteBatch batcher){
         for(int i=1; i<3;i++){
             if(i==1){
@@ -545,6 +603,11 @@ public class GameRenderer {
         }
     }
 
+    /** Draws a notification on the player's screen when they suceed in activating a powerup
+     *
+     * @param batcher           A SpriteBatcher used for drawing.
+     * @throws InterruptedException
+     */
     private void checkPowerUpAttacks(SpriteBatch batcher) throws InterruptedException {
         if(actionResolver.checkPowerUpAttack()==1){
             AssetLoader.font.draw(batcher,"Attack: Count Reset",30, 33);
@@ -565,14 +628,14 @@ public class GameRenderer {
     }
 
 
-    //update puff animation and other frames
+    /** For rendering general gameplay*/
     private void generalGameRender(float runTime) throws InterruptedException {
         if (leftPuff.collides(rightPuff)) {
             OppoCount = actionResolver.requestOppoCount();
         }
         leftPuffX = actionResolver.requestLeftPuffX();
         rightPuffX = actionResolver.requestRightPuffX();
-        //delay is optional
+        /**delay is optional*/
         if ((actionResolver.checkMove() == 1) || (handler.getIsTouched() == true) || (!leftPuff.collides(rightPuff)) || (actionResolver.requestOppGameState() == 3)) {
                 if (leftPuff.getId().equals("player1")) {
                     actionResolver.broadCastLeftPuffX(leftPuff.getX());
@@ -590,7 +653,7 @@ public class GameRenderer {
         if(freezeTimer.isTimeUp()){
             handler.setPowerUpFreeze(false);
         }
-
+            /** Shows the player and opponent's count */
             AssetLoader.font.draw(batcher, "You:" + handler.getMyCount() + "", 4, 85);
             AssetLoader.font.draw(batcher, "Opp:" + actionResolver.requestOppoCount() + " ", 4, 95);
 
@@ -601,7 +664,7 @@ public class GameRenderer {
             batcher.draw(AssetLoader.runningAnimationBlue.getKeyFrame(runTime), rightPuff.getX(), rightPuff.getY(), rightPuff.getWidth(), rightPuff.getHeight());
         }
 
-
+    /* A countdown when power up wears off */
     private void attackCountDown(SpriteBatch batcher){
         if(attackTimer.checkTimeLeft()<=3 && attackTimer.checkTimeLeft()>2){
             AssetLoader.font.draw(batcher,3+"",70,20);
@@ -618,7 +681,7 @@ public class GameRenderer {
 
     }
 
-
+    /* A countdown for the egg mini-game.*/
     private void taskCountDown(SpriteBatch batcher){
         if(taskTimer.checkTimeLeft()<=3 && taskTimer.checkTimeLeft()>2){
             AssetLoader.font.draw(batcher,3+"",70,20);
@@ -635,7 +698,7 @@ public class GameRenderer {
 
     }
 
-
+    /* A Countdown for when the opponent's power up is wearing off.*/
     public void requestCountDown(SpriteBatch batcher){
         if(actionResolver.getTimeLeft()==1)
             AssetLoader.font.draw(batcher,1+"",70,45);

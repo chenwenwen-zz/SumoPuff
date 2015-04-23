@@ -8,6 +8,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+/** AssetLoader contains the different backgrounds, character sprite, powerup icons, selection panels,
+ *  manual, animations, fonts and music need for GameRenderer;
+ *
+ */
 public class AssetLoader {
     public static Texture texture;
     public static TextureRegion background,powerupBackground;
@@ -22,7 +26,7 @@ public class AssetLoader {
     public static TextureRegion egg0,egg1,egg2,egg3,egg4,egg5,egg6,egg7,egg8,egg9;
     
     public static TextureRegion arrow,ready,start,redWinner, blueWinner, redLoser,blueLoser,playAgain,quit,help;
-    public static BitmapFont font,shadow,arial;
+    public static BitmapFont font;
     public static Music BackgroundMusic;
     public static Sound EggPressed;
     public static Sound Fanfare;
@@ -32,14 +36,16 @@ public class AssetLoader {
     // loads every texture from the disk. 
     // Called when SPGame is intialized. 
     public static void load(){
+
+        /** Load music files */
         BackgroundMusic=Gdx.audio.newMusic(Gdx.files.internal("BackgroundMusic.mp3"));
-//        BackgroundMusic=Gdx.audio.newMusic(Gdx.files.internal("BackgroundMusic.mp3"));
         Fanfare=Gdx.audio.newSound(Gdx.files.internal("Fanfare.mp3"));
         GameOver=Gdx.audio.newSound(Gdx.files.internal("GameOver.mp3"));
         EggPressed=Gdx.audio.newSound(Gdx.files.internal("EggPressed.mp3"));
         FallingDown=Gdx.audio.newSound(Gdx.files.internal("FallingDown.mp3"));
         PowerUp=Gdx.audio.newSound(Gdx.files.internal("PowerUp.mp3"));
 
+        /** Load background images */
         background = new TextureRegion(new Texture(Gdx.files.internal("background.png")));
         background.flip(false, true);
         powerupBackground = new TextureRegion(new Texture(Gdx.files.internal("powerupbackground.png")));
@@ -47,13 +53,15 @@ public class AssetLoader {
         powerupScreen = new TextureRegion(new Texture(Gdx.files.internal("powerupscreen.png")));
         powerupScreen.flip(false, true);
 
+        /** Load manual pages */
         manual1 = new TextureRegion(new Texture(Gdx.files.internal("manual1.png")));
         manual1.flip(false, true);
         manual2 = new TextureRegion(new Texture(Gdx.files.internal("manual2.png")));
         manual2.flip(false, true);
         manual3 = new TextureRegion(new Texture(Gdx.files.internal("manual3.png")));
         manual3.flip(false, true);
-     	
+
+        /** Load the red/left SumoPuff character art */
         defaultRed = new TextureRegion(new Texture(Gdx.files.internal("defaultred.png")));
         defaultRed.flip(false, true);
 
@@ -67,7 +75,7 @@ public class AssetLoader {
         redFall.flip(false, true);
         
 
-        
+        /** Load the blue/right SumoPuff character art */
         defaultBlue = new TextureRegion(new Texture(Gdx.files.internal("defaultblue.png")));
         defaultBlue.flip(false, true);
 
@@ -80,6 +88,7 @@ public class AssetLoader {
         blueFall = new TextureRegion(new Texture(Gdx.files.internal("bluefall.png")));
         blueFall.flip(false, true);
 
+        /** Loads the running animantion for both left and right SumoPuff */
         TextureRegion[] redRun = { redRun1, redRun2};
         runningAnimationRed = new Animation(0.12f, redRun);
         runningAnimationRed.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
@@ -87,14 +96,18 @@ public class AssetLoader {
         TextureRegion[] blueRun = { blueRun1 , blueRun2 };
         runningAnimationBlue = new Animation(0.12f, blueRun);
         runningAnimationBlue.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
-        
+
+        /** Loads the arrow image */
         arrow = new TextureRegion(new Texture(Gdx.files.internal("arrow.png")));
         arrow.flip(false,true);
+
+        /** Loads the "Ready" and "Start" icon to be used at currentstate =running */
         ready = new TextureRegion(new Texture(Gdx.files.internal("ready.png")));
         ready.flip(false,true);
         start = new TextureRegion(new Texture(Gdx.files.internal("start.png")));
         start.flip(false, true);
-        
+
+        /** Loads the winner and loser screens */
         redWinner = new TextureRegion(new Texture(Gdx.files.internal("redwinner.png")));
         redWinner.flip(false, true);
         blueWinner = new TextureRegion(new Texture(Gdx.files.internal("bluewinner.png")));
@@ -104,6 +117,7 @@ public class AssetLoader {
         blueLoser = new TextureRegion(new Texture(Gdx.files.internal("blueloser.png")));
         blueLoser.flip(false, true);
 
+        /** Loads the "Quit" and "PlayAgain" options that shows when currentstate = GameOver */
         quit = new TextureRegion(new Texture(Gdx.files.internal("Quit.png")));
         quit.flip(false, true);
         playAgain = new TextureRegion(new Texture(Gdx.files.internal("PlayAgain.png")));
@@ -111,6 +125,7 @@ public class AssetLoader {
         help = new TextureRegion(new Texture(Gdx.files.internal("help.png")));
         help.flip(false, true);
 
+        /** Loads the power up icons: ramen, black and white ramen and the ramen powerup selection panel*/
         ramen = new TextureRegion(new Texture(Gdx.files.internal("ramen.png")));
         ramen.flip(false, true);
         bwramen = new TextureRegion(new Texture(Gdx.files.internal("bwramen.png")));
@@ -119,7 +134,8 @@ public class AssetLoader {
         ramenpower.flip(false, true);
         bwramenpower = new TextureRegion(new Texture(Gdx.files.internal("bwramenpower.png")));
         bwramenpower.flip(false, true);
-        
+
+        /** Loads the power up icons: riceball, black and white riceball and the riceball powerup selection panel*/
         riceball = new TextureRegion(new Texture(Gdx.files.internal("riceball.png")));
         riceball.flip(false, true);
         bwriceball = new TextureRegion(new Texture(Gdx.files.internal("bwriceball.png")));
@@ -128,7 +144,8 @@ public class AssetLoader {
         riceballpower.flip(false, true);
         bwriceballpower = new TextureRegion(new Texture(Gdx.files.internal("bwriceballpower.png")));
         bwriceballpower.flip(false, true);
-        
+
+        /** Loads the power up icons: ice-cream, black and white ice-cream and the ice-cream powerup selection panel*/
         iceCream = new TextureRegion(new Texture(Gdx.files.internal("icecream.png")));
         iceCream.flip(false, true);
         bwiceCream = new TextureRegion(new Texture(Gdx.files.internal("bwicecream.png")));
@@ -137,10 +154,13 @@ public class AssetLoader {
         iceCreampower.flip(false, true);
         bwiceCreampower = new TextureRegion(new Texture(Gdx.files.internal("bwicecreampower.png")));
         bwiceCreampower.flip(false, true);
-        
+
+        /** Loads the "Choose A Power" sign that appears when currentstate = Initialize */
         chooseapower = new TextureRegion(new Texture(Gdx.files.internal("chooseapower.png")));
         chooseapower.flip(false, true);
 
+
+        /** Loads the eggs 0-9 for the mini-game*/
         egg0 = new TextureRegion(new Texture(Gdx.files.internal("egg0.png")));
         egg0.flip(false, true);
         egg1 = new TextureRegion(new Texture(Gdx.files.internal("egg1.png")));
@@ -161,12 +181,10 @@ public class AssetLoader {
         egg8.flip(false, true);
         egg9 = new TextureRegion(new Texture(Gdx.files.internal("egg9.png")));
         egg9.flip(false, true);
-        //for displaying on screen
+
+        /** Loads font for writing on screen*/
         font = new BitmapFont(Gdx.files.internal("fonts/text.fnt"));
         font.setScale(.13f, -.13f);
-        shadow = new BitmapFont(Gdx.files.internal("fonts/shadow.fnt"));
-        shadow.setScale(.25f, -.25f);
-        arial = new BitmapFont(Gdx.files.internal("fonts/arial.fnt"));
     }
 
     public static void dispose() {
