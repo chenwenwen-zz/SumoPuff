@@ -1,56 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- <ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true" > -->
+
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!-- SIGN-IN SCREEN -->
     <LinearLayout android:id="@+id/screen_sign_in" style="@style/SignInScreen">
-        <!-- <TextView style="@style/GameTitle" /> -->
         <ImageView android:id="@+id/company_logo" style="@style/CompanyTitle"/>
         <TextView style="@style/GameBlurb" />
-<!--         <com.google.android.gms.common.SignInButton android:id="@+id/button_sign_in"
-            style="@style/SignInButton" /> -->
         <Button android:id="@+id/button_sign_in" style="@style/SignInButton"/>
     </LinearLayout>
 
     <!-- MAIN SCREEN -->
     <LinearLayout android:id="@+id/screen_main" style="@style/LLScreen">
-        <!-- <TextView style="@style/GameTitle" /> -->
-        <!-- <View android:layout_width="match_parent" android:layout_height="50dp"></View> -->
         <Button android:id="@+id/button_quick_game"
             style="@style/PlayGameButton"
             />
-        <!--<TextView style="@style/MainScreenButtonBlurb"
-            android:text="@string/quick_game_explanation" />-->
-       <!-- <Button android:id="@+id/button_invite_players"
-            style="@style/InviteButton" />-->
-     <!--   <TextView style="@style/MainScreenButtonBlurb"
-            android:text="@string/invite_players_explanation" />-->
-
-        <!--<Button android:id="@+id/button_see_invitations"
-            style="@style/SeeInvitations" />-->
 
         <Button android:id="@+id/button_sign_out"
             style="@style/SignOutButton" />
-
-
-    </LinearLayout>
-
-    <!-- INVITATION POPUP -->
-    <LinearLayout android:id="@+id/invitation_popup" style="@style/InvPopup">
-        <TextView android:id="@+id/incoming_invitation_text" style="@style/InvPopupText" />
-        <Button android:id="@+id/button_accept_popup_invitation"
-            style="@style/InvPopupButton"
-            android:text="@string/accept_popup_invite" />
     </LinearLayout>
 
     <!-- "PLEASE WAIT" SCREEN -->
@@ -62,4 +32,3 @@
     <LinearLayout android:id="@+id/screen_game" style="@style/LLScreen">
     </LinearLayout>
 </FrameLayout>
-<!-- </ScrollView> -->

@@ -27,8 +27,8 @@ public class SPGame extends Game {
 	@Override
 	// method called to dispose of the screen
     public void dispose() {
-        AssetLoader.BackgroundMusic.dispose();
-        super.dispose();
+       // AssetLoader.BackgroundMusic.stop();
+        //super.dispose();
     }
 
 
